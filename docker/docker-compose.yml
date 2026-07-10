@@ -1,0 +1,13 @@
+services:
+  backdrop-studio-dev:
+    image: node:20-alpine
+    container_name: backdrop-studio-dev
+    working_dir: /app
+    volumes:
+      - ../:/app
+    ports:
+      # Bound to localhost to comply with local security testing guidelines
+      - "127.0.0.1:${PORT:-3030}:${PORT:-3030}"
+    command: npm run dev -- --port ${PORT:-3030} --host
+    environment:
+      - NODE_ENV=development

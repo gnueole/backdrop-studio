@@ -1,0 +1,780 @@
+<!-- ==============================================================================
+     🎥 Backdrop Studio - renderer.html
+     Description : Renders dynamic, slow-pulsing background overlays for video calls.
+     ============================================================================== -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MMZMFJDN');</script>
+    <!-- End Google Tag Manager -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Backdrop & Virtual Overlay</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Outfit:wght@200;300;400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Load Core Stylesheet -->
+    <link rel="stylesheet" href="./style.css">
+    
+    <!-- html2canvas for PNG Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        /* Backdrop Specific Reset & Styling */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-dark, #0d0d0d);
+            font-family: var(--font-sans, 'Inter', sans-serif);
+            transition: background-color 0.5s ease;
+        }
+
+        body.theme-light {
+            background-color: var(--bg-light, #f9fafb);
+        }
+
+        #backdrop-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Text Overlay Layout Container */
+        .backdrop-text-container {
+            position: absolute;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            user-select: none;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Text shadow / glow effect states */
+        .text-effect-none #backdrop-name, 
+        .text-effect-none #backdrop-title {
+            text-shadow: none;
+        }
+        .text-effect-shadow-soft #backdrop-name, 
+        .text-effect-shadow-soft #backdrop-title {
+            text-shadow: 0 0 10px var(--shadow-color-50, rgba(0, 0, 0, 0.5));
+        }
+        .text-effect-shadow-strong #backdrop-name, 
+        .text-effect-shadow-strong #backdrop-title {
+            text-shadow: 0 0 18px var(--shadow-color-80, rgba(0, 0, 0, 0.8));
+        }
+        .text-effect-glow-neon #backdrop-name, 
+        .text-effect-glow-neon #backdrop-title {
+            text-shadow: 0 0 6px rgba(255,255,255,0.8), 
+                         0 0 15px var(--accent-color-50, rgba(251,146,60,0.5));
+        }
+        .text-effect-glow-matched #backdrop-name {
+            text-shadow: 0 0 8px var(--accent-color-50, rgba(251,146,60,0.5)), 
+                         0 0 18px var(--accent-color-30, rgba(251,146,60,0.3));
+        }
+        .text-effect-glow-matched #backdrop-title {
+            text-shadow: 0 0 8px var(--title-color, var(--accent-color-50)), 
+                         0 0 18px var(--title-color, var(--accent-color-30));
+        }
+
+        /* Positioning Styles */
+        .pos-top { top: 8%; }
+        .pos-bottom { bottom: 8%; }
+        .pos-middle { top: 50%; transform: translateY(-50%); }
+        .pos-center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        
+        .align-left { left: 8%; text-align: left; align-items: flex-start; }
+        .align-right { right: 8%; text-align: right; align-items: flex-end; }
+        .align-center { text-align: center; align-items: center; }
+        .pos-center.align-center { left: 50%; }
+
+        /* Typography & Custom Sizing */
+        #backdrop-name {
+            font-family: var(--font-title, 'Outfit', sans-serif);
+            font-weight: 800;
+            color: var(--text-color, #ffffff);
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin: 0;
+            transition: font-size 0.3s ease;
+        }
+
+        #backdrop-title {
+            font-family: var(--font-body, 'Outfit', sans-serif);
+            font-weight: 400;
+            color: var(--title-color, var(--accent-color, #fb923c));
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin: 0;
+            transition: font-size 0.3s ease;
+        }
+
+        /* Sizing Styles */
+        .size-small #backdrop-name { font-size: 1.6rem; }
+        .size-small #backdrop-title { font-size: 0.9rem; }
+
+        .size-medium #backdrop-name { font-size: 2.2rem; }
+        .size-medium #backdrop-title { font-size: 1.1rem; }
+
+        .size-big #backdrop-name { font-size: 3.2rem; }
+        .size-big #backdrop-title { font-size: 1.4rem; }
+
+        /* Subtle bottom accents */
+        .backdrop-border {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color, #fb923c), var(--glow-color, #60a5fa), rgba(255, 255, 255, 0.35), var(--accent-color, #fb923c));
+            z-index: 20;
+            opacity: 0.8;
+            background-size: 200% 100%;
+            transition: all 0.5s ease;
+        }
+        .backdrop-border.border-animated {
+            animation: moveBorderGradient 4s linear infinite;
+        }
+        @keyframes moveBorderGradient {
+            0% { background-position: 0% 0%; }
+            100% { background-position: -200% 0%; }
+        }
+
+        /* Dithering noise to prevent color banding */
+        .noise-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.02;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Transparent Background Mode */
+        body.bg-transparent {
+            background: transparent !important;
+        }
+        body.bg-transparent .noise-overlay,
+        body.bg-transparent #backdrop-canvas {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="mode-business theme-dark">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MMZMFJDN"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Canvas Animation Background -->
+    <canvas id="backdrop-canvas"></canvas>
+    
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+    
+    <!-- Name / Title Container -->
+    <div class="backdrop-text-container" id="backdrop-text-container">
+        <h1 id="backdrop-name"></h1>
+        <p id="backdrop-title"></p>
+    </div>
+    
+    <!-- Bottom Border Accent -->
+    <div class="backdrop-border"></div>
+
+    <script>
+        (function() {
+            // 1. Parse URL Configuration
+            const params = new URLSearchParams(window.location.search);
+            const theme = params.get('theme') || 'dark';
+            const mode = params.get('mode') || params.get('persona') || 'business';
+            const lang = params.get('hl') || params.get('lang') || 'fr';
+            
+            document.body.className = '';
+            document.body.classList.add('theme-' + theme);
+            document.body.classList.add('mode-' + mode);
+
+            // 3. Format Layout Class
+            const formatParam = params.get('format') || '169';
+            document.body.classList.add('format-' + formatParam);
+
+            // 3b. Transparent Background Mode
+            const bgParam = params.get('bg');
+            if (bgParam === 'transparent') {
+                document.body.classList.add('bg-transparent');
+            }
+            
+            // 3c. Size and Position configuration
+            const hasPosition = params.has('position');
+            const hasAlign = params.has('align');
+            let position, align;
+            if (formatParam === '11') {
+                position = hasPosition ? params.get('position') : 'center';
+                align = hasAlign ? params.get('align') : 'center';
+            } else if (formatParam === 'banner') {
+                position = hasPosition ? params.get('position') : 'middle';
+                align = hasAlign ? params.get('align') : 'right';
+            } else {
+                position = params.get('position') || 'bottom';
+                align = params.get('align') || 'right';
+            }
+            const sizeParam = params.get('size') || 'medium';
+            
+            const container = document.getElementById('backdrop-text-container');
+            container.className = 'backdrop-text-container';
+            container.classList.add('pos-' + position);
+            container.classList.add('align-' + align);
+            
+            const nameEl = document.getElementById('backdrop-name');
+            const titleEl = document.getElementById('backdrop-title');
+            
+            const ratioParam = params.get('ratio') || '0.45';
+            const numRatio = parseFloat(ratioParam);
+            const numSize = parseFloat(sizeParam);
+
+            if (!isNaN(numSize)) {
+                nameEl.style.fontSize = numSize + 'rem';
+                titleEl.style.fontSize = (numSize * (isNaN(numRatio) ? 0.45 : numRatio)) + 'rem';
+            } else {
+                container.classList.add('size-' + sizeParam);
+            }
+            
+            // 4. Custom colors parsing
+            const brandDefaults = {
+                business: {
+                    dark: { accent: '#38bdf8', glow: '#0f172a', bg: '#080b11' },
+                    light: { accent: '#0284c7', glow: '#f0f9ff', bg: '#f8fafc' }
+                },
+                artist: {
+                    dark: { accent: '#e2875c', glow: '#1b3a4b', bg: '#16100c' },
+                    light: { accent: '#c2410c', glow: '#fff7ed', bg: '#fcfbf7' }
+                }
+            };
+            const defaults = brandDefaults[mode]?.[theme] || brandDefaults.business.dark;
+
+            function hexToRgba(hex, alpha) {
+                const cleanHex = hex.replace('#', '');
+                let r = 0, g = 0, b = 0;
+                if (cleanHex.length === 3) {
+                    r = parseInt(cleanHex[0] + cleanHex[0], 16);
+                    g = parseInt(cleanHex[1] + cleanHex[1], 16);
+                    b = parseInt(cleanHex[2] + cleanHex[2], 16);
+                } else if (cleanHex.length === 6) {
+                    r = parseInt(cleanHex.slice(0, 2), 16);
+                    g = parseInt(cleanHex.slice(2, 4), 16);
+                    b = parseInt(cleanHex.slice(4, 6), 16);
+                }
+                return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            }
+
+            // Hue shift utility for canvas shimmer
+            function shiftHue(hex, degree) {
+                const cleanHex = hex.replace('#', '');
+                let r = parseInt(cleanHex.slice(0, 2), 16);
+                let g = parseInt(cleanHex.slice(2, 4), 16);
+                let b = parseInt(cleanHex.slice(4, 6), 16);
+                if (cleanHex.length === 3) {
+                    r = parseInt(cleanHex[0] + cleanHex[0], 16);
+                    g = parseInt(cleanHex[1] + cleanHex[1], 16);
+                    b = parseInt(cleanHex[2] + cleanHex[2], 16);
+                }
+                r /= 255; g /= 255; b /= 255;
+                const max = Math.max(r, g, b), min = Math.min(r, g, b);
+                let h, s, l = (max + min) / 2;
+                if (max === min) {
+                    h = s = 0;
+                } else {
+                    const d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    switch (max) {
+                        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                        case g: h = (b - r) / d + 2; break;
+                        case b: h = (r - g) / d + 4; break;
+                    }
+                    h /= 6;
+                }
+                h = (h * 360 + degree) % 360;
+                if (h < 0) h += 360;
+                return `hsl(${Math.round(h)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
+            }
+
+            const glow = params.get('glow');
+            const finalGlow = glow ? decodeURIComponent(glow) : defaults.glow;
+            document.body.style.setProperty('--glow-color', finalGlow);
+            document.body.style.setProperty('--glow-color-30', hexToRgba(finalGlow, 0.3));
+
+            const accent = params.get('accent');
+            const finalAccent = accent ? decodeURIComponent(accent) : defaults.accent;
+            document.body.style.setProperty('--accent-color', finalAccent);
+            document.body.style.setProperty('--accent-color-15', hexToRgba(finalAccent, 0.15));
+
+            const namecolor = params.get('namecolor') || params.get('fontcolor');
+            if (namecolor) {
+                document.body.style.setProperty('--text-color', decodeURIComponent(namecolor));
+            }
+            const titlecolor = params.get('titlecolor');
+            if (titlecolor) {
+                document.body.style.setProperty('--title-color', decodeURIComponent(titlecolor));
+            }
+            const shadowcolor = params.get('shadowcolor');
+            const finalShadow = shadowcolor ? decodeURIComponent(shadowcolor) : '#000000';
+            document.body.style.setProperty('--shadow-color', finalShadow);
+            document.body.style.setProperty('--shadow-color-95', hexToRgba(finalShadow, 0.95));
+            document.body.style.setProperty('--shadow-color-80', hexToRgba(finalShadow, 0.8));
+            document.body.style.setProperty('--shadow-color-50', hexToRgba(finalShadow, 0.5));
+            document.body.style.setProperty('--shadow-color-30', hexToRgba(finalShadow, 0.3));
+            
+            // 4.7. Text shadow/glow effect configuration
+            const textEffect = params.get('texteffect') || 'shadow-soft';
+            document.body.classList.add('text-effect-' + textEffect);
+            
+            // Animation variables
+            const animation = params.get('animation') || 'none';
+            const speed = params.get('speed') || 'medium';
+            const bgColor = defaults.bg;
+            
+            // 5. Title Display Logic
+            const titleParam = params.get('title');
+            if (titleParam === 'off') {
+                titleEl.style.display = 'none';
+            } else if (titleParam && titleParam !== 'on') {
+                titleEl.textContent = decodeURIComponent(titleParam);
+            } else {
+                if (mode === 'artist') {
+                    titleEl.textContent = lang === 'en' ? 'Artist & Explorer' : 'Artiste & Explorateur';
+                } else {
+                    titleEl.textContent = 'Presales Engineer';
+                }
+            }
+            
+            // 6. Name Display Logic
+            const nameParam = params.get('name');
+            if (nameParam === 'off') {
+                nameEl.style.display = 'none';
+            } else if (nameParam && nameParam !== 'on') {
+                nameEl.textContent = decodeURIComponent(nameParam);
+            } else {
+                if (mode === 'artist') {
+                    nameEl.textContent = 'Éole';
+                } else {
+                    nameEl.textContent = 'Julien Avarre';
+                }
+            }
+            
+            // 7. Bottom Border Animation Logic
+            const borderAnimParam = params.get('borderanim') || 'on';
+            const borderEl = document.querySelector('.backdrop-border');
+            if (borderEl) {
+                if (borderAnimParam === 'on') {
+                    borderEl.classList.add('border-animated');
+                } else {
+                    borderEl.classList.remove('border-animated');
+                }
+            }
+
+            // ==============================================================================
+            // 🎨 Canvas-based Glow Rendering Engine
+            // ==============================================================================
+            const canvas = document.getElementById('backdrop-canvas');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            function drawBackdrops(cCtx, width, height, elapsed) {
+                cCtx.clearRect(0, 0, width, height);
+
+                if (bgParam === 'transparent') return;
+
+                // 1. Draw base background color
+                cCtx.fillStyle = bgColor;
+                cCtx.fillRect(0, 0, width, height);
+
+                // 2. Compute animation coordinates
+                const speedMultipliers = { slow: 0.1, medium: 0.25, fast: 0.6 };
+                const s = speedMultipliers[speed] || 0.25;
+
+                let g1_x = 0.25 * width;
+                let g1_y = 0.25 * height;
+                let g2_x = 0.75 * width;
+                let g2_y = 0.75 * height;
+
+                let opacity1 = 0.55;
+                let opacity2 = 0.45;
+                let scale1 = 1.0;
+                let scale2 = 1.0;
+
+                let baseGlowColor = finalGlow;
+                let baseAccentColor = finalAccent;
+
+                if (animation === 'pulse') {
+                    opacity1 = 0.40 + 0.15 * Math.sin(elapsed * s * Math.PI * 2);
+                    scale1 = 1.0 + 0.08 * Math.sin(elapsed * s * Math.PI * 2);
+                    opacity2 = 0.30 + 0.15 * Math.sin(elapsed * s * 0.8 * Math.PI * 2);
+                    scale2 = 1.0 + 0.12 * Math.sin(elapsed * s * 0.8 * Math.PI * 2);
+                } else if (animation === 'wave') {
+                    g1_x += 0.06 * width * Math.sin(elapsed * s * 0.5 * Math.PI * 2);
+                    g1_y -= 0.04 * height * Math.sin(elapsed * s * 0.5 * Math.PI * 2);
+                    g2_x -= 0.06 * width * Math.sin(elapsed * s * 0.4 * Math.PI * 2);
+                    g2_y += 0.04 * height * Math.sin(elapsed * s * 0.4 * Math.PI * 2);
+                } else if (animation === 'eclipse') {
+                    const angle = elapsed * s * 0.2 * Math.PI * 2;
+                    g1_x += 0.08 * width * Math.cos(angle);
+                    g1_y += 0.06 * height * Math.sin(angle);
+                    g2_x -= 0.08 * width * Math.cos(angle);
+                    g2_y -= 0.06 * height * Math.sin(angle);
+                } else if (animation === 'monochrome') {
+                    baseGlowColor = baseAccentColor;
+                    opacity1 = 0.10 + 0.22 * Math.sin(elapsed * s * Math.PI * 2);
+                    opacity2 = 0.08 + 0.18 * Math.sin(elapsed * s * 0.8 * Math.PI * 2);
+                }
+
+                const maxDim = Math.max(width, height);
+
+                // Setup custom color/stops for Shimmer
+                let colorGlowFinal = baseGlowColor;
+                let colorAccentFinal = baseAccentColor;
+
+                if (animation === 'shimmer') {
+                    const hueShift = Math.floor(elapsed * s * 45) % 360;
+                    colorGlowFinal = shiftHue(baseGlowColor, hueShift);
+                    colorAccentFinal = shiftHue(baseAccentColor, -hueShift);
+                }
+
+                // Render Glow 1 (Radial Gradient)
+                const r1 = 0.65 * maxDim * scale1;
+                const grad1 = cCtx.createRadialGradient(g1_x, g1_y, 0, g1_x, g1_y, r1);
+                grad1.addColorStop(0, hexToRgba(colorGlowFinal, opacity1));
+                grad1.addColorStop(1, 'transparent');
+                
+                cCtx.fillStyle = grad1;
+                cCtx.fillRect(0, 0, width, height);
+
+                // Render Glow 2 (Radial Gradient)
+                const r2 = 0.65 * maxDim * scale2;
+                const grad2 = cCtx.createRadialGradient(g2_x, g2_y, 0, g2_x, g2_y, r2);
+                grad2.addColorStop(0, hexToRgba(colorAccentFinal, opacity2));
+                grad2.addColorStop(1, 'transparent');
+                
+                cCtx.fillStyle = grad2;
+                cCtx.fillRect(0, 0, width, height);
+            }
+
+            function drawTextOverlay(cCtx, w, h, elapsed) {
+                if (nameParam === 'off' && titleParam === 'off') return;
+
+                let x = 0.08 * w;
+                let y = 0.08 * h;
+                let textAlign = 'left';
+
+                if (align === 'right') {
+                    x = w - 0.08 * w;
+                    textAlign = 'right';
+                } else if (align === 'center') {
+                    x = w / 2;
+                    textAlign = 'center';
+                }
+
+                let nameSizeVal = 60;
+                let titleSizeVal = 30;
+
+                if (!isNaN(numSize)) {
+                    nameSizeVal = numSize * 25;
+                    titleSizeVal = nameSizeVal * (isNaN(numRatio) ? 0.45 : numRatio);
+                } else {
+                    const sizeMap = {
+                        small: { name: 40, title: 20 },
+                        medium: { name: 60, title: 27 },
+                        big: { name: 90, title: 40 }
+                    };
+                    const sizes = sizeMap[sizeParam] || sizeMap.medium;
+                    nameSizeVal = sizes.name;
+                    titleSizeVal = sizes.title;
+                }
+
+                const nameFontFamily = mode === 'artist' ? 'Lora, Georgia, serif' : 'Outfit, Inter, sans-serif';
+                const titleFontFamily = mode === 'artist' ? 'Lora, Georgia, serif' : 'Outfit, Inter, sans-serif';
+
+                cCtx.textAlign = textAlign;
+                cCtx.textBaseline = 'top';
+
+                const nameText = nameParam !== 'off' ? (nameParam ? decodeURIComponent(nameParam) : (mode === 'artist' ? 'Éole' : 'Julien Avarre')) : '';
+                const titleText = titleParam !== 'off' ? (titleParam ? decodeURIComponent(titleParam) : (mode === 'artist' ? (lang === 'en' ? 'Artist & Explorer' : 'Artiste & Explorateur') : 'Presales Engineer')) : '';
+
+                const lineSpacing = 12;
+                const totalTextHeight = (nameText ? nameSizeVal : 0) + (titleText ? titleSizeVal : 0) + (nameText && titleText ? lineSpacing : 0);
+
+                if (position === 'bottom') {
+                    y = h - 0.08 * h - totalTextHeight;
+                } else if (position === 'middle' || position === 'center') {
+                    y = (h - totalTextHeight) / 2;
+                }
+
+                cCtx.save();
+                cCtx.shadowOffsetX = 0;
+                cCtx.shadowOffsetY = 0;
+                cCtx.shadowBlur = 0;
+
+                const shadowColorHex = finalShadow || '#000000';
+
+                if (textEffect === 'shadow-soft') {
+                    cCtx.shadowColor = hexToRgba(shadowColorHex, 0.5);
+                    cCtx.shadowBlur = 10;
+                } else if (textEffect === 'shadow-strong') {
+                    cCtx.shadowColor = hexToRgba(shadowColorHex, 0.8);
+                    cCtx.shadowBlur = 18;
+                } else if (textEffect === 'glow-neon') {
+                    cCtx.shadowColor = hexToRgba(finalAccent, 0.8);
+                    cCtx.shadowBlur = 15;
+                } else if (textEffect === 'glow-matched') {
+                    cCtx.shadowColor = hexToRgba(finalAccent, 0.6);
+                    cCtx.shadowBlur = 18;
+                }
+
+                if (nameText) {
+                    cCtx.font = `800 ${nameSizeVal}px ${nameFontFamily}`;
+                    cCtx.fillStyle = decodeURIComponent(namecolor || '#ffffff');
+                    cCtx.fillText(nameText, x, y);
+                    y += nameSizeVal + lineSpacing;
+                }
+
+                if (titleText) {
+                    cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                    let titleColorFinal = decodeURIComponent(titlecolor || finalAccent);
+                    if (textEffect === 'glow-matched') {
+                        cCtx.shadowColor = hexToRgba(titleColorFinal, 0.6);
+                    }
+                    cCtx.fillStyle = titleColorFinal;
+                    cCtx.fillText(titleText, x, y);
+                }
+                cCtx.restore();
+
+                // Draw Bottom Border
+                if (borderAnimParam === 'on') {
+                    cCtx.save();
+                    const borderHeight = 4;
+                    const borderY = h - borderHeight;
+                    const offset = (elapsed * 0.25) % 1.0; 
+                    const grad = cCtx.createLinearGradient(-w + offset * 2 * w, borderY, w + offset * 2 * w, borderY);
+                    
+                    grad.addColorStop(0, finalAccent);
+                    grad.addColorStop(0.33, finalGlow);
+                    grad.addColorStop(0.5, 'rgba(255,255,255,0.35)');
+                    grad.addColorStop(0.66, finalGlow);
+                    grad.addColorStop(1.0, finalAccent);
+
+                    cCtx.fillStyle = grad;
+                    cCtx.fillRect(0, borderY, w, borderHeight);
+                    cCtx.restore();
+                }
+            }
+
+            // Real-time animation loop (background only)
+            const startTime = Date.now();
+            function renderLoop() {
+                const elapsed = (Date.now() - startTime) / 1000;
+                drawBackdrops(ctx, canvas.width, canvas.height, elapsed);
+                requestAnimationFrame(renderLoop);
+            }
+            requestAnimationFrame(renderLoop);
+
+            // ==============================================================================
+            // 📸 Exporters
+            // ==============================================================================
+            window.capturePng = function(format = '169') {
+                if (typeof html2canvas === 'undefined') {
+                    alert('Erreur : La librairie de capture est en cours de chargement.');
+                    return;
+                }
+                
+                const oldHtmlWidth = document.documentElement.style.width;
+                const oldHtmlHeight = document.documentElement.style.height;
+                const oldHtmlMinW = document.documentElement.style.minWidth;
+                const oldHtmlMinH = document.documentElement.style.minHeight;
+
+                const oldWidth = document.body.style.width;
+                const oldHeight = document.body.style.height;
+                const oldMinW = document.body.style.minWidth;
+                const oldMinH = document.body.style.minHeight;
+                const oldPosition = document.body.style.position;
+                
+                if (format === '11') {
+                    document.documentElement.style.width = '1080px';
+                    document.documentElement.style.height = '1080px';
+                    document.documentElement.style.minWidth = '1080px';
+                    document.documentElement.style.minHeight = '1080px';
+
+                    document.body.style.width = '1080px';
+                    document.body.style.height = '1080px';
+                    document.body.style.minWidth = '1080px';
+                    document.body.style.minHeight = '1080px';
+                    document.body.style.position = 'relative';
+                } else if (format === 'banner') {
+                    document.documentElement.style.width = '1584px';
+                    document.documentElement.style.height = '396px';
+                    document.documentElement.style.minWidth = '1584px';
+                    document.documentElement.style.minHeight = '396px';
+
+                    document.body.style.width = '1584px';
+                    document.body.style.height = '396px';
+                    document.body.style.minWidth = '1584px';
+                    document.body.style.minHeight = '396px';
+                    document.body.style.position = 'relative';
+                } else {
+                    document.documentElement.style.width = '1920px';
+                    document.documentElement.style.height = '1080px';
+                    document.documentElement.style.minWidth = '1920px';
+                    document.documentElement.style.minHeight = '1080px';
+
+                    document.body.style.width = '1920px';
+                    document.body.style.height = '1080px';
+                    document.body.style.minWidth = '1920px';
+                    document.body.style.minHeight = '1080px';
+                    document.body.style.position = 'relative';
+                }
+
+                // Temporary resize of canvas
+                const targetW = format === '11' ? 1080 : (format === 'banner' ? 1584 : 1920);
+                const targetH = format === '11' ? 1080 : (format === 'banner' ? 396 : 1080);
+                canvas.width = targetW;
+                canvas.height = targetH;
+                
+                const elapsed = (Date.now() - startTime) / 1000;
+                drawBackdrops(ctx, targetW, targetH, elapsed);
+
+                const noiseEl = document.querySelector('.noise-overlay');
+                if (noiseEl) noiseEl.style.display = 'none';
+
+                const options = {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    width: targetW,
+                    height: targetH
+                };
+
+                function restoreStyles() {
+                    if (noiseEl) noiseEl.style.display = '';
+                    document.documentElement.style.width = oldHtmlWidth;
+                    document.documentElement.style.height = oldHtmlHeight;
+                    document.documentElement.style.minWidth = oldHtmlMinW;
+                    document.documentElement.style.minHeight = oldHtmlMinH;
+
+                    document.body.style.width = oldWidth;
+                    document.body.style.height = oldHeight;
+                    document.body.style.minWidth = oldMinW;
+                    document.body.style.minHeight = oldMinH;
+                    document.body.style.position = oldPosition;
+                    resizeCanvas();
+                }
+                
+                html2canvas(document.body, options).then(canvas => {
+                    const link = document.createElement('a');
+                    const cleanName = (document.getElementById('backdrop-name').textContent || 'backdrop')
+                        .toLowerCase().replace(/[^a-z0-9]+/g, '_');
+                    link.download = `${cleanName}_backdrop_${format}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    restoreStyles();
+                }).catch(err => {
+                    console.error('Capture error:', err);
+                    alert('Erreur lors de la génération du PNG.');
+                    restoreStyles();
+                });
+            };
+
+            // Capture animated 5 seconds WebM video
+            window.captureVideo = function(format = '169', duration = 5) {
+                return new Promise((resolve, reject) => {
+                    let w = 1920, h = 1080;
+                    if (format === '11') { w = 1080; h = 1080; }
+                    else if (format === 'banner') { w = 1584; h = 396; }
+
+                    const recCanvas = document.createElement('canvas');
+                    recCanvas.width = w;
+                    recCanvas.height = h;
+                    const recCtx = recCanvas.getContext('2d');
+
+                    const stream = recCanvas.captureStream(30); // 30 FPS
+                    
+                    let mimeType = 'video/webm;codecs=vp9';
+                    if (!MediaRecorder.isTypeSupported(mimeType)) {
+                        mimeType = 'video/webm;codecs=vp8';
+                    }
+                    if (!MediaRecorder.isTypeSupported(mimeType)) {
+                        mimeType = 'video/webm';
+                    }
+
+                    const chunks = [];
+                    const recorder = new MediaRecorder(stream, { mimeType });
+                    
+                    recorder.ondataavailable = e => {
+                        if (e.data.size > 0) chunks.push(e.data);
+                    };
+                    
+                    recorder.onstop = () => {
+                        const blob = new Blob(chunks, { type: 'video/webm' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        const cleanName = (nameEl.textContent || 'backdrop')
+                            .toLowerCase().replace(/[^a-z0-9]+/g, '_');
+                        a.download = `${cleanName}_backdrop_${format}.webm`;
+                        a.href = url;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                        resolve();
+                    };
+
+                    let recStartTime = null;
+                    let animId = null;
+
+                    function drawRecordFrame(timestamp) {
+                        if (!recStartTime) recStartTime = timestamp;
+                        const elapsed = (timestamp - recStartTime) / 1000;
+
+                        if (elapsed >= duration) {
+                            recorder.stop();
+                            cancelAnimationFrame(animId);
+                            return;
+                        }
+
+                        // Draw background gradients
+                        drawBackdrops(recCtx, w, h, elapsed);
+
+                        // Draw texts and borders
+                        drawTextOverlay(recCtx, w, h, elapsed);
+
+                        animId = requestAnimationFrame(drawRecordFrame);
+                    }
+
+                    recorder.start();
+                    animId = requestAnimationFrame(drawRecordFrame);
+                });
+            };
+        })();
+    </script>
+</body>
+</html>

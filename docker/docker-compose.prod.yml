@@ -1,0 +1,29 @@
+name: eole-me-backdrop-studio
+
+services:
+  backdrop-studio-app:
+    image: ghcr.io/gnueole/backdrop-studio:latest
+    container_name: eole-me-backdrop-prod-container
+    restart: unless-stopped
+    networks:
+      - eole_shared_network
+    labels:
+      - "traefik.enable=true"
+      # Primary backdrop.eole.me router
+      - "traefik.http.routers.backdrop-studio.rule=Host(`backdrop.eole.me`)"
+      - "traefik.http.routers.backdrop-studio.entrypoints=websecure"
+      - "traefik.http.routers.backdrop-studio.tls=true"
+      - "traefik.http.routers.backdrop-studio.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.backdrop-studio.service=backdrop-studio"
+      
+      # Target Nginx port inside the container
+      - "traefik.http.services.backdrop-studio.loadbalancer.server.port=3000"
+      
+      # Vector logs collection
+      - "vector.dev/collect=true"
+      - "vector.dev/dataset=backdrop-studio"
+
+networks:
+  eole_shared_network:
+    name: ${DOCKER_NETWORK_NAME}
+    external: ${DOCKER_NETWORK_EXTERNAL}
