@@ -371,7 +371,7 @@
 
         .preset-card.active {
             border-color: var(--accent-color, #fb923c);
-            box-shadow: 0 0 15px rgba(251, 146, 60, 0.3);
+            box-shadow: 0 0 15px var(--glow-color, rgba(251, 146, 60, 0.3));
             background: rgba(255, 255, 255, 0.06);
         }
 
@@ -632,8 +632,8 @@
             color: #ffffff;
         }
         .speed-btn.active {
-            background: rgba(255, 255, 255, 0.08);
-            color: #ffffff;
+            background: var(--accent-color, #fb923c);
+            color: #000000;
             font-weight: 600;
         }
         .format-btn:hover:not(.active) {
@@ -641,8 +641,8 @@
             background: rgba(255, 255, 255, 0.02);
         }
         .format-btn.active {
-            background: rgba(255, 255, 255, 0.08);
-            color: #ffffff !important;
+            background: var(--accent-color, #fb923c);
+            color: #000000 !important;
             font-weight: 600;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
@@ -651,8 +651,8 @@
             background: rgba(255, 255, 255, 0.02);
         }
         .texteffect-btn.active {
-            background: rgba(255, 255, 255, 0.08);
-            color: #ffffff !important;
+            background: var(--accent-color, #fb923c);
+            color: #000000 !important;
             font-weight: 600;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
@@ -661,8 +661,8 @@
             background: rgba(255, 255, 255, 0.02);
         }
         .mode-btn.active, .lang-btn.active {
-            background: rgba(255, 255, 255, 0.08);
-            color: #ffffff !important;
+            background: var(--accent-color, #fb923c);
+            color: #000000 !important;
             font-weight: 600;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
@@ -785,7 +785,7 @@
             transform: scale(0.95);
         }
     </style>
-  <link rel="stylesheet" crossorigin href="/assets/style-CqlkTr8J.css">
+  <link rel="stylesheet" crossorigin href="/assets/style-BulR6fSH.css">
 </head>
 <body class="theme-dark">
     <!-- Google Tag Manager (noscript) -->
@@ -972,17 +972,17 @@
                         </div>
                         
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.25rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.6rem;">
-                            <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af;">Animer la barre du bas</span>
+                            <label for="ctrl-animate-border" style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left; cursor: pointer; user-select: none;">Animer la barre du bas</label>
                             <label class="switch-toggle" style="position: relative; display: inline-block; width: 36px; height: 20px;">
                                 <input type="checkbox" id="ctrl-animate-border" checked>
                                 <span class="switch-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.08); transition: .3s; border-radius: 20px; border: 1px solid rgba(255,255,255,0.12);"></span>
                             </label>
                         </div>
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.25rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.6rem;">
-                            <div>
+                            <label for="ctrl-transparent-bg" style="flex: 1; text-align: left; cursor: pointer; user-select: none; display: flex; flex-direction: column;">
                                 <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af;">Fond transparent</span>
                                 <span style="display: block; font-size: 0.68rem; color: #6b7280; font-family: var(--font-sans);">Pour créer un asset superposable (PNG)</span>
-                            </div>
+                            </label>
                             <label class="switch-toggle" style="position: relative; display: inline-block; width: 36px; height: 20px;">
                                 <input type="checkbox" id="ctrl-transparent-bg">
                                 <span class="switch-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.08); transition: .3s; border-radius: 20px; border: 1px solid rgba(255,255,255,0.12);"></span>
@@ -1295,7 +1295,7 @@
             if (mode === 'artist') {
                 configFooter.innerHTML = 'Développé par <a href="https://eole.me" target="_blank" style="color: #9ca3af; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color=\'var(--accent-color, #fb923c)\'" onmouseout="this.style.color=\'#9ca3af\'">Éole</a> &mdash; <a href="https://eole.me" target="_blank" style="color: #9ca3af; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color=\'var(--accent-color, #fb923c)\'" onmouseout="this.style.color=\'#9ca3af\'">eole.me</a> &mdash; Copyright 2026' + versionStr;
             } else {
-                configFooter.innerHTML = 'Développé par <a href="https://jobby.ch" target="_blank" style="color: #9ca3af; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color=\'var(--accent-color, #fb923c)\'" onmouseout="this.style.color=\'#9ca3af\'">Julien Avarre</a> &mdash; <a href="https://jobby.ch" target="_blank" style="color: #9ca3af; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color=\'var(--accent-color, #fb923c)\'" onmouseout="this.style.color=\'#9ca3af\'">jobby.ch</a> &mdash; Copyright 2026' + versionStr;
+                configFooter.innerHTML = 'Développé par <a href="https://jobby.eole.me" target="_blank" style="color: #9ca3af; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color=\'var(--accent-color, #fb923c)\'" onmouseout="this.style.color=\'#9ca3af\'">Julien Avarre</a> &mdash; <a href="https://jobby.eole.me" target="_blank" style="color: #9ca3af; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color=\'var(--accent-color, #fb923c)\'" onmouseout="this.style.color=\'#9ca3af\'">jobby.eole.me</a> &mdash; Copyright 2026' + versionStr;
             }
         }
 
