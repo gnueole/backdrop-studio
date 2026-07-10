@@ -169,13 +169,49 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        /* Transparent Background Mode */
-        body.bg-transparent {
-            background: transparent !important;
+        /* Text Transition Animations */
+        .title-blur-transition {
+            transition: filter 0.4s ease, opacity 0.4s ease;
         }
-        body.bg-transparent .noise-overlay,
-        body.bg-transparent #backdrop-canvas {
-            display: none !important;
+        .title-blur-transition.blur-out {
+            filter: blur(8px);
+            opacity: 0;
+        }
+
+        /* 3D Flip & Airport animations use span characters */
+        .char-airport, .char-flip {
+            display: inline-block;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+        }
+        .char-airport-out {
+            animation: airportOut 0.4s ease-in both;
+        }
+        .char-airport-in {
+            animation: airportIn 0.4s ease-out both;
+        }
+        @keyframes airportOut {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(100%); opacity: 0; }
+        }
+        @keyframes airportIn {
+            0% { transform: translateY(-100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .char-flip-out {
+            animation: flipOut 0.4s ease-in both;
+        }
+        .char-flip-in {
+            animation: flipIn 0.4s ease-out both;
+        }
+        @keyframes flipOut {
+            0% { transform: rotateY(0deg); opacity: 1; }
+            100% { transform: rotateY(90deg); opacity: 0; }
+        }
+        @keyframes flipIn {
+            0% { transform: rotateY(-90deg); opacity: 0; }
+            100% { transform: rotateY(0deg); opacity: 1; }
         }
     </style>
   <link rel="stylesheet" crossorigin href="/assets/style-BulR6fSH.css">
@@ -194,8 +230,15 @@
     
     <!-- Name / Title Container -->
     <div class="backdrop-text-container" id="backdrop-text-container">
+        <div id="backdrop-logo-container" style="display: none; margin-bottom: 0.15rem; line-height: 0;">
+            <img id="backdrop-logo" src="" alt="Logo" style="max-height: 100%; width: auto; object-fit: contain;">
+        </div>
         <h1 id="backdrop-name"></h1>
-        <p id="backdrop-title"></p>
+        <div class="backdrop-subtitle-wrapper" id="backdrop-subtitle-wrapper" style="display: flex; align-items: center; gap: 0.4em; flex-wrap: wrap;">
+            <p id="backdrop-title" style="margin: 0;"></p>
+            <span id="backdrop-company-sep" style="opacity: 0.4; display: none;">|</span>
+            <span id="backdrop-company" style="font-family: var(--font-sans); font-weight: 400; opacity: 0.6; display: none; font-size: 0.85em;"></span>
+        </div>
     </div>
     
     <!-- Bottom Border Accent -->
@@ -246,6 +289,31 @@
             
             const nameEl = document.getElementById('backdrop-name');
             const titleEl = document.getElementById('backdrop-title');
+            const companyEl = document.getElementById('backdrop-company');
+            const companySepEl = document.getElementById('backdrop-company-sep');
+            const subtitleWrapper = document.getElementById('backdrop-subtitle-wrapper');
+            const logoEl = document.getElementById('backdrop-logo');
+            const logoContainer = document.getElementById('backdrop-logo-container');
+            
+            // Align logo and subtitle wrapper based on align parameter
+            if (subtitleWrapper) {
+                if (align === 'right') {
+                    subtitleWrapper.style.justifyContent = 'flex-end';
+                } else if (align === 'center') {
+                    subtitleWrapper.style.justifyContent = 'center';
+                } else {
+                    subtitleWrapper.style.justifyContent = 'flex-start';
+                }
+            }
+            if (logoContainer) {
+                if (align === 'right') {
+                    logoContainer.style.alignSelf = 'flex-end';
+                } else if (align === 'center') {
+                    logoContainer.style.alignSelf = 'center';
+                } else {
+                    logoContainer.style.alignSelf = 'flex-start';
+                }
+            }
             
             const ratioParam = params.get('ratio') || '0.45';
             const numRatio = parseFloat(ratioParam);
@@ -253,7 +321,9 @@
 
             if (!isNaN(numSize)) {
                 nameEl.style.fontSize = numSize + 'rem';
-                titleEl.style.fontSize = (numSize * (isNaN(numRatio) ? 0.45 : numRatio)) + 'rem';
+                const computedTitleSize = numSize * (isNaN(numRatio) ? 0.45 : numRatio);
+                titleEl.style.fontSize = computedTitleSize + 'rem';
+                if (companyEl) companyEl.style.fontSize = (computedTitleSize * 0.85) + 'rem';
             } else {
                 container.classList.add('size-' + sizeParam);
             }
@@ -353,18 +423,181 @@
             const bgColor = defaults.bg;
             
             // 5. Title Display Logic
+            // 5. Title Display Logic
             const titleParam = params.get('title');
+            const title2Param = params.get('title2');
+            let initialTitle = '';
             if (titleParam === 'off') {
                 titleEl.style.display = 'none';
             } else if (titleParam && titleParam !== 'on') {
-                titleEl.textContent = decodeURIComponent(titleParam);
+                initialTitle = decodeURIComponent(titleParam);
+                titleEl.textContent = initialTitle;
             } else {
                 if (mode === 'artist') {
-                    titleEl.textContent = lang === 'en' ? 'Artist & Explorer' : 'Artiste & Explorateur';
+                    initialTitle = lang === 'en' ? 'Artist & Explorer' : 'Artiste & Explorateur';
                 } else {
-                    titleEl.textContent = 'Presales Engineer';
+                    initialTitle = 'Presales Engineer';
                 }
+                titleEl.textContent = initialTitle;
             }
+            
+            // 5b. Company Display Logic
+            const companyParam = params.get('company');
+            const company2Param = params.get('company2');
+            let initialCompany = '';
+            if (companyParam && companyParam !== 'off') {
+                initialCompany = decodeURIComponent(companyParam);
+                companyEl.textContent = initialCompany;
+                companyEl.style.display = 'inline';
+                if (companySepEl && titleParam !== 'off') {
+                    companySepEl.style.display = 'inline';
+                }
+            } else {
+                companyEl.style.display = 'none';
+                if (companySepEl) companySepEl.style.display = 'none';
+            }
+            
+            // 5c. Logo Display Logic
+            const logoParam = params.get('logo');
+            const logoSize = params.get('logosize') || '2.4';
+            const logoOpacity = params.get('logoopacity') || '0.85';
+            if (logoParam && logoParam !== 'off') {
+                logoEl.src = decodeURIComponent(logoParam);
+                logoEl.style.height = logoSize + 'rem';
+                logoEl.style.opacity = logoOpacity;
+                logoContainer.style.display = 'block';
+            } else {
+                logoContainer.style.display = 'none';
+            }
+
+            // Expose values for live iframe modification
+            window.titles = [initialTitle, title2Param ? decodeURIComponent(title2Param) : ''];
+            window.companies = [initialCompany, company2Param ? decodeURIComponent(company2Param) : ''];
+            
+            // Cycle/Loop logic
+            let currentTextIndex = 0;
+            function wrapTextInSpans(el, text) {
+                el.innerHTML = '';
+                const chars = [...text];
+                chars.forEach((char) => {
+                    const span = document.createElement('span');
+                    span.textContent = char === ' ' ? '\u00A0' : char;
+                    span.style.display = 'inline-block';
+                    span.style.whiteSpace = 'pre';
+                    el.appendChild(span);
+                });
+            }
+            
+            function scrambleText(el, targetText) {
+                const chars = '!@#$%^&*()_+{}[]:;<>?,./~';
+                const originalText = el.textContent || '';
+                const length = Math.max(originalText.length, targetText.length);
+                let frames = 0;
+                const maxFrames = 15;
+                
+                const interval = setInterval(() => {
+                    let currentText = '';
+                    for (let i = 0; i < length; i++) {
+                        if (i < frames) {
+                            currentText += targetText[i] || '';
+                        } else {
+                            currentText += chars[Math.floor(Math.random() * chars.length)];
+                        }
+                    }
+                    el.textContent = currentText;
+                    frames++;
+                    if (frames > length || frames > maxFrames) {
+                        el.textContent = targetText;
+                        clearInterval(interval);
+                    }
+                }, 40);
+            }
+            
+            function airportTransition(el, targetText, outClass, inClass) {
+                const originalText = el.textContent || '';
+                wrapTextInSpans(el, originalText);
+                const spans = el.querySelectorAll('span');
+                
+                spans.forEach((span, idx) => {
+                    span.style.animationDelay = (idx * 0.02) + 's';
+                    span.classList.add(outClass);
+                });
+                
+                setTimeout(() => {
+                    wrapTextInSpans(el, targetText);
+                    const newSpans = el.querySelectorAll('span');
+                    newSpans.forEach((span, idx) => {
+                        span.style.animationDelay = (idx * 0.02) + 's';
+                        span.classList.add(inClass);
+                    });
+                }, 400 + (spans.length * 20));
+            }
+            
+            function cycleTitle() {
+                const hasTitle2 = window.titles[1] && window.titles[1].trim() !== '';
+                const hasCompany2 = window.companies[1] && window.companies[1].trim() !== '';
+                if (!hasTitle2 && !hasCompany2) return;
+                
+                const nextIndex = (currentTextIndex + 1) % 2;
+                const nextTitle = window.titles[nextIndex] || '';
+                const nextCompany = window.companies[nextIndex] || '';
+                
+                const transAnim = params.get('transanim') || 'none';
+                
+                if (transAnim === 'blur') {
+                    titleEl.classList.add('title-blur-transition', 'blur-out');
+                    if (companyEl) companyEl.classList.add('title-blur-transition', 'blur-out');
+                    
+                    setTimeout(() => {
+                        titleEl.textContent = nextTitle;
+                        if (companyEl) {
+                            companyEl.textContent = nextCompany;
+                            companyEl.style.display = nextCompany.trim() ? 'inline' : 'none';
+                            if (companySepEl) companySepEl.style.display = (nextTitle.trim() && nextCompany.trim()) ? 'inline' : 'none';
+                        }
+                        titleEl.classList.remove('blur-out');
+                        if (companyEl) companyEl.classList.remove('blur-out');
+                    }, 400);
+                } else if (transAnim === 'scramble') {
+                    scrambleText(titleEl, nextTitle);
+                    if (companyEl) {
+                        scrambleText(companyEl, nextCompany);
+                        setTimeout(() => {
+                            companyEl.style.display = nextCompany.trim() ? 'inline' : 'none';
+                            if (companySepEl) companySepEl.style.display = (nextTitle.trim() && nextCompany.trim()) ? 'inline' : 'none';
+                        }, 800);
+                    }
+                } else if (transAnim === 'airport') {
+                    airportTransition(titleEl, nextTitle, 'char-airport-out', 'char-airport-in');
+                    if (companyEl) {
+                        airportTransition(companyEl, nextCompany, 'char-airport-out', 'char-airport-in');
+                        setTimeout(() => {
+                            companyEl.style.display = nextCompany.trim() ? 'inline' : 'none';
+                            if (companySepEl) companySepEl.style.display = (nextTitle.trim() && nextCompany.trim()) ? 'inline' : 'none';
+                        }, 800);
+                    }
+                } else if (transAnim === 'flip') {
+                    airportTransition(titleEl, nextTitle, 'char-flip-out', 'char-flip-in');
+                    if (companyEl) {
+                        airportTransition(companyEl, nextCompany, 'char-flip-out', 'char-flip-in');
+                        setTimeout(() => {
+                            companyEl.style.display = nextCompany.trim() ? 'inline' : 'none';
+                            if (companySepEl) companySepEl.style.display = (nextTitle.trim() && nextCompany.trim()) ? 'inline' : 'none';
+                        }, 800);
+                    }
+                } else {
+                    titleEl.textContent = nextTitle;
+                    if (companyEl) {
+                        companyEl.textContent = nextCompany;
+                        companyEl.style.display = nextCompany.trim() ? 'inline' : 'none';
+                        if (companySepEl) companySepEl.style.display = (nextTitle.trim() && nextCompany.trim()) ? 'inline' : 'none';
+                    }
+                }
+                currentTextIndex = nextIndex;
+            }
+            
+            // Cycle every 5 seconds
+            setInterval(cycleTitle, 5000);
             
             // 6. Name Display Logic
             const nameParam = params.get('name');
@@ -522,10 +755,59 @@
                 cCtx.textBaseline = 'top';
 
                 const nameText = nameParam !== 'off' ? (nameParam ? decodeURIComponent(nameParam) : (mode === 'artist' ? 'Éole' : 'Julien Avarre')) : '';
-                const titleText = titleParam !== 'off' ? (titleParam ? decodeURIComponent(titleParam) : (mode === 'artist' ? (lang === 'en' ? 'Artist & Explorer' : 'Artiste & Explorateur') : 'Presales Engineer')) : '';
+                
+                // Get animated title and company texts
+                const cycleTime = elapsed % 5;
+                let blurPx = 0;
+                let opacityVal = 1;
+                let activeTitle = '';
+                let activeCompany = '';
+                
+                const hasTitle2 = window.titles[1] && window.titles[1].trim() !== '';
+                const hasCompany2 = window.companies[1] && window.companies[1].trim() !== '';
+                
+                if (hasTitle2 || hasCompany2) {
+                    const nextIndex = Math.floor(elapsed / 5) % 2;
+                    activeTitle = window.titles[nextIndex] || '';
+                    activeCompany = window.companies[nextIndex] || '';
+                    
+                    const transAnim = params.get('transanim') || 'none';
+                    if (transAnim === 'blur') {
+                        if (cycleTime < 0.4) {
+                            const progress = cycleTime / 0.4;
+                            blurPx = (1 - progress) * 8;
+                            opacityVal = progress;
+                        } else if (cycleTime > 4.6) {
+                            const progress = (5.0 - cycleTime) / 0.4;
+                            blurPx = (1 - progress) * 8;
+                            opacityVal = progress;
+                        }
+                    } else if (transAnim !== 'none') {
+                        // For scramble/airport/flip in canvas, do a clean quick cross-fade transition
+                        if (cycleTime < 0.3) {
+                            opacityVal = cycleTime / 0.3;
+                        } else if (cycleTime > 4.7) {
+                            opacityVal = (5.0 - cycleTime) / 0.3;
+                        }
+                    }
+                } else {
+                    activeTitle = window.titles[0] || '';
+                    activeCompany = window.companies[0] || '';
+                }
 
                 const lineSpacing = 12;
-                const totalTextHeight = (nameText ? nameSizeVal : 0) + (titleText ? titleSizeVal : 0) + (nameText && titleText ? lineSpacing : 0);
+                
+                // Logo properties
+                const hasLogo = logoParam && logoParam !== 'off';
+                let logoHeight = 0;
+                let logoWidth = 0;
+                if (hasLogo && logoEl.complete && logoEl.naturalHeight > 0) {
+                    const logoSizeVal = parseFloat(logoSize) * 20;
+                    logoHeight = logoSizeVal;
+                    logoWidth = logoEl.naturalWidth * (logoSizeVal / logoEl.naturalHeight);
+                }
+                
+                const totalTextHeight = (logoHeight ? logoHeight + lineSpacing : 0) + (nameText ? nameSizeVal : 0) + (activeTitle ? titleSizeVal : 0) + (nameText && activeTitle ? lineSpacing : 0);
 
                 if (position === 'bottom') {
                     y = h - 0.08 * h - totalTextHeight;
@@ -539,6 +821,21 @@
                 cCtx.shadowBlur = 0;
 
                 const shadowColorHex = finalShadow || '#000000';
+
+                // Draw Logo
+                if (hasLogo && logoHeight > 0) {
+                    cCtx.save();
+                    cCtx.globalAlpha = parseFloat(logoOpacity);
+                    let logoX = x;
+                    if (textAlign === 'right') {
+                        logoX = x - logoWidth;
+                    } else if (textAlign === 'center') {
+                        logoX = x - logoWidth / 2;
+                    }
+                    cCtx.drawImage(logoEl, logoX, y, logoWidth, logoHeight);
+                    cCtx.restore();
+                    y += logoHeight + lineSpacing;
+                }
 
                 if (textEffect === 'shadow-soft') {
                     cCtx.shadowColor = hexToRgba(shadowColorHex, 0.5);
@@ -561,14 +858,71 @@
                     y += nameSizeVal + lineSpacing;
                 }
 
-                if (titleText) {
-                    cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                if (activeTitle) {
+                    cCtx.save();
+                    cCtx.globalAlpha = opacityVal;
+                    if (blurPx > 0) {
+                        cCtx.filter = `blur(${blurPx}px)`;
+                    }
+                    
                     let titleColorFinal = decodeURIComponent(titlecolor || finalAccent);
                     if (textEffect === 'glow-matched') {
                         cCtx.shadowColor = hexToRgba(titleColorFinal, 0.6);
                     }
-                    cCtx.fillStyle = titleColorFinal;
-                    cCtx.fillText(titleText, x, y);
+                    
+                    if (activeCompany) {
+                        const sepText = " | ";
+                        const companySizeVal = titleSizeVal * 0.85;
+                        
+                        cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                        const titleWidth = cCtx.measureText(activeTitle).width;
+                        
+                        cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                        const sepWidth = cCtx.measureText(sepText).width;
+                        
+                        cCtx.font = `400 ${companySizeVal}px ${nameFontFamily}`;
+                        const companyWidth = cCtx.measureText(activeCompany).width;
+                        
+                        const totalWidth = titleWidth + sepWidth + companyWidth;
+                        
+                        let titleX = x;
+                        let sepX = x;
+                        let companyX = x;
+                        
+                        if (textAlign === 'right') {
+                            titleX = x - totalWidth;
+                            sepX = titleX + titleWidth;
+                            companyX = sepX + sepWidth;
+                        } else if (textAlign === 'center') {
+                            titleX = x - totalWidth / 2;
+                            sepX = titleX + titleWidth;
+                            companyX = sepX + sepWidth;
+                        } else {
+                            titleX = x;
+                            sepX = x + titleWidth;
+                            companyX = sepX + sepWidth;
+                        }
+                        
+                        // Draw Title
+                        cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                        cCtx.fillStyle = titleColorFinal;
+                        cCtx.fillText(activeTitle, titleX, y);
+                        
+                        // Draw Separator
+                        cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                        cCtx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                        cCtx.fillText(sepText, sepX, y);
+                        
+                        // Draw Company
+                        cCtx.font = `400 ${companySizeVal}px ${nameFontFamily}`;
+                        cCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                        cCtx.fillText(activeCompany, companyX, y + (titleSizeVal - companySizeVal));
+                    } else {
+                        cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                        cCtx.fillStyle = titleColorFinal;
+                        cCtx.fillText(activeTitle, x, y);
+                    }
+                    cCtx.restore();
                 }
                 cCtx.restore();
 
@@ -593,10 +947,23 @@
             }
 
             // Real-time animation loop (background only)
+            const boomerangParam = params.get('boomerang') || 'off';
+            const durationParam = parseFloat(params.get('duration')) || 5;
+            
             const startTime = Date.now();
             function renderLoop() {
                 const elapsed = (Date.now() - startTime) / 1000;
-                drawBackdrops(ctx, canvas.width, canvas.height, elapsed);
+                let animTime = elapsed;
+                if (boomerangParam === 'on') {
+                    const cycle = elapsed % durationParam;
+                    const half = durationParam / 2;
+                    if (cycle < half) {
+                        animTime = cycle;
+                    } else {
+                        animTime = durationParam - cycle;
+                    }
+                }
+                drawBackdrops(ctx, canvas.width, canvas.height, animTime);
                 requestAnimationFrame(renderLoop);
             }
             requestAnimationFrame(renderLoop);
@@ -604,7 +971,7 @@
             // ==============================================================================
             // 📸 Exporters
             // ==============================================================================
-            window.capturePng = function(format = '169') {
+            window.capturePng = function(format = '169', resOption = 'hd') {
                 if (typeof html2canvas === 'undefined') {
                     alert('Erreur : La librairie de capture est en cours de chargement.');
                     return;
@@ -668,8 +1035,15 @@
                 const noiseEl = document.querySelector('.noise-overlay');
                 if (noiseEl) noiseEl.style.display = 'none';
 
+                let scaleVal = 1;
+                if (resOption === '4k') {
+                    scaleVal = 2;
+                } else if (resOption === 'dpr') {
+                    scaleVal = window.devicePixelRatio || 1;
+                }
+
                 const options = {
-                    scale: 2,
+                    scale: scaleVal,
                     useCORS: true,
                     allowTaint: true,
                     width: targetW,
@@ -761,8 +1135,19 @@
                             return;
                         }
 
+                        // Handle boomerang loop logic for video animation time
+                        let animTime = elapsed;
+                        if (boomerangParam === 'on') {
+                            const halfDuration = duration / 2;
+                            if (elapsed < halfDuration) {
+                                animTime = elapsed;
+                            } else {
+                                animTime = duration - elapsed;
+                            }
+                        }
+
                         // Draw background gradients
-                        drawBackdrops(recCtx, w, h, elapsed);
+                        drawBackdrops(recCtx, w, h, animTime);
 
                         // Draw texts and borders
                         drawTextOverlay(recCtx, w, h, elapsed);

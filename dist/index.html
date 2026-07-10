@@ -796,13 +796,6 @@
     <div class="config-container">
         <div class="config-header" style="display: flex; align-items: center; text-align: left; margin-bottom: 1.25rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 0.85rem; justify-content: space-between; width: 100%;">
             <div style="display: flex; align-items: center; justify-content: flex-start;">
-                <a href="/utils/" class="back-link" style="font-size: 0.82rem; padding: 0.4rem 0.85rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; flex-shrink: 0; display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--accent-color, #fb923c); font-family: var(--font-title-sans, 'Outfit', sans-serif); font-weight: 600; transition: all 0.2s ease;">
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                    <span>Retour aux Outils</span>
-                </a>
-                
-                <div style="width: 1px; height: 24px; background: rgba(255, 255, 255, 0.12); margin: 0 1.25rem; flex-shrink: 0;"></div>
-                
                 <div>
                     <h1 style="margin: 0; font-size: 1.6rem; font-family: var(--font-title-sans, 'Outfit', sans-serif); font-weight: 700; color: #ffffff; letter-spacing: -0.015em;">
                         Configurez votre <span style="background: linear-gradient(135deg, #ffffff 30%, var(--accent-color, #fb923c) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Backdrop</span>
@@ -857,16 +850,36 @@
                     </div>
                 </div>
 
-                <!-- Custom Name & Title (Grouped closer together) -->
-                <div class="row-group" style="gap: 1rem;">
+                <!-- Custom Name, Title, Company & Transition -->
+                <div class="row-group" style="gap: 1rem; margin-bottom: 0.75rem;">
                     <div class="form-group">
                         <label for="name-input">Nom affiché</label>
                         <input type="text" id="name-input" class="form-control" placeholder="Laisser vide pour défaut">
                     </div>
                     <div class="form-group">
-                        <label for="title-input">Titre affiché</label>
+                        <label for="company-input">Entreprise / Organisation</label>
+                        <input type="text" id="company-input" class="form-control" placeholder="Laisser vide / 'off'">
+                    </div>
+                </div>
+                <div class="row-group" style="gap: 1rem; margin-bottom: 0.75rem;">
+                    <div class="form-group">
+                        <label for="title-input">Titre Principal</label>
                         <input type="text" id="title-input" class="form-control" placeholder="Laisser vide / 'off' pour masquer">
                     </div>
+                    <div class="form-group">
+                        <label for="title-secondary-input">Titre Secondaire (Transition)</label>
+                        <input type="text" id="title-secondary-input" class="form-control" placeholder="Laisser vide si aucun cycle">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 0.85rem;">
+                    <label for="title-transition">Transition du Titre</label>
+                    <select id="title-transition" class="form-control" style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #ffffff; padding: 0.45rem; font-size: 0.78rem; outline: none; width: 100%;">
+                        <option value="none">Aucune (Fixe)</option>
+                        <option value="blur">Flou (Blur In/Out)</option>
+                        <option value="scramble">Lettres mélangées (Scramble)</option>
+                        <option value="airport">Panneau d'aéroport (Split-flap)</option>
+                        <option value="flip">Flip 3D (Rotation Y)</option>
+                    </select>
                 </div>
 
                 <!-- Layout Config (Visual Selector) -->
@@ -919,6 +932,37 @@
                     </div>
                     <input type="hidden" id="text-effect" value="shadow-soft">
                 </div>
+
+                <!-- Logo Integration -->
+                <fieldset style="border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 0.85rem 0.75rem 0.75rem 0.75rem; margin: 0 0 0.85rem 0; background: rgba(255, 255, 255, 0.01);">
+                    <legend style="font-family: var(--font-title-sans, 'Outfit', sans-serif); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--accent-color, #fb923c); padding: 0 0.5rem; letter-spacing: 0.05em;">Intégration Logo</legend>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem; text-align: left;">
+                        <div class="form-group">
+                            <label for="logo-file" style="display: block; margin-bottom: 0.25rem;">Uploader un Logo (Local)</label>
+                            <input type="file" id="logo-file" accept="image/*" class="form-control" style="font-size: 0.75rem; padding: 0.25rem; background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #ffffff; width: 100%;">
+                        </div>
+                        <div class="form-group">
+                            <label for="logo-url">Ou URL de logo (Image en ligne)</label>
+                            <input type="text" id="logo-url" class="form-control" placeholder="https://example.com/logo.png">
+                        </div>
+                        <div class="row-group" style="gap: 1rem; display: flex;">
+                            <div class="form-group" style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                    <label for="logo-size" style="margin-bottom: 0;">Taille Logo</label>
+                                    <span id="logo-size-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">2.4rem</span>
+                                </div>
+                                <input type="range" id="logo-size" min="1.0" max="8.0" step="0.1" value="2.4" style="width: 100%; accent-color: var(--accent-color, #fb923c); height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.1); cursor: pointer; outline: none; margin: 0; padding: 0; border: none;">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                    <label for="logo-opacity" style="margin-bottom: 0;">Opacité</label>
+                                    <span id="logo-opacity-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">85%</span>
+                                </div>
+                                <input type="range" id="logo-opacity" min="0.1" max="1.0" step="0.05" value="0.85" style="width: 100%; accent-color: var(--accent-color, #fb923c); height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.1); cursor: pointer; outline: none; margin: 0; padding: 0; border: none;">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
 
                 <!-- Animation Config (Tactile button list in Fieldset) -->
                 <fieldset style="border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 0.85rem 0.75rem 0.75rem 0.75rem; margin: 0 0 0.85rem 0; background: rgba(255, 255, 255, 0.01);">
@@ -1072,6 +1116,30 @@
                         <input type="hidden" id="export-format" value="169">
                     </div>
 
+                    <!-- Export settings (Resolution, duration, boomerang) -->
+                    <div style="display: flex; gap: 1rem; margin-bottom: 0.85rem; text-align: left;">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="export-res">Résolution Image</label>
+                            <select id="export-res" class="form-control" style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #ffffff; padding: 0.45rem; font-size: 0.78rem; outline: none; width: 100%;">
+                                <option value="hd">HD (1920x1080)</option>
+                                <option value="4k">4K (3840x2160)</option>
+                                <option value="dpr">Ratio Écran (DPR)</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="video-duration">Durée Vidéo</label>
+                            <select id="video-duration" class="form-control" style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #ffffff; padding: 0.45rem; font-size: 0.78rem; outline: none; width: 100%;">
+                                <option value="3">3 secondes</option>
+                                <option value="5" selected>5 secondes</option>
+                                <option value="10">10 secondes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem;">
+                        <label for="ctrl-boomerang" style="font-size: 0.78rem; font-family: var(--font-sans); color: #9ca3af; cursor: pointer; user-select: none;">Boucle vidéo Boomerang (aller-retour)</label>
+                        <input type="checkbox" id="ctrl-boomerang" checked style="accent-color: var(--accent-color, #fb923c); cursor: pointer; width: 16px; height: 16px;">
+                    </div>
+
                     <!-- Action Buttons -->
                     <div style="display: flex; gap: 0.75rem; align-items: center;">
                         <button id="btn-open" class="btn btn-secondary" style="flex: 1; height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 600;">
@@ -1185,6 +1253,10 @@
                     </ol>
                 </div>
             </div>
+            <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #9ca3af;"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                <a href="https://github.com/gnueole/backdrop-studio" target="_blank" style="font-family: var(--font-title-sans, 'Outfit', sans-serif); font-size: 0.82rem; font-weight: 600; color: var(--accent-color, #fb923c); text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">Voir le code source sur GitHub</a>
+            </div>
         </div>
     </div>
 
@@ -1219,7 +1291,20 @@
         const ctrlMode = document.getElementById('mode');
         const ctrlLang = document.getElementById('lang');
         const ctrlName = document.getElementById('name-input');
+        const ctrlCompany = document.getElementById('company-input');
         const ctrlTitle = document.getElementById('title-input');
+        const ctrlTitleSecondary = document.getElementById('title-secondary-input');
+        const ctrlTitleTransition = document.getElementById('title-transition');
+        
+        const ctrlLogoFile = document.getElementById('logo-file');
+        const ctrlLogoUrl = document.getElementById('logo-url');
+        const ctrlLogoSize = document.getElementById('logo-size');
+        const ctrlLogoOpacity = document.getElementById('logo-opacity');
+        
+        const ctrlExportRes = document.getElementById('export-res');
+        const ctrlVideoDuration = document.getElementById('video-duration');
+        const ctrlBoomerang = document.getElementById('ctrl-boomerang');
+        
         const ctrlPosition = document.getElementById('position');
         const ctrlAlign = document.getElementById('align');
         const ctrlSize = document.getElementById('size');
@@ -1240,6 +1325,8 @@
         const txtShadowHex = document.getElementById('shadow-hex');
         const ctrlAnimateBorder = document.getElementById('ctrl-animate-border');
         const ctrlTransparentBg = document.getElementById('ctrl-transparent-bg');
+
+        let uploadedLogoDataUrl = '';
 
         // Dynamic base URL resolver
         const baseBackdropUrl = window.location.origin + window.location.pathname.replace('config.html', '');
@@ -1299,17 +1386,8 @@
             }
         }
 
-        function updateUrlTextOnly() {
-            try {
-                document.body.className = '';
-                document.body.classList.add('theme-dark');
-                document.body.classList.add('mode-' + hostMode);
-                document.body.style.setProperty('--accent-color', ctrlColorAccent.value);
-                document.body.style.setProperty('--glow-color', hexToRgba(ctrlColorGlow.value, 0.3));
-            } catch(e) {}
-
+        function getQueryParams() {
             const queryParams = new URLSearchParams();
-
             if (ctrlTheme.value !== 'dark') queryParams.set('theme', ctrlTheme.value);
             if (ctrlMode.value !== hostMode) queryParams.set('mode', ctrlMode.value);
             if (ctrlLang.value !== 'fr') queryParams.set('hl', ctrlLang.value);
@@ -1319,7 +1397,72 @@
                 queryParams.set('format', exportFormatVal);
             }
 
+            if (!showText) {
+                queryParams.set('name', 'off');
+                queryParams.set('title', 'off');
+                queryParams.set('company', 'off');
+            } else {
+                if (ctrlName.value.trim() !== '') queryParams.set('name', ctrlName.value.trim());
+                if (ctrlTitle.value.trim() !== '') queryParams.set('title', ctrlTitle.value.trim());
+                if (ctrlTitleSecondary.value.trim() !== '') queryParams.set('title2', ctrlTitleSecondary.value.trim());
+                if (ctrlCompany.value.trim() !== '') queryParams.set('company', ctrlCompany.value.trim());
+            }
+            
+            if (ctrlTitleTransition.value !== 'none') queryParams.set('transanim', ctrlTitleTransition.value);
+            
+            const finalLogo = uploadedLogoDataUrl || ctrlLogoUrl.value.trim();
+            if (finalLogo) {
+                queryParams.set('logo', finalLogo);
+                if (ctrlLogoSize.value !== '2.4') queryParams.set('logosize', ctrlLogoSize.value);
+                if (ctrlLogoOpacity.value !== '0.85') queryParams.set('logoopacity', ctrlLogoOpacity.value);
+            }
+            
+            if (ctrlBoomerang.checked) queryParams.set('boomerang', 'on');
+            if (ctrlVideoDuration.value !== '5') queryParams.set('duration', ctrlVideoDuration.value);
+            
+            if (ctrlPosition.value !== 'bottom') queryParams.set('position', ctrlPosition.value);
+            if (ctrlAlign.value !== 'right') queryParams.set('align', ctrlAlign.value);
+            if (ctrlSize.value !== '2.2') queryParams.set('size', ctrlSize.value);
+            if (ctrlRatio.value !== '0.45') queryParams.set('ratio', ctrlRatio.value);
+            if (ctrlAnimation.value !== 'none') queryParams.set('animation', ctrlAnimation.value);
+            if (ctrlSpeed.value !== 'medium') queryParams.set('speed', ctrlSpeed.value);
+            if (ctrlTextEffect.value !== 'shadow-soft') queryParams.set('texteffect', ctrlTextEffect.value);
+            if (ctrlAnimateBorder.checked) queryParams.set('borderanim', 'on');
+            if (ctrlTransparentBg.checked) queryParams.set('bg', 'transparent');
+
+            const defaults = brandDefaults[ctrlMode.value][ctrlTheme.value];
+            if (ctrlColorAccent.value.toLowerCase() !== defaults.accent.toLowerCase()) {
+                queryParams.set('accent', ctrlColorAccent.value);
+            }
+            if (ctrlColorGlow.value.toLowerCase() !== defaults.glow.toLowerCase()) {
+                queryParams.set('glow', ctrlColorGlow.value);
+            }
+            if (ctrlColorName.value.toLowerCase() !== defaults.name.toLowerCase()) {
+                queryParams.set('namecolor', ctrlColorName.value);
+            }
+            if (ctrlColorTitle.value.toLowerCase() !== defaults.title.toLowerCase()) {
+                queryParams.set('titlecolor', ctrlColorTitle.value);
+            }
+            if (ctrlColorShadow.value.toLowerCase() !== defaults.shadow.toLowerCase()) {
+                queryParams.set('shadowcolor', ctrlColorShadow.value);
+            }
+            
+            return queryParams;
+        }
+
+        function updateUrlTextOnly() {
+            try {
+                document.body.className = '';
+                document.body.classList.add('theme-dark');
+                document.body.classList.add('mode-' + hostMode);
+                document.body.style.setProperty('--accent-color', ctrlColorAccent.value);
+                document.body.style.setProperty('--glow-color', hexToRgba(ctrlColorGlow.value, 0.3));
+            } catch(e) {}
+
+            const queryParams = getQueryParams();
+
             // Sync Aspect Ratio container class & label text visually
+            const exportFormatVal = document.getElementById('export-format').value;
             const previewContainer = document.querySelector('.iframe-preview-container');
             const previewLabel = document.querySelector('.preview-section > label');
             if (previewContainer) {
@@ -1341,23 +1484,6 @@
                 }
             } catch (e) {}
 
-            if (!showText) {
-                queryParams.set('name', 'off');
-                queryParams.set('title', 'off');
-            } else {
-                if (ctrlName.value.trim() !== '') queryParams.set('name', ctrlName.value.trim());
-                if (ctrlTitle.value.trim() !== '') queryParams.set('title', ctrlTitle.value.trim());
-            }
-            if (ctrlPosition.value !== 'bottom') queryParams.set('position', ctrlPosition.value);
-            if (ctrlAlign.value !== 'right') queryParams.set('align', ctrlAlign.value);
-            if (ctrlSize.value !== '2.2') queryParams.set('size', ctrlSize.value);
-            if (ctrlRatio.value !== '0.45') queryParams.set('ratio', ctrlRatio.value);
-            if (ctrlAnimation.value !== 'none') queryParams.set('animation', ctrlAnimation.value);
-            if (ctrlSpeed.value !== 'medium') queryParams.set('speed', ctrlSpeed.value);
-            if (ctrlTextEffect.value !== 'shadow-soft') queryParams.set('texteffect', ctrlTextEffect.value);
-            if (ctrlAnimateBorder.checked) queryParams.set('borderanim', 'on');
-            if (ctrlTransparentBg.checked) queryParams.set('bg', 'transparent');
-
             // Preview: toggle bg-transparent class on iframe body
             try {
                 const iframeDoc2 = previewIframe.contentDocument || previewIframe.contentWindow.document;
@@ -1376,25 +1502,6 @@
             txtNameHex.textContent = ctrlColorName.value;
             txtTitleHex.textContent = ctrlColorTitle.value;
             txtShadowHex.textContent = ctrlColorShadow.value;
-
-            // Only add parameters if they differ from the brand defaults
-            const defaults = brandDefaults[ctrlMode.value][ctrlTheme.value];
-            
-            if (ctrlColorAccent.value.toLowerCase() !== defaults.accent.toLowerCase()) {
-                queryParams.set('accent', ctrlColorAccent.value);
-            }
-            if (ctrlColorGlow.value.toLowerCase() !== defaults.glow.toLowerCase()) {
-                queryParams.set('glow', ctrlColorGlow.value);
-            }
-            if (ctrlColorName.value.toLowerCase() !== defaults.name.toLowerCase()) {
-                queryParams.set('namecolor', ctrlColorName.value);
-            }
-            if (ctrlColorTitle.value.toLowerCase() !== defaults.title.toLowerCase()) {
-                queryParams.set('titlecolor', ctrlColorTitle.value);
-            }
-            if (ctrlColorShadow.value.toLowerCase() !== defaults.shadow.toLowerCase()) {
-                queryParams.set('shadowcolor', ctrlColorShadow.value);
-            }
 
             const queryStr = queryParams.toString();
             const finalUrl = baseBackdropUrl + (queryStr ? '?' + queryStr : '');
@@ -1433,11 +1540,14 @@
                 if (ctrl.id === 'size' || ctrl.id === 'ratio') {
                     const nameEl = iframeDoc.getElementById('backdrop-name');
                     const titleEl = iframeDoc.getElementById('backdrop-title');
+                    const companyEl = iframeDoc.getElementById('backdrop-company');
                     if (nameEl && titleEl) {
                         const numSize = parseFloat(ctrlSize.value);
                         const numRatio = parseFloat(ctrlRatio.value);
                         nameEl.style.fontSize = numSize + 'rem';
-                        titleEl.style.fontSize = (numSize * numRatio) + 'rem';
+                        const computedTitleSize = numSize * numRatio;
+                        titleEl.style.fontSize = computedTitleSize + 'rem';
+                        if (companyEl) companyEl.style.fontSize = (computedTitleSize * 0.85) + 'rem';
                     }
                     if (ctrl.id === 'size') {
                         document.getElementById('size-val').textContent = ctrlSize.value + 'rem';
@@ -1484,6 +1594,47 @@
                     } else if (ctrl.id === 'title-input' && titleEl) {
                         const defaultTitle = (mode === 'artist') ? 'Artiste & Auteur' : 'Presales Engineer';
                         titleEl.textContent = ctrlTitle.value.trim() ? ctrlTitle.value : defaultTitle;
+                        if (previewIframe.contentWindow.titles) {
+                            previewIframe.contentWindow.titles[0] = ctrlTitle.value.trim() ? ctrlTitle.value : defaultTitle;
+                        }
+                    }
+                } else if (ctrl.id === 'company-input') {
+                    const companyEl = iframeDoc.getElementById('backdrop-company');
+                    const companySepEl = iframeDoc.getElementById('backdrop-company-sep');
+                    const titleEl = iframeDoc.getElementById('backdrop-title');
+                    if (companyEl) {
+                        companyEl.textContent = ctrlCompany.value.trim();
+                        companyEl.style.display = ctrlCompany.value.trim() ? 'inline' : 'none';
+                        if (companySepEl && titleEl) {
+                            companySepEl.style.display = (titleEl.textContent.trim() && ctrlCompany.value.trim()) ? 'inline' : 'none';
+                        }
+                    }
+                    if (previewIframe.contentWindow.companies) {
+                        previewIframe.contentWindow.companies[0] = ctrlCompany.value.trim();
+                    }
+                } else if (ctrl.id === 'title-secondary-input') {
+                    if (previewIframe.contentWindow.titles) {
+                        previewIframe.contentWindow.titles[1] = ctrlTitleSecondary.value.trim();
+                    }
+                } else if (ctrl.id === 'logo-size') {
+                    const logoEl = iframeDoc.getElementById('backdrop-logo');
+                    if (logoEl) logoEl.style.height = ctrlLogoSize.value + 'rem';
+                    document.getElementById('logo-size-val').textContent = ctrlLogoSize.value + 'rem';
+                } else if (ctrl.id === 'logo-opacity') {
+                    const logoEl = iframeDoc.getElementById('backdrop-logo');
+                    if (logoEl) logoEl.style.opacity = ctrlLogoOpacity.value;
+                    document.getElementById('logo-opacity-val').textContent = Math.round(ctrlLogoOpacity.value * 100) + '%';
+                } else if (ctrl.id === 'logo-url') {
+                    const logoEl = iframeDoc.getElementById('backdrop-logo');
+                    const logoContainer = iframeDoc.getElementById('backdrop-logo-container');
+                    if (logoEl && logoContainer) {
+                        const val = ctrlLogoUrl.value.trim();
+                        if (val) {
+                            logoEl.src = val;
+                            logoContainer.style.display = 'block';
+                        } else if (!uploadedLogoDataUrl) {
+                            logoContainer.style.display = 'none';
+                        }
                     }
                 }
                 
@@ -1493,51 +1644,7 @@
 
         function updateUrl() {
             updateUrlTextOnly();
-            
-            const queryParams = new URLSearchParams();
-            if (ctrlTheme.value !== 'dark') queryParams.set('theme', ctrlTheme.value);
-            if (ctrlMode.value !== hostMode) queryParams.set('mode', ctrlMode.value);
-            if (ctrlLang.value !== 'fr') queryParams.set('hl', ctrlLang.value);
-            
-            const exportFormatVal = document.getElementById('export-format').value;
-            if (exportFormatVal !== '169') {
-                queryParams.set('format', exportFormatVal);
-            }
-
-            if (!showText) {
-                queryParams.set('name', 'off');
-                queryParams.set('title', 'off');
-            } else {
-                if (ctrlName.value.trim() !== '') queryParams.set('name', ctrlName.value.trim());
-                if (ctrlTitle.value.trim() !== '') queryParams.set('title', ctrlTitle.value.trim());
-            }
-            if (ctrlPosition.value !== 'bottom') queryParams.set('position', ctrlPosition.value);
-            if (ctrlAlign.value !== 'right') queryParams.set('align', ctrlAlign.value);
-            if (ctrlSize.value !== '2.2') queryParams.set('size', ctrlSize.value);
-            if (ctrlRatio.value !== '0.45') queryParams.set('ratio', ctrlRatio.value);
-            if (ctrlAnimation.value !== 'none') queryParams.set('animation', ctrlAnimation.value);
-            if (ctrlSpeed.value !== 'medium') queryParams.set('speed', ctrlSpeed.value);
-            if (ctrlTextEffect.value !== 'shadow-soft') queryParams.set('texteffect', ctrlTextEffect.value);
-            if (ctrlAnimateBorder.checked) queryParams.set('borderanim', 'on');
-            if (ctrlTransparentBg.checked) queryParams.set('bg', 'transparent');
-
-            const defaults = brandDefaults[ctrlMode.value][ctrlTheme.value];
-            if (ctrlColorAccent.value.toLowerCase() !== defaults.accent.toLowerCase()) {
-                queryParams.set('accent', ctrlColorAccent.value);
-            }
-            if (ctrlColorGlow.value.toLowerCase() !== defaults.glow.toLowerCase()) {
-                queryParams.set('glow', ctrlColorGlow.value);
-            }
-            if (ctrlColorName.value.toLowerCase() !== defaults.name.toLowerCase()) {
-                queryParams.set('namecolor', ctrlColorName.value);
-            }
-            if (ctrlColorTitle.value.toLowerCase() !== defaults.title.toLowerCase()) {
-                queryParams.set('titlecolor', ctrlColorTitle.value);
-            }
-            if (ctrlColorShadow.value.toLowerCase() !== defaults.shadow.toLowerCase()) {
-                queryParams.set('shadowcolor', ctrlColorShadow.value);
-            }
-
+            const queryParams = getQueryParams();
             const queryStr = queryParams.toString();
             const relativeUrl = './renderer.html' + (queryStr ? '?' + queryStr : '');
             previewIframe.src = relativeUrl;
@@ -1545,7 +1652,10 @@
         }
 
         const controls = [
-            ctrlName, ctrlTitle, ctrlPosition, ctrlAlign, ctrlSize, ctrlRatio, ctrlColorAccent, ctrlColorGlow, ctrlLang, ctrlColorName, ctrlColorTitle, ctrlColorShadow, ctrlAnimation, ctrlSpeed, ctrlTextEffect, ctrlAnimateBorder, ctrlTransparentBg
+            ctrlName, ctrlCompany, ctrlTitle, ctrlTitleSecondary, ctrlTitleTransition,
+            ctrlLogoUrl, ctrlLogoSize, ctrlLogoOpacity,
+            ctrlExportRes, ctrlVideoDuration, ctrlBoomerang,
+            ctrlPosition, ctrlAlign, ctrlSize, ctrlRatio, ctrlColorAccent, ctrlColorGlow, ctrlLang, ctrlColorName, ctrlColorTitle, ctrlColorShadow, ctrlAnimation, ctrlSpeed, ctrlTextEffect, ctrlAnimateBorder, ctrlTransparentBg
         ];
         controls.forEach(ctrl => {
             if (ctrl.type === 'range' || ctrl.type === 'color' || ctrl.type === 'checkbox' || ctrl.type === 'text') {
@@ -1559,6 +1669,48 @@
                 ctrl.addEventListener('input', updateUrl);
                 ctrl.addEventListener('change', updateUrl);
             }
+        });
+
+        // Logo local file upload with canvas resizing (CORS-safe, URL-safe)
+        ctrlLogoFile.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) {
+                uploadedLogoDataUrl = '';
+                updateUrl();
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const maxDim = 120;
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > height) {
+                        if (width > maxDim) {
+                            height = Math.round((height * maxDim) / width);
+                            width = maxDim;
+                        }
+                    } else {
+                        if (height > maxDim) {
+                            width = Math.round((width * maxDim) / height);
+                            height = maxDim;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    uploadedLogoDataUrl = canvas.toDataURL('image/png');
+                    
+                    // Clear URL input to avoid conflicts
+                    ctrlLogoUrl.value = '';
+                    updateUrl();
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
         });
 
         // Mode Toggle Buttons Logic
@@ -1698,7 +1850,7 @@
         const exportFormat = document.getElementById('export-format');
         btnPng.addEventListener('click', () => {
             try {
-                previewIframe.contentWindow.capturePng(exportFormat.value);
+                previewIframe.contentWindow.capturePng(exportFormat.value, ctrlExportRes.value);
             } catch (e) {
                 console.error(e);
             }
@@ -1883,8 +2035,10 @@
                 btnVideo.disabled = true;
                 btnVideo.style.opacity = '0.7';
 
+                const durationVal = parseFloat(ctrlVideoDuration.value) || 5;
+
                 try {
-                    previewIframe.contentWindow.captureVideo(exportFormat.value, 5)
+                    previewIframe.contentWindow.captureVideo(exportFormat.value, durationVal)
                         .then(() => {
                             btnVideo.querySelector('span').textContent = originalText;
                             btnVideo.disabled = false;
