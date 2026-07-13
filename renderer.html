@@ -1081,7 +1081,7 @@
             };
 
             // Capture animated 5 seconds WebM video
-            window.captureVideo = function(format = '169', duration = 5) {
+            window.captureVideo = function(format = '169', duration = 5, onProgress) {
                 return new Promise((resolve, reject) => {
                     let w = 1920, h = 1080;
                     if (format === '11') { w = 1080; h = 1080; }
@@ -1129,7 +1129,12 @@
                         if (!recStartTime) recStartTime = timestamp;
                         const elapsed = (timestamp - recStartTime) / 1000;
 
+                        if (onProgress) {
+                            onProgress(Math.min(100, (elapsed / duration) * 100));
+                        }
+
                         if (elapsed >= duration) {
+                            if (onProgress) onProgress(100);
                             recorder.stop();
                             cancelAnimationFrame(animId);
                             return;

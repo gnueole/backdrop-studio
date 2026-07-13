@@ -11,6 +11,12 @@
   "author": "Julien (Éole) Avarre <hi@eole.me>",
   "license": "MIT",
   "devDependencies": {
-    "vite": "^5.0.0"
+    "vite": "^8.1.4"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.62.2"
+  },
+  "dependencies": {
+    "@rolldown/binding-linux-x64-gnu": "^1.1.5"
   }
 }

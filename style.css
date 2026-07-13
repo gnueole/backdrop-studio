@@ -18,6 +18,7 @@
 
 /* --- Business Theme Variables (Julien Avarre) --- */
 body.mode-business, :root {
+    color-scheme: dark;
     --bg-color: #080b11;
     --bg-color-rgb: 8, 11, 17;
     --text-color: #f1f5f9;
@@ -35,6 +36,7 @@ body.mode-business, :root {
 
 /* --- Artist Theme Variables (Éole) --- */
 body.mode-artist {
+    color-scheme: dark;
     --bg-color: #16100c;
     --bg-color-rgb: 22, 16, 12;
     --text-color: #f5f2eb;
@@ -52,6 +54,7 @@ body.mode-artist {
 
 /* --- Business Theme Variables (Julien Avarre) - LIGHT MODE --- */
 body.mode-business.theme-light {
+    color-scheme: light;
     --bg-color: #f8fafc;
     --bg-color-rgb: 248, 250, 252;
     --text-color: #0f172a;
@@ -66,6 +69,7 @@ body.mode-business.theme-light {
 
 /* --- Artist Theme Variables (Éole) - LIGHT MODE --- */
 body.mode-artist.theme-light {
+    color-scheme: light;
     --bg-color: #fcfbf7;
     --bg-color-rgb: 252, 251, 247;
     --text-color: #2c241e;
