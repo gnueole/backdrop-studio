@@ -55,30 +55,30 @@ body.mode-artist {
 /* --- Business Theme Variables (Julien Avarre) - LIGHT MODE --- */
 body.mode-business.theme-light {
     color-scheme: light;
-    --bg-color: #f8fafc;
-    --bg-color-rgb: 248, 250, 252;
+    --bg-color: #f1f5f9;
+    --bg-color-rgb: 241, 245, 249;
     --text-color: #0f172a;
     --text-muted: #475569;
     --accent-color: #0284c7;
     --accent-hover: #0369a1;
-    --card-bg: rgba(255, 255, 255, 0.6);
-    --card-hover-bg: rgba(255, 255, 255, 0.9);
-    --border-color: rgba(15, 23, 42, 0.08);
+    --card-bg: #ffffff;
+    --card-hover-bg: #ffffff;
+    --border-color: rgba(15, 23, 42, 0.12);
     --glow-color: rgba(2, 132, 199, 0.05);
 }
 
 /* --- Artist Theme Variables (Éole) - LIGHT MODE --- */
 body.mode-artist.theme-light {
     color-scheme: light;
-    --bg-color: #fcfbf7;
-    --bg-color-rgb: 252, 251, 247;
+    --bg-color: #f4efe6;
+    --bg-color-rgb: 244, 239, 230;
     --text-color: #2c241e;
     --text-muted: #6b5c52;
     --accent-color: #c96537;
     --accent-hover: #b0542a;
-    --card-bg: rgba(255, 255, 255, 0.6);
-    --card-hover-bg: rgba(255, 255, 255, 0.9);
-    --border-color: rgba(44, 36, 30, 0.08);
+    --card-bg: #ffffff;
+    --card-hover-bg: #ffffff;
+    --border-color: rgba(44, 36, 30, 0.12);
     --glow-color: rgba(201, 101, 55, 0.05);
 }
 

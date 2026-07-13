@@ -37,100 +37,136 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
-    <div class="config-container">
-        <div class="config-header" style="display: flex; align-items: center; text-align: left; margin-bottom: 1.25rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 0.85rem; justify-content: space-between; width: 100%;">
-            <div style="display: flex; align-items: center; justify-content: flex-start;">
-                <div>
-                    <h1 style="margin: 0; font-size: 1.6rem; font-family: var(--font-title-sans, 'Outfit', sans-serif); font-weight: 700; color: #ffffff; letter-spacing: -0.015em;">
-                        Configurez votre <span style="background: linear-gradient(135deg, #ffffff 30%, var(--accent-color, #fb923c) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Backdrop</span>
-                    </h1>
-                    <p style="margin: 0.1rem 0 0 0; font-size: 0.82rem; color: var(--text-muted, #9ca3af);">Ajustez les options ci-dessous pour générer l'URL exacte de votre fond d'écran OBS/Zoom.</p>
-                </div>
+    <!-- Decorative Background Glows -->
+    <div class="bg-glow bg-glow-accent"></div>
+    <div class="bg-glow bg-glow-secondary"></div>
+
+    <!-- Application Header -->
+    <header class="app-header">
+        <div class="header-left">
+            <div class="header-logo" id="logo-trigger">
+                <span class="logo-icon">🎥</span>
+                <h1 class="logo-title">
+                    Backdrop <span class="logo-accent">Studio</span>
+                </h1>
             </div>
-            
+            <p class="logo-subtitle">
+                <span class="lang-fr">Configurez votre fond d'écran OBS/Zoom</span>
+                <span class="lang-en">Configure your OBS/Zoom backdrop</span>
+            </p>
+        </div>
+        <div class="header-right">
+            <!-- Language Toggle Switch -->
+            <div class="lang-switcher-header">
+                <button type="button" class="lang-btn active" data-lang="fr" title="Français">FR</button>
+                <button type="button" class="lang-btn" data-lang="en" title="English">EN</button>
+            </div>
+
+            <!-- UI Theme Switcher -->
+            <div class="ui-theme-switcher">
+                <button type="button" class="ui-theme-btn" data-ui-theme="light" title="Thème Clair / Light Theme">
+                    <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                </button>
+                <button type="button" class="ui-theme-btn" data-ui-theme="dark" title="Thème Sombre / Dark Theme">
+                    <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+                <button type="button" class="ui-theme-btn" data-ui-theme="system" title="Thème Système / System Theme">
+                    <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                </button>
+            </div>
+
+            <!-- Help Button -->
             <button id="btn-help-modal" class="help-btn" type="button" title="Comment utiliser votre Backdrop ?">
                 <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                 <span class="lang-fr">Aide</span>
                 <span class="lang-en">Help</span>
             </button>
         </div>
+    </header>
 
+    <div class="config-container">
         <div class="config-grid">
             <!-- Left Side: Controls -->
             <div class="form-section">
-                <!-- Theme -->
-                <div class="form-group">
-                    <label><span class="lang-fr">Thème</span><span class="lang-en">Theme</span></label>
-                    <div class="theme-toggle-group">
-                        <button type="button" class="theme-btn active" data-theme="dark">
-                            <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                            <span class="lang-fr">Sombre</span><span class="lang-en">Dark</span>
-                        </button>
-                        <button type="button" class="theme-btn" data-theme="light">
-                            <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                            <span class="lang-fr">Clair</span><span class="lang-en">Light</span>
-                        </button>
-                    </div>
-                    <input type="hidden" id="theme" value="dark">
-                </div>
-
-                <!-- Mode / Persona & Langue -->
-                <div class="row-group">
-                    <div class="form-group" style="flex: 1.2;">
-                        <label><span class="lang-fr">Persona / Mode</span><span class="lang-en">Persona / Mode</span></label>
-                        <div class="mode-toggle-group" style="display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 2px; gap: 2px; width: 100%;">
-                            <button type="button" class="mode-btn active" data-mode="business" title="Julien Avarre (Pro)">Julien (Pro)</button>
-                            <button type="button" class="mode-btn" data-mode="artist" title="Éole (Artiste)">Éole (Artist)</button>
+                <!-- Card 1: Base Configuration -->
+                <div class="form-card">
+                    <h3 class="card-title">
+                        <span class="lang-fr">Configuration de base</span>
+                        <span class="lang-en">Base Settings</span>
+                    </h3>
+                    <div class="row-group">
+                        <div class="form-group">
+                            <label><span class="lang-fr">Persona / Mode</span><span class="lang-en">Persona / Mode</span></label>
+                            <div class="mode-toggle-group" style="display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 2px; gap: 2px; width: 100%;">
+                                <button type="button" class="mode-btn active" data-mode="business" title="Julien Avarre (Pro)">Julien (Pro)</button>
+                                <button type="button" class="mode-btn" data-mode="artist" title="Éole (Artiste)">Éole (Artist)</button>
+                            </div>
+                            <input type="hidden" id="mode" value="business">
                         </div>
-                        <input type="hidden" id="mode" value="business">
-                    </div>
-                    
-                    <div class="form-group" style="flex: 0.8;">
-                        <label><span class="lang-fr">Langue</span><span class="lang-en">Language</span></label>
-                        <div class="lang-toggle-group" style="display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 2px; gap: 2px; width: 100%;">
-                            <button type="button" class="lang-btn active" data-lang="fr" title="Français">FR</button>
-                            <button type="button" class="lang-btn" data-lang="en" title="English">EN</button>
+                        
+                        <div class="form-group">
+                            <label><span class="lang-fr">Thème du fond</span><span class="lang-en">Backdrop Theme</span></label>
+                            <div class="theme-toggle-group" style="display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 2px; gap: 2px; width: 100%;">
+                                <button type="button" class="theme-btn active" data-theme="dark">
+                                    <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                                    <span class="lang-fr">Sombre</span><span class="lang-en">Dark</span>
+                                </button>
+                                <button type="button" class="theme-btn" data-theme="light">
+                                    <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                                    <span class="lang-fr">Clair</span><span class="lang-en">Light</span>
+                                </button>
+                            </div>
+                            <input type="hidden" id="theme" value="dark">
                         </div>
-                        <input type="hidden" id="lang" value="fr">
+                    </div>
+                    <input type="hidden" id="lang" value="fr">
+                </div>
+
+                <!-- Card 2: Text Info -->
+                <div class="form-card">
+                    <h3 class="card-title">
+                        <span class="lang-fr">Informations du texte</span>
+                        <span class="lang-en">Text Information</span>
+                    </h3>
+                    <div class="row-group" style="gap: 1rem; margin-bottom: 0.75rem;">
+                        <div class="form-group">
+                            <label for="name-input"><span class="lang-fr">Nom affiché</span><span class="lang-en">Displayed Name</span></label>
+                            <input type="text" id="name-input" class="form-control" placeholder="Laisser vide pour défaut">
+                        </div>
+                        <div class="form-group">
+                            <label for="company-input"><span class="lang-fr">Entreprise / Organisation</span><span class="lang-en">Company / Organization</span></label>
+                            <input type="text" id="company-input" class="form-control" placeholder="Laisser vide / 'off'">
+                        </div>
+                    </div>
+                    <div class="row-group" style="gap: 1rem; margin-bottom: 0.75rem;">
+                        <div class="form-group">
+                            <label for="title-input"><span class="lang-fr">Titre Principal</span><span class="lang-en">Primary Title</span></label>
+                            <input type="text" id="title-input" class="form-control" placeholder="Laisser vide / 'off' pour masquer">
+                        </div>
+                        <div class="form-group">
+                            <label for="title-secondary-input"><span class="lang-fr">Titre Secondaire (Transition)</span><span class="lang-en">Secondary Title (Transition)</span></label>
+                            <input type="text" id="title-secondary-input" class="form-control" placeholder="Laisser vide si aucun cycle">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="title-transition"><span class="lang-fr">Transition du Titre</span><span class="lang-en">Title Transition</span></label>
+                        <select id="title-transition" class="form-control" style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #ffffff; padding: 0.45rem; font-size: 0.78rem; outline: none; width: 100%;">
+                            <option value="none">Aucune (Fixe)</option>
+                            <option value="blur">Flou (Blur In/Out)</option>
+                            <option value="scramble">Lettres mélangées (Scramble)</option>
+                            <option value="airport">Panneau d'aéroport (Split-flap)</option>
+                            <option value="flip">Flip 3D (Rotation Y)</option>
+                        </select>
                     </div>
                 </div>
 
-                <!-- Custom Name, Title, Company & Transition -->
-                <div class="row-group" style="gap: 1rem; margin-bottom: 0.75rem;">
-                    <div class="form-group">
-                        <label for="name-input"><span class="lang-fr">Nom affiché</span><span class="lang-en">Displayed Name</span></label>
-                        <input type="text" id="name-input" class="form-control" placeholder="Laisser vide pour défaut">
-                    </div>
-                    <div class="form-group">
-                        <label for="company-input"><span class="lang-fr">Entreprise / Organisation</span><span class="lang-en">Company / Organization</span></label>
-                        <input type="text" id="company-input" class="form-control" placeholder="Laisser vide / 'off'">
-                    </div>
-                </div>
-                <div class="row-group" style="gap: 1rem; margin-bottom: 0.75rem;">
-                    <div class="form-group">
-                        <label for="title-input"><span class="lang-fr">Titre Principal</span><span class="lang-en">Primary Title</span></label>
-                        <input type="text" id="title-input" class="form-control" placeholder="Laisser vide / 'off' pour masquer">
-                    </div>
-                    <div class="form-group">
-                        <label for="title-secondary-input"><span class="lang-fr">Titre Secondaire (Transition)</span><span class="lang-en">Secondary Title (Transition)</span></label>
-                        <input type="text" id="title-secondary-input" class="form-control" placeholder="Laisser vide si aucun cycle">
-                    </div>
-                </div>
-                <div class="form-group" style="margin-bottom: 0.85rem;">
-                    <label for="title-transition"><span class="lang-fr">Transition du Titre</span><span class="lang-en">Title Transition</span></label>
-                    <select id="title-transition" class="form-control" style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #ffffff; padding: 0.45rem; font-size: 0.78rem; outline: none; width: 100%;">
-                        <option value="none">Aucune (Fixe)</option>
-                        <option value="blur">Flou (Blur In/Out)</option>
-                        <option value="scramble">Lettres mélangées (Scramble)</option>
-                        <option value="airport">Panneau d'aéroport (Split-flap)</option>
-                        <option value="flip">Flip 3D (Rotation Y)</option>
-                    </select>
-                </div>
-
-                <!-- Layout Config (Visual Selector) -->
-                <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
-                    <label><span class="lang-fr">Position & Alignement</span><span class="lang-en">Position & Alignment</span></label>
-                    <div style="display: flex; align-items: center; gap: 0.75rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 0.45rem 0.65rem; border-radius: 12px;">
+                <!-- Card 3: Layout and Effects -->
+                <div class="form-card">
+                    <h3 class="card-title">
+                        <span class="lang-fr">Position & Alignement</span>
+                        <span class="lang-en">Position & Alignment</span>
+                    </h3>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 0.45rem 0.65rem; border-radius: 12px; margin-bottom: 0.85rem;">
                         <div class="alignment-grid">
                             <button type="button" class="align-btn top-left" data-pos="top" data-align="left" title="En haut à gauche"></button>
                             <button type="button" class="align-btn top-right" data-pos="top" data-align="right" title="En haut à droite"></button>
@@ -142,56 +178,56 @@
                             <span class="lang-en">Click on a quadrant to position and align the text on your backdrop.</span>
                         </div>
                     </div>
-                    <!-- Hidden inputs to preserve standard state binding -->
                     <input type="hidden" id="position" value="bottom">
                     <input type="hidden" id="align" value="right">
-                </div>
 
-                <!-- Font Sizing (Global & Ratio) -->
-                <div class="row-group">
-                    <div class="form-group" style="flex: 1.2;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                            <label for="size" style="margin-bottom: 0;"><span class="lang-fr">Taille Globale</span><span class="lang-en">Global Size</span></label>
-                            <span id="size-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">2.2rem</span>
+                    <div class="row-group" style="margin-bottom: 0.85rem;">
+                        <div class="form-group">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                <label for="size" style="margin-bottom: 0;"><span class="lang-fr">Taille Globale</span><span class="lang-en">Global Size</span></label>
+                                <span id="size-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">2.2rem</span>
+                            </div>
+                            <input type="range" id="size" min="1.0" max="12.0" step="0.1" value="2.2">
                         </div>
-                        <input type="range" id="size" min="1.0" max="12.0" step="0.1" value="2.2">
-                    </div>
-                    
-                    <div class="form-group" style="flex: 0.8;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                            <label for="ratio" style="margin-bottom: 0;"><span class="lang-fr">Ratio Titre/Nom</span><span class="lang-en">Title/Name Ratio</span></label>
-                            <span id="ratio-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">45%</span>
+                        
+                        <div class="form-group">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                <label for="ratio" style="margin-bottom: 0;"><span class="lang-fr">Ratio Titre/Nom</span><span class="lang-en">Title/Name Ratio</span></label>
+                                <span id="ratio-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">45%</span>
+                            </div>
+                            <input type="range" id="ratio" min="0.1" max="1.5" step="0.05" value="0.45">
                         </div>
-                        <input type="range" id="ratio" min="0.1" max="1.5" step="0.05" value="0.45">
+                    </div>
+
+                    <div class="form-group">
+                        <label><span class="lang-fr">Effet du Texte (Ombre / Néon)</span><span class="lang-en">Text Effect (Shadow / Neon)</span></label>
+                        <div class="texteffect-toggle-group" style="display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 2px; gap: 2px; width: 100%;">
+                            <button type="button" class="texteffect-btn" data-effect="none" title="Aucun effet">
+                                <span class="lang-fr">Aucun</span><span class="lang-en">None</span>
+                            </button>
+                            <button type="button" class="texteffect-btn active" data-effect="shadow-soft" title="Ombre Douce">
+                                <span class="lang-fr">Douce</span><span class="lang-en">Soft</span>
+                            </button>
+                            <button type="button" class="texteffect-btn" data-effect="shadow-strong" title="Ombre Forte (Très lisible)">
+                                <span class="lang-fr">Forte</span><span class="lang-en">Strong</span>
+                            </button>
+                            <button type="button" class="texteffect-btn" data-effect="glow-neon" title="Glow Néon Blanc">
+                                <span class="lang-fr">Néon B.</span><span class="lang-en">Neon W.</span>
+                            </button>
+                            <button type="button" class="texteffect-btn" data-effect="glow-matched" title="Glow Couleur (Néon Assorti)">
+                                <span class="lang-fr">Néon Ass.</span><span class="lang-en">Neon Match</span>
+                            </button>
+                        </div>
+                        <input type="hidden" id="text-effect" value="shadow-soft">
                     </div>
                 </div>
 
-                <!-- Text Effect -->
-                <div class="form-group">
-                    <label><span class="lang-fr">Effet du Texte (Ombre / Néon)</span><span class="lang-en">Text Effect (Shadow / Neon)</span></label>
-                    <div class="texteffect-toggle-group" style="display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 2px; gap: 2px; width: 100%;">
-                        <button type="button" class="texteffect-btn" data-effect="none" title="Aucun effet">
-                            <span class="lang-fr">Aucun</span><span class="lang-en">None</span>
-                        </button>
-                        <button type="button" class="texteffect-btn active" data-effect="shadow-soft" title="Ombre Douce">
-                            <span class="lang-fr">Douce</span><span class="lang-en">Soft</span>
-                        </button>
-                        <button type="button" class="texteffect-btn" data-effect="shadow-strong" title="Ombre Forte (Très lisible)">
-                            <span class="lang-fr">Forte</span><span class="lang-en">Strong</span>
-                        </button>
-                        <button type="button" class="texteffect-btn" data-effect="glow-neon" title="Glow Néon Blanc">
-                            <span class="lang-fr">Néon B.</span><span class="lang-en">Neon W.</span>
-                        </button>
-                        <button type="button" class="texteffect-btn" data-effect="glow-matched" title="Glow Couleur (Néon Assorti)">
-                            <span class="lang-fr">Néon Ass.</span><span class="lang-en">Neon Match</span>
-                        </button>
-                    </div>
-                    <input type="hidden" id="text-effect" value="shadow-soft">
-                </div>
-
-                <!-- Logo Integration -->
-                <fieldset style="border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 0.85rem 0.75rem 0.75rem 0.75rem; margin: 0 0 0.85rem 0; background: rgba(255, 255, 255, 0.01);">
-                    <legend style="font-family: var(--font-title-sans, 'Outfit', sans-serif); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--accent-color, #fb923c); padding: 0 0.5rem; letter-spacing: 0.05em;"><span class="lang-fr">Intégration Logo</span><span class="lang-en">Logo Integration</span></legend>
+                <!-- Card 4: Logo Integration -->
+                <div class="form-card">
+                    <h3 class="card-title">
+                        <span class="lang-fr">Logo</span>
+                        <span class="lang-en">Logo</span>
+                    </h3>
                     <div style="display: flex; flex-direction: column; gap: 0.75rem; text-align: left;">
                         <div class="form-group">
                             <label for="logo-file" style="display: block; margin-bottom: 0.25rem;"><span class="lang-fr">Uploader un Logo (Local)</span><span class="lang-en">Upload a Logo (Local)</span></label>
@@ -218,11 +254,14 @@
                             </div>
                         </div>
                     </div>
-                </fieldset>
+                </div>
 
-                <!-- Animation Config (Tactile button list in Fieldset) -->
-                <fieldset style="border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 0.85rem 0.75rem 0.75rem 0.75rem; margin: 0 0 0.85rem 0; background: rgba(255, 255, 255, 0.01);">
-                    <legend style="font-family: var(--font-title-sans); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--accent-color, #fb923c); padding: 0 0.5rem; letter-spacing: 0.05em;"><span class="lang-fr">Animation</span><span class="lang-en">Animation</span></legend>
+                <!-- Card 5: Animation Config -->
+                <div class="form-card">
+                    <h3 class="card-title">
+                        <span class="lang-fr">Animation</span>
+                        <span class="lang-en">Animation</span>
+                    </h3>
                     <div style="display: flex; flex-direction: column; gap: 0.85rem;">
                         <div>
                             <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; display: block; margin-bottom: 0.4rem; text-align: left;"><span class="lang-fr">Effet</span><span class="lang-en">Effect</span></span>
@@ -289,52 +328,59 @@
                             </label>
                         </div>
                     </div>
-                </fieldset>
+                </div>
 
-                <!-- Colors -->
-                <div class="form-group" style="display: flex; flex-direction: column; gap: 0.75rem;">
-                    <label><span class="lang-fr">Couleurs Personnalisées</span><span class="lang-en">Custom Colors</span></label>
+                <!-- Card 6: Colors -->
+                <div class="form-card">
+                    <h3 class="card-title">
+                        <span class="lang-fr">Couleurs Personnalisées</span>
+                        <span class="lang-en">Custom Colors</span>
+                    </h3>
                     
-                    <!-- FOND Group -->
-                    <fieldset style="border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 0.85rem 0.75rem 0.75rem 0.75rem; margin: 0; background: rgba(255, 255, 255, 0.01);">
-                        <legend style="font-family: var(--font-title-sans); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--accent-color, #fb923c); padding: 0 0.5rem; letter-spacing: 0.05em;"><span class="lang-fr">Fond</span><span class="lang-en">Background</span></legend>
-                        <div class="color-pickers">
-                            <div class="color-picker-wrapper" title="Couleur de l'Accent (Néon)">
-                                <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Accent</span><span class="lang-en">Accent</span></span>
-                                <input type="color" id="color-accent" value="#fb923c">
-                                <span id="accent-hex">#fb923c</span>
-                            </div>
-                            <div class="color-picker-wrapper" title="Couleur du Halo (Glow)">
-                                <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Halo</span><span class="lang-en">Halo</span></span>
-                                <input type="color" id="color-glow" value="#3b82f6">
-                                <span id="glow-hex">#3b82f6</span>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <!-- FOND Group -->
+                        <div style="border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 0.75rem; background: rgba(255, 255, 255, 0.01);">
+                            <span style="font-family: var(--font-title-sans); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--accent-color, #fb923c); display: block; margin-bottom: 0.5rem; letter-spacing: 0.05em;"><span class="lang-fr">Fond</span><span class="lang-en">Background</span></span>
+                            <div class="color-pickers">
+                                <div class="color-picker-wrapper" title="Couleur de l'Accent (Néon)">
+                                    <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Accent</span><span class="lang-en">Accent</span></span>
+                                    <input type="color" id="color-accent" value="#fb923c">
+                                    <span id="accent-hex">#fb923c</span>
+                                </div>
+                                <div class="color-picker-wrapper" title="Couleur du Halo (Glow)">
+                                    <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Halo</span><span class="lang-en">Halo</span></span>
+                                    <input type="color" id="color-glow" value="#3b82f6">
+                                    <span id="glow-hex">#3b82f6</span>
+                                </div>
                             </div>
                         </div>
-                    </fieldset>
-                    
-                    <!-- TEXTE Group -->
-                    <fieldset style="border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 0.85rem 0.75rem 0.75rem 0.75rem; margin: 0; background: rgba(255, 255, 255, 0.01);">
-                        <legend style="font-family: var(--font-title-sans); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--accent-color, #fb923c); padding: 0 0.5rem; letter-spacing: 0.05em;"><span class="lang-fr">Texte</span><span class="lang-en">Text</span></legend>
-                        <div class="color-pickers" style="grid-template-columns: repeat(3, 1fr);">
-                            <div class="color-picker-wrapper" title="Couleur du Nom">
-                                <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Nom</span><span class="lang-en">Name</span></span>
-                                <input type="color" id="color-name" value="#ffffff">
-                                <span id="name-hex">#ffffff</span>
-                            </div>
-                            <div class="color-picker-wrapper" title="Couleur du Titre">
-                                <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Titre</span><span class="lang-en">Title</span></span>
-                                <input type="color" id="color-title" value="#ffffff">
-                                <span id="title-hex">#ffffff</span>
-                            </div>
-                            <div class="color-picker-wrapper" title="Couleur de l'Ombre / Glow">
-                                <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Ombre</span><span class="lang-en">Shadow</span></span>
-                                <input type="color" id="color-shadow" value="#000000">
-                                <span id="shadow-hex">#000000</span>
+                        
+                        <!-- TEXTE Group -->
+                        <div style="border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 0.75rem; background: rgba(255, 255, 255, 0.01);">
+                            <span style="font-family: var(--font-title-sans); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--accent-color, #fb923c); display: block; margin-bottom: 0.5rem; letter-spacing: 0.05em;"><span class="lang-fr">Texte</span><span class="lang-en">Text</span></span>
+                            <div class="color-pickers" style="grid-template-columns: repeat(3, 1fr);">
+                                <div class="color-picker-wrapper" title="Couleur du Nom">
+                                    <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Nom</span><span class="lang-en">Name</span></span>
+                                    <input type="color" id="color-name" value="#ffffff">
+                                    <span id="name-hex">#ffffff</span>
+                                </div>
+                                <div class="color-picker-wrapper" title="Couleur du Titre">
+                                    <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Titre</span><span class="lang-en">Title</span></span>
+                                    <input type="color" id="color-title" value="#ffffff">
+                                    <span id="title-hex">#ffffff</span>
+                                </div>
+                                <div class="color-picker-wrapper" title="Couleur de l'Ombre / Glow">
+                                    <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Ombre</span><span class="lang-en">Shadow</span></span>
+                                    <input type="color" id="color-shadow" value="#000000">
+                                    <span id="shadow-hex">#000000</span>
+                                </div>
                             </div>
                         </div>
-                    </fieldset>
+                    </div>
                 </div>
             </div>
+
+            <!-- Right Side: Preview & Output -->
 
             <!-- Right Side: Preview & Output -->
             <div class="preview-section">
@@ -542,11 +588,19 @@
                     </ol>
                 </div>
             </div>
-            <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #9ca3af;"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                <a href="https://github.com/gnueole/backdrop-studio" target="_blank" style="font-family: var(--font-title-sans, 'Outfit', sans-serif); font-size: 0.82rem; font-weight: 600; color: var(--accent-color, #fb923c); text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-                    <span class="lang-fr">Voir le code source sur GitHub</span>
-                    <span class="lang-en">View source code on GitHub</span>
+            <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid var(--border-color); padding-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
+                <!-- Link to Author -->
+                <a href="https://eole.me" target="_blank" class="author-link" style="padding: 0.35rem 0.75rem; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 0.4rem; text-decoration: none;">
+                    <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <span class="lang-fr">À propos de l'auteur (eole.me)</span>
+                    <span class="lang-en">About the author (eole.me)</span>
+                </a>
+
+                <!-- GitHub link -->
+                <a href="https://github.com/gnueole/backdrop-studio" target="_blank" style="font-family: var(--font-title-sans, 'Outfit', sans-serif); font-size: 0.78rem; font-weight: 600; color: var(--accent-color, #fb923c); text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #9ca3af;"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                    <span class="lang-fr">Code source sur GitHub</span>
+                    <span class="lang-en">GitHub Source Code</span>
                 </a>
             </div>
         </div>

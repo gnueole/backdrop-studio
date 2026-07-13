@@ -183,13 +183,52 @@ const previewIframe = document.getElementById('preview-iframe');
             return queryParams;
         }
 
+        // ==============================================================================
+        // 🌓 UI Theme Manager Helper Functions
+        // ==============================================================================
+        function getResolvedUiTheme() {
+            const storedUiTheme = localStorage.getItem('backdrop-studio-ui-theme') || 'system';
+            if (storedUiTheme === 'system') {
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            return storedUiTheme;
+        }
+
+        function applyUiTheme() {
+            const storedUiTheme = localStorage.getItem('backdrop-studio-ui-theme') || 'system';
+            const resolvedTheme = getResolvedUiTheme();
+            
+            // Sync active button classes
+            const uiThemeButtons = document.querySelectorAll('.ui-theme-btn');
+            uiThemeButtons.forEach(btn => {
+                if (btn.getAttribute('data-ui-theme') === storedUiTheme) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
         function updateUrlTextOnly() {
             try {
+                const resolvedTheme = getResolvedUiTheme();
                 document.body.className = '';
-                document.body.classList.add('theme-' + ctrlTheme.value);
+                document.body.classList.add('theme-' + resolvedTheme);
                 document.body.classList.add('mode-' + ctrlMode.value);
                 document.body.style.setProperty('--accent-color', ctrlColorAccent.value);
                 document.body.style.setProperty('--glow-color', hexToRgba(ctrlColorGlow.value, 0.3));
+                
+                // Update decorative glow elements dynamically
+                const glowAccent = document.querySelector('.bg-glow-accent');
+                const glowSecondary = document.querySelector('.bg-glow-secondary');
+                if (glowAccent) {
+                    glowAccent.style.background = ctrlColorAccent.value;
+                }
+                if (glowSecondary) {
+                    glowSecondary.style.background = ctrlColorGlow.value;
+                }
+                
+                applyUiTheme();
             } catch(e) {}
 
             const queryParams = getQueryParams();
@@ -1044,3 +1083,33 @@ const previewIframe = document.getElementById('preview-iframe');
         }
         syncAlignmentUI();
         syncLangButtons();
+
+        // Bind UI Theme switcher buttons in the app header
+        const uiThemeButtons = document.querySelectorAll('.ui-theme-btn');
+        uiThemeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const selectedUiTheme = btn.getAttribute('data-ui-theme');
+                localStorage.setItem('backdrop-studio-ui-theme', selectedUiTheme);
+                updateUrlTextOnly();
+            });
+        });
+
+        // Watch for system color scheme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            const storedUiTheme = localStorage.getItem('backdrop-studio-ui-theme') || 'system';
+            if (storedUiTheme === 'system') {
+                updateUrlTextOnly();
+            }
+        });
+
+        // Initial UI theme application
+        applyUiTheme();
+
+        // Bind Logo click to reset local configuration and reload the page
+        const logoTrigger = document.getElementById('logo-trigger');
+        if (logoTrigger) {
+            logoTrigger.addEventListener('click', () => {
+                localStorage.removeItem('backdrop-studio-config');
+                window.location.href = window.location.pathname;
+            });
+        }

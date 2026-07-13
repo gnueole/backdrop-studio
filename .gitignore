@@ -1,3 +1,5 @@
 .env
+.env.prod.temp
+.env.*
 node_modules/
 dist/
