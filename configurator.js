@@ -303,7 +303,7 @@ const previewIframe = document.getElementById('preview-iframe');
                 }
                 const btnQrToggle = document.getElementById('btn-qr-persona-toggle');
                 if (btnQrToggle) {
-                    btnQrToggle.textContent = ctrlMode.value === 'artist' ? 'E' : 'J';
+                    btnQrToggle.textContent = ctrlMode.value === 'artist' ? 'É' : 'J';
                     btnQrToggle.style.fontFamily = ctrlMode.value === 'artist' ? "var(--font-serif, 'Lora', Georgia, serif)" : "var(--font-title-sans, 'Outfit', sans-serif)";
                 }
             } catch(e) {}
