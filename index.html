@@ -62,16 +62,15 @@
                 <button type="button" class="lang-btn" data-lang="en" title="English">EN</button>
             </div>
 
-            <!-- UI Theme Switcher -->
+            <!-- UI Theme Switcher (Single Cycling Button) -->
             <div class="ui-theme-switcher">
-                <button type="button" class="ui-theme-btn" data-ui-theme="light" title="Thème Clair / Light Theme">
-                    <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                </button>
-                <button type="button" class="ui-theme-btn" data-ui-theme="dark" title="Thème Sombre / Dark Theme">
-                    <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                </button>
-                <button type="button" class="ui-theme-btn" data-ui-theme="system" title="Thème Système / System Theme">
-                    <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                <button type="button" id="ui-theme-cycle-btn" class="ui-theme-cycle-btn" title="Changer le thème de l'interface / Cycle UI theme">
+                    <!-- System Icon -->
+                    <svg class="icon theme-icon-system" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                    <!-- Light Icon -->
+                    <svg class="icon theme-icon-light" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <!-- Dark Icon -->
+                    <svg class="icon theme-icon-dark" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                 </button>
             </div>
 
@@ -86,295 +85,336 @@
 
     <div class="config-container">
         <div class="config-grid">
-            <!-- Left Side: Controls -->
+            <!-- Left Side: Settings Panel (Tabbed) -->
             <div class="form-section">
-                <!-- Card 1: Base Configuration -->
-                <div class="form-card">
-                    <h3 class="card-title">
-                        <span class="lang-fr">Configuration de base</span>
-                        <span class="lang-en">Base Settings</span>
-                    </h3>
-                    <div class="row-group">
-                        <div class="form-group">
-                            <label><span class="lang-fr">Persona / Mode</span><span class="lang-en">Persona / Mode</span></label>
-                            <div class="mode-toggle-group" style="display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 2px; gap: 2px; width: 100%;">
-                                <button type="button" class="mode-btn active" data-mode="business" title="Julien Avarre (Pro)">Julien (Pro)</button>
-                                <button type="button" class="mode-btn" data-mode="artist" title="Éole (Artiste)">Éole (Artist)</button>
-                            </div>
-                            <input type="hidden" id="mode" value="business">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label><span class="lang-fr">Thème du fond</span><span class="lang-en">Backdrop Theme</span></label>
-                            <div class="theme-toggle-group" style="display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 2px; gap: 2px; width: 100%;">
-                                <button type="button" class="theme-btn active" data-theme="dark">
-                                    <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                                    <span class="lang-fr">Sombre</span><span class="lang-en">Dark</span>
-                                </button>
-                                <button type="button" class="theme-btn" data-theme="light">
-                                    <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                                    <span class="lang-fr">Clair</span><span class="lang-en">Light</span>
-                                </button>
-                            </div>
-                            <input type="hidden" id="theme" value="dark">
-                        </div>
-                    </div>
-                    <input type="hidden" id="lang" value="fr">
+                <input type="hidden" id="lang" value="fr">
+                <!-- Tabs Header Navigation -->
+                <div class="settings-tabs">
+                    <button type="button" class="tab-btn active" data-tab="content">
+                        <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        <span class="lang-fr">Contenu</span>
+                        <span class="lang-en">Content</span>
+                    </button>
+                    <button type="button" class="tab-btn" data-tab="style">
+                        <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                        <span class="lang-fr">Style & Anim</span>
+                        <span class="lang-en">Style & Anim</span>
+                    </button>
+                    <button type="button" class="tab-btn" data-tab="layout">
+                        <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line></svg>
+                        <span class="lang-fr">Disposition</span>
+                        <span class="lang-en">Layout</span>
+                    </button>
                 </div>
 
-                <!-- Card 2: Text Info -->
-                <div class="form-card">
-                    <h3 class="card-title">
-                        <span class="lang-fr">Informations du texte</span>
-                        <span class="lang-en">Text Information</span>
-                    </h3>
-                    <div class="row-group" style="gap: 1rem; margin-bottom: 0.75rem;">
-                        <div class="form-group">
-                            <label for="name-input"><span class="lang-fr">Nom affiché</span><span class="lang-en">Displayed Name</span></label>
-                            <input type="text" id="name-input" class="form-control" placeholder="Laisser vide pour défaut">
-                        </div>
-                        <div class="form-group">
-                            <label for="company-input"><span class="lang-fr">Entreprise / Organisation</span><span class="lang-en">Company / Organization</span></label>
-                            <input type="text" id="company-input" class="form-control" placeholder="Laisser vide / 'off'">
-                        </div>
-                    </div>
-                    <div class="row-group" style="gap: 1rem; margin-bottom: 0.75rem;">
-                        <div class="form-group">
-                            <label for="title-input"><span class="lang-fr">Titre Principal</span><span class="lang-en">Primary Title</span></label>
-                            <input type="text" id="title-input" class="form-control" placeholder="Laisser vide / 'off' pour masquer">
-                        </div>
-                        <div class="form-group">
-                            <label for="title-secondary-input"><span class="lang-fr">Titre Secondaire (Transition)</span><span class="lang-en">Secondary Title (Transition)</span></label>
-                            <input type="text" id="title-secondary-input" class="form-control" placeholder="Laisser vide si aucun cycle">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="title-transition"><span class="lang-fr">Transition du Titre</span><span class="lang-en">Title Transition</span></label>
-                        <select id="title-transition" class="form-control" style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #ffffff; padding: 0.45rem; font-size: 0.78rem; outline: none; width: 100%;">
-                            <option value="none">Aucune (Fixe)</option>
-                            <option value="blur">Flou (Blur In/Out)</option>
-                            <option value="scramble">Lettres mélangées (Scramble)</option>
-                            <option value="airport">Panneau d'aéroport (Split-flap)</option>
-                            <option value="flip">Flip 3D (Rotation Y)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Card 3: Layout and Effects -->
-                <div class="form-card">
-                    <h3 class="card-title">
-                        <span class="lang-fr">Position & Alignement</span>
-                        <span class="lang-en">Position & Alignment</span>
-                    </h3>
-                    <div style="display: flex; align-items: center; gap: 0.75rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 0.45rem 0.65rem; border-radius: 12px; margin-bottom: 0.85rem;">
-                        <div class="alignment-grid">
-                            <button type="button" class="align-btn top-left" data-pos="top" data-align="left" title="En haut à gauche"></button>
-                            <button type="button" class="align-btn top-right" data-pos="top" data-align="right" title="En haut à droite"></button>
-                            <button type="button" class="align-btn bottom-left" data-pos="bottom" data-align="left" title="En bas à gauche"></button>
-                            <button type="button" class="align-btn bottom-right" data-pos="bottom" data-align="right" title="En bas à droite"></button>
-                        </div>
-                        <div style="font-family: var(--font-sans); font-size: 0.72rem; color: #9ca3af; line-height: 1.35; flex: 1; text-align: left;">
-                            <span class="lang-fr">Cliquez sur un quadrant pour positionner et aligner le texte sur votre fond d'écran.</span>
-                            <span class="lang-en">Click on a quadrant to position and align the text on your backdrop.</span>
-                        </div>
-                    </div>
-                    <input type="hidden" id="position" value="bottom">
-                    <input type="hidden" id="align" value="right">
-
-                    <div class="row-group" style="margin-bottom: 0.85rem;">
-                        <div class="form-group">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                                <label for="size" style="margin-bottom: 0;"><span class="lang-fr">Taille Globale</span><span class="lang-en">Global Size</span></label>
-                                <span id="size-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">2.2rem</span>
+                <!-- Tab 1: Contenu (Content Settings) -->
+                <div class="tab-content active" data-tab-content="content">
+                    <!-- Base Configuration Card -->
+                    <div class="form-card">
+                        <h3 class="card-title">
+                            <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            <span class="lang-fr">Configuration de base</span>
+                            <span class="lang-en">Base Settings</span>
+                        </h3>
+                        <div class="row-group">
+                            <div class="form-group">
+                                <label><span class="lang-fr">Persona / Mode</span><span class="lang-en">Persona / Mode</span></label>
+                                <div class="mode-toggle-group" style="display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 2px; gap: 2px; width: 100%;">
+                                    <button type="button" class="mode-btn active" data-mode="business" title="Julien Avarre (Pro)">Julien (Pro)</button>
+                                    <button type="button" class="mode-btn" data-mode="artist" title="Éole (Artiste)">Éole (Artist)</button>
+                                </div>
+                                <input type="hidden" id="mode" value="business">
                             </div>
-                            <input type="range" id="size" min="1.0" max="12.0" step="0.1" value="2.2">
-                        </div>
-                        
-                        <div class="form-group">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                                <label for="ratio" style="margin-bottom: 0;"><span class="lang-fr">Ratio Titre/Nom</span><span class="lang-en">Title/Name Ratio</span></label>
-                                <span id="ratio-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">45%</span>
-                            </div>
-                            <input type="range" id="ratio" min="0.1" max="1.5" step="0.05" value="0.45">
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label><span class="lang-fr">Effet du Texte (Ombre / Néon)</span><span class="lang-en">Text Effect (Shadow / Neon)</span></label>
-                        <div class="texteffect-toggle-group" style="display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 2px; gap: 2px; width: 100%;">
-                            <button type="button" class="texteffect-btn" data-effect="none" title="Aucun effet">
-                                <span class="lang-fr">Aucun</span><span class="lang-en">None</span>
-                            </button>
-                            <button type="button" class="texteffect-btn active" data-effect="shadow-soft" title="Ombre Douce">
-                                <span class="lang-fr">Douce</span><span class="lang-en">Soft</span>
-                            </button>
-                            <button type="button" class="texteffect-btn" data-effect="shadow-strong" title="Ombre Forte (Très lisible)">
-                                <span class="lang-fr">Forte</span><span class="lang-en">Strong</span>
-                            </button>
-                            <button type="button" class="texteffect-btn" data-effect="glow-neon" title="Glow Néon Blanc">
-                                <span class="lang-fr">Néon B.</span><span class="lang-en">Neon W.</span>
-                            </button>
-                            <button type="button" class="texteffect-btn" data-effect="glow-matched" title="Glow Couleur (Néon Assorti)">
-                                <span class="lang-fr">Néon Ass.</span><span class="lang-en">Neon Match</span>
-                            </button>
+                    <!-- Text Information Card -->
+                    <div class="form-card">
+                        <h3 class="card-title">
+                            <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            <span class="lang-fr">Informations du texte</span>
+                            <span class="lang-en">Text Information</span>
+                        </h3>
+                        <div class="row-group" style="gap: 1rem; margin-bottom: 0.25rem;">
+                            <div class="form-group">
+                                <label for="name-input"><span class="lang-fr">Nom affiché</span><span class="lang-en">Displayed Name</span></label>
+                                <input type="text" id="name-input" class="form-control" placeholder="Laisser vide pour défaut">
+                            </div>
+                            <div class="form-group">
+                                <label for="company-input"><span class="lang-fr">Entreprise / Organisation</span><span class="lang-en">Company / Organization</span></label>
+                                <input type="text" id="company-input" class="form-control" placeholder="Laisser vide / 'off'">
+                            </div>
                         </div>
-                        <input type="hidden" id="text-effect" value="shadow-soft">
+                        <div class="row-group" style="gap: 1rem; margin-bottom: 0.25rem;">
+                            <div class="form-group">
+                                <label for="title-input"><span class="lang-fr">Titre Principal</span><span class="lang-en">Primary Title</span></label>
+                                <input type="text" id="title-input" class="form-control" placeholder="Laisser vide / 'off' pour masquer">
+                            </div>
+                            <div class="form-group">
+                                <label for="title-secondary-input"><span class="lang-fr">Titre Secondaire (Transition)</span><span class="lang-en">Secondary Title (Transition)</span></label>
+                                <input type="text" id="title-secondary-input" class="form-control" placeholder="Laisser vide si aucun cycle">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="title-transition"><span class="lang-fr">Transition du Titre</span><span class="lang-en">Title Transition</span></label>
+                            <select id="title-transition" class="form-control" style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #ffffff; padding: 0.45rem; font-size: 0.78rem; outline: none; width: 100%;">
+                                <option value="none">Aucune (Fixe)</option>
+                                <option value="blur">Flou (Blur In/Out)</option>
+                                <option value="scramble">Lettres mélangées (Scramble)</option>
+                                <option value="airport">Panneau d'aéroport (Split-flap)</option>
+                                <option value="flip">Flip 3D (Rotation Y)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Logo Card -->
+                    <div class="form-card">
+                        <h3 class="card-title">
+                            <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                            <span class="lang-fr">Logo</span>
+                            <span class="lang-en">Logo</span>
+                        </h3>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem; text-align: left;">
+                            <div class="form-group">
+                                <label for="logo-file" style="display: block; margin-bottom: 0.25rem;"><span class="lang-fr">Uploader un Logo (Local)</span><span class="lang-en">Upload a Logo (Local)</span></label>
+                                <input type="file" id="logo-file" accept="image/*" class="form-control" style="font-size: 0.75rem; padding: 0.25rem; background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #ffffff; width: 100%;">
+                            </div>
+                            <div class="form-group">
+                                <label for="logo-url"><span class="lang-fr">Ou URL de logo (Image en ligne)</span><span class="lang-en">Or logo URL (Online image)</span></label>
+                                <input type="text" id="logo-url" class="form-control" placeholder="https://example.com/logo.png">
+                            </div>
+                            <div class="row-group" style="gap: 1rem; display: flex;">
+                                <div class="form-group" style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                        <label for="logo-size" style="margin-bottom: 0;"><span class="lang-fr">Taille Logo</span><span class="lang-en">Logo Size</span></label>
+                                        <span id="logo-size-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">2.4rem</span>
+                                    </div>
+                                    <input type="range" id="logo-size" min="1.0" max="8.0" step="0.1" value="2.4">
+                                </div>
+                                <div class="form-group" style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                        <label for="logo-opacity" style="margin-bottom: 0;"><span class="lang-fr">Opacité</span><span class="lang-en">Opacity</span></label>
+                                        <span id="logo-opacity-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">85%</span>
+                                    </div>
+                                    <input type="range" id="logo-opacity" min="0.1" max="1.0" step="0.05" value="0.85">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Card 4: Logo Integration -->
-                <div class="form-card">
-                    <h3 class="card-title">
-                        <span class="lang-fr">Logo</span>
-                        <span class="lang-en">Logo</span>
-                    </h3>
-                    <div style="display: flex; flex-direction: column; gap: 0.75rem; text-align: left;">
-                        <div class="form-group">
-                            <label for="logo-file" style="display: block; margin-bottom: 0.25rem;"><span class="lang-fr">Uploader un Logo (Local)</span><span class="lang-en">Upload a Logo (Local)</span></label>
-                            <input type="file" id="logo-file" accept="image/*" class="form-control" style="font-size: 0.75rem; padding: 0.25rem; background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #ffffff; width: 100%;">
+                <!-- Tab 2: Style & Anim (Animation, Theme, Colors) -->
+                <div class="tab-content" data-tab-content="style">
+                    <!-- Design Theme Card -->
+                    <div class="form-card">
+                        <h3 class="card-title">
+                            <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"></path></svg>
+                            <span class="lang-fr">Thème du design</span>
+                            <span class="lang-en">Design Theme</span>
+                        </h3>
+                        <div class="row-group">
+                            <div class="form-group">
+                                <div class="theme-toggle-group" style="display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 2px; gap: 2px; width: 100%;">
+                                    <button type="button" class="theme-btn active" data-theme="dark">
+                                        <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                                        <span class="lang-fr">Sombre</span><span class="lang-en">Dark</span>
+                                    </button>
+                                    <button type="button" class="theme-btn" data-theme="light">
+                                        <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                                        <span class="lang-fr">Clair</span><span class="lang-en">Light</span>
+                                    </button>
+                                </div>
+                                <input type="hidden" id="theme" value="dark">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="logo-url"><span class="lang-fr">Ou URL de logo (Image en ligne)</span><span class="lang-en">Or logo URL (Online image)</span></label>
-                            <input type="text" id="logo-url" class="form-control" placeholder="https://example.com/logo.png">
+                    </div>
+
+                    <!-- Animation Settings Card -->
+                    <div class="form-card">
+                        <h3 class="card-title">
+                            <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                            <span class="lang-fr">Animation</span>
+                            <span class="lang-en">Animation</span>
+                        </h3>
+                        <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+                            <div>
+                                <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; display: block; margin-bottom: 0.4rem; text-align: left;"><span class="lang-fr">Effet</span><span class="lang-en">Effect</span></span>
+                                <div class="animation-grid">
+                                    <button type="button" class="anim-btn active" data-anim="none" title="Aucune animation (Statique)">
+                                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><rect x="9" y="9" width="6" height="6"></rect></svg>
+                                        <span class="lang-fr">Statique</span><span class="lang-en">Static</span>
+                                    </button>
+                                    <button type="button" class="anim-btn" data-anim="pulse" title="Variation d'intensité (Pulse)">
+                                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                                        <span class="lang-fr">Pulse</span><span class="lang-en">Pulse</span>
+                                    </button>
+                                    <button type="button" class="anim-btn" data-anim="wave" title="Déplacement fluide (Vague)">
+                                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20M2 8h16M2 16h12"></path></svg>
+                                        <span class="lang-fr">Vague</span><span class="lang-en">Wave</span>
+                                    </button>
+                                    <button type="button" class="anim-btn" data-anim="shimmer" title="Variation de teintes (Shimmer)">
+                                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                        <span class="lang-fr">Shimmer</span><span class="lang-en">Shimmer</span>
+                                    </button>
+                                    <button type="button" class="anim-btn" data-anim="monochrome" title="Monochrome animé (Mono)">
+                                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10V2z"></path></svg>
+                                        <span class="lang-fr">Mono</span><span class="lang-en">Mono</span>
+                                    </button>
+                                    <button type="button" class="anim-btn" data-anim="eclipse" title="Orbites croisées lentes (Éclipse)">
+                                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path><path d="M2 12h20"></path></svg>
+                                        <span class="lang-fr">Éclipse</span><span class="lang-en">Eclipse</span>
+                                    </button>
+                                </div>
+                                <input type="hidden" id="ctrl-animation" value="none">
+                            </div>
+                            
+                            <div>
+                                <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; display: block; margin-bottom: 0.4rem; text-align: left;"><span class="lang-fr">Vitesse</span><span class="lang-en">Speed</span></span>
+                                <div class="speed-toggle-group" style="max-width: 180px;">
+                                    <button type="button" class="speed-btn" data-speed="slow" title="Lent (Slow)" style="display: flex; align-items: center; justify-content: center; height: 32px;">
+                                        <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                    </button>
+                                    <button type="button" class="speed-btn active" data-speed="medium" title="Normal (Medium)" style="display: flex; align-items: center; justify-content: center; height: 32px;">
+                                        <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
+                                    </button>
+                                    <button type="button" class="speed-btn" data-speed="fast" title="Rapide (Fast)" style="display: flex; align-items: center; justify-content: center; height: 32px;">
+                                        <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                    </button>
+                                </div>
+                                <input type="hidden" id="ctrl-speed" value="medium">
+                            </div>
+                            
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.25rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.6rem;">
+                                <label for="ctrl-animate-border" style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left; cursor: pointer; user-select: none;"><span class="lang-fr">Animer la barre du bas</span><span class="lang-en">Animate bottom border</span></label>
+                                <label class="switch-toggle" style="position: relative; display: inline-block; width: 36px; height: 20px;">
+                                    <input type="checkbox" id="ctrl-animate-border" checked>
+                                    <span class="switch-slider"></span>
+                                </label>
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.25rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.6rem;">
+                                <label for="ctrl-transparent-bg" style="flex: 1; text-align: left; cursor: pointer; user-select: none; display: flex; flex-direction: column;">
+                                    <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af;"><span class="lang-fr">Fond transparent</span><span class="lang-en">Transparent background</span></span>
+                                    <span style="display: block; font-size: 0.68rem; color: #6b7280; font-family: var(--font-sans);"><span class="lang-fr">Pour créer un asset superposable (PNG)</span><span class="lang-en">To create an overlay asset (PNG)</span></span>
+                                </label>
+                                <label class="switch-toggle" style="position: relative; display: inline-block; width: 36px; height: 20px;">
+                                    <input type="checkbox" id="ctrl-transparent-bg">
+                                    <span class="switch-slider"></span>
+                                </label>
+                            </div>
                         </div>
-                        <div class="row-group" style="gap: 1rem; display: flex;">
-                            <div class="form-group" style="flex: 1;">
+                    </div>
+
+                    <!-- Custom Colors Card -->
+                    <div class="form-card">
+                        <h3 class="card-title">
+                            <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 2 12 22Z"></path><path d="M12 2V22"></path><path d="M12 12L19.07 4.93"></path></svg>
+                            <span class="lang-fr">Couleurs Personnalisées</span>
+                            <span class="lang-en">Custom Colors</span>
+                        </h3>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <!-- FOND Group -->
+                            <div style="border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 0.75rem; background: rgba(255, 255, 255, 0.01);">
+                                <span style="font-family: var(--font-title-sans); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--accent-color, #fb923c); display: block; margin-bottom: 0.5rem; letter-spacing: 0.05em;"><span class="lang-fr">Fond</span><span class="lang-en">Background</span></span>
+                                <div class="color-pickers">
+                                    <div class="color-picker-wrapper" title="Couleur de l'Accent (Néon)">
+                                        <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Accent</span><span class="lang-en">Accent</span></span>
+                                        <input type="color" id="color-accent" value="#fb923c">
+                                        <span id="accent-hex">#fb923c</span>
+                                    </div>
+                                    <div class="color-picker-wrapper" title="Couleur du Halo (Glow)">
+                                        <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Halo</span><span class="lang-en">Halo</span></span>
+                                        <input type="color" id="color-glow" value="#3b82f6">
+                                        <span id="glow-hex">#3b82f6</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- TEXTE Group -->
+                            <div style="border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 0.75rem; background: rgba(255, 255, 255, 0.01);">
+                                <span style="font-family: var(--font-title-sans); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--accent-color, #fb923c); display: block; margin-bottom: 0.5rem; letter-spacing: 0.05em;"><span class="lang-fr">Texte</span><span class="lang-en">Text</span></span>
+                                <div class="color-pickers" style="grid-template-columns: repeat(3, 1fr);">
+                                    <div class="color-picker-wrapper" title="Couleur du Nom">
+                                        <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Nom</span><span class="lang-en">Name</span></span>
+                                        <input type="color" id="color-name" value="#ffffff">
+                                        <span id="name-hex">#ffffff</span>
+                                    </div>
+                                    <div class="color-picker-wrapper" title="Couleur du Titre">
+                                        <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Titre</span><span class="lang-en">Title</span></span>
+                                        <input type="color" id="color-title" value="#ffffff">
+                                        <span id="title-hex">#ffffff</span>
+                                    </div>
+                                    <div class="color-picker-wrapper" title="Couleur de l'Ombre / Glow">
+                                        <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Ombre</span><span class="lang-en">Shadow</span></span>
+                                        <input type="color" id="color-shadow" value="#000000">
+                                        <span id="shadow-hex">#000000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Disposition (Position, Size, Effects) -->
+                <div class="tab-content" data-tab-content="layout">
+                    <!-- Position Card -->
+                    <div class="form-card">
+                        <h3 class="card-title">
+                            <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="17" x2="13" y2="17"></line></svg>
+                            <span class="lang-fr">Position & Alignement</span>
+                            <span class="lang-en">Position & Alignment</span>
+                        </h3>
+                        <div style="display: flex; align-items: center; gap: 0.75rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 0.45rem 0.65rem; border-radius: 12px; margin-bottom: 0.85rem;">
+                            <div class="alignment-grid">
+                                <button type="button" class="align-btn top-left" data-pos="top" data-align="left" title="En haut à gauche"></button>
+                                <button type="button" class="align-btn top-right" data-pos="top" data-align="right" title="En haut à droite"></button>
+                                <button type="button" class="align-btn bottom-left" data-pos="bottom" data-align="left" title="En bas à gauche"></button>
+                                <button type="button" class="align-btn bottom-right" data-pos="bottom" data-align="right" title="En bas à droite"></button>
+                            </div>
+                            <div style="font-family: var(--font-sans); font-size: 0.72rem; color: #9ca3af; line-height: 1.35; flex: 1; text-align: left;">
+                                <span class="lang-fr">Cliquez sur un quadrant pour positionner et aligner le texte sur votre fond d'écran.</span>
+                                <span class="lang-en">Click on a quadrant to position and align the text on your backdrop.</span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="position" value="bottom">
+                        <input type="hidden" id="align" value="right">
+
+                        <div class="row-group" style="margin-bottom: 0.85rem;">
+                            <div class="form-group">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                                    <label for="logo-size" style="margin-bottom: 0;"><span class="lang-fr">Taille Logo</span><span class="lang-en">Logo Size</span></label>
-                                    <span id="logo-size-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">2.4rem</span>
+                                    <label for="size" style="margin-bottom: 0;"><span class="lang-fr">Taille Globale</span><span class="lang-en">Global Size</span></label>
+                                    <span id="size-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">2.2rem</span>
                                 </div>
-                                <input type="range" id="logo-size" min="1.0" max="8.0" step="0.1" value="2.4">
+                                <input type="range" id="size" min="1.0" max="12.0" step="0.1" value="2.2">
                             </div>
-                            <div class="form-group" style="flex: 1;">
+                            
+                            <div class="form-group">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                                    <label for="logo-opacity" style="margin-bottom: 0;"><span class="lang-fr">Opacité</span><span class="lang-en">Opacity</span></label>
-                                    <span id="logo-opacity-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">85%</span>
+                                    <label for="ratio" style="margin-bottom: 0;"><span class="lang-fr">Ratio Titre/Nom</span><span class="lang-en">Title/Name Ratio</span></label>
+                                    <span id="ratio-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">45%</span>
                                 </div>
-                                <input type="range" id="logo-opacity" min="0.1" max="1.0" step="0.05" value="0.85">
+                                <input type="range" id="ratio" min="0.1" max="1.5" step="0.05" value="0.45">
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Card 5: Animation Config -->
-                <div class="form-card">
-                    <h3 class="card-title">
-                        <span class="lang-fr">Animation</span>
-                        <span class="lang-en">Animation</span>
-                    </h3>
-                    <div style="display: flex; flex-direction: column; gap: 0.85rem;">
-                        <div>
-                            <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; display: block; margin-bottom: 0.4rem; text-align: left;"><span class="lang-fr">Effet</span><span class="lang-en">Effect</span></span>
-                            <div class="animation-grid">
-                                <button type="button" class="anim-btn active" data-anim="none" title="Aucune animation (Statique)">
-                                    <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><rect x="9" y="9" width="6" height="6"></rect></svg>
-                                    <span class="lang-fr">Statique</span><span class="lang-en">Static</span>
+                        <div class="form-group">
+                            <label><span class="lang-fr">Effet du Texte (Ombre / Néon)</span><span class="lang-en">Text Effect (Shadow / Neon)</span></label>
+                            <div class="texteffect-toggle-group" style="display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 2px; gap: 2px; width: 100%;">
+                                <button type="button" class="texteffect-btn" data-effect="none" title="Aucun effet">
+                                    <span class="lang-fr">Aucun</span><span class="lang-en">None</span>
                                 </button>
-                                <button type="button" class="anim-btn" data-anim="pulse" title="Variation d'intensité (Pulse)">
-                                    <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                                    <span class="lang-fr">Pulse</span><span class="lang-en">Pulse</span>
+                                <button type="button" class="texteffect-btn active" data-effect="shadow-soft" title="Ombre Douce">
+                                    <span class="lang-fr">Douce</span><span class="lang-en">Soft</span>
                                 </button>
-                                <button type="button" class="anim-btn" data-anim="wave" title="Déplacement fluide (Vague)">
-                                    <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20M2 8h16M2 16h12"></path></svg>
-                                    <span class="lang-fr">Vague</span><span class="lang-en">Wave</span>
+                                <button type="button" class="texteffect-btn" data-effect="shadow-strong" title="Ombre Forte (Très lisible)">
+                                    <span class="lang-fr">Forte</span><span class="lang-en">Strong</span>
                                 </button>
-                                <button type="button" class="anim-btn" data-anim="shimmer" title="Variation de teintes (Shimmer)">
-                                    <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                                    <span class="lang-fr">Shimmer</span><span class="lang-en">Shimmer</span>
+                                <button type="button" class="texteffect-btn" data-effect="glow-neon" title="Glow Néon Blanc">
+                                    <span class="lang-fr">Néon B.</span><span class="lang-en">Neon W.</span>
                                 </button>
-                                <button type="button" class="anim-btn" data-anim="monochrome" title="Monochrome animé (Mono)">
-                                    <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10V2z"></path></svg>
-                                    <span class="lang-fr">Mono</span><span class="lang-en">Mono</span>
-                                </button>
-                                <button type="button" class="anim-btn" data-anim="eclipse" title="Orbites croisées lentes (Éclipse)">
-                                    <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path><path d="M2 12h20"></path></svg>
-                                    <span class="lang-fr">Éclipse</span><span class="lang-en">Eclipse</span>
+                                <button type="button" class="texteffect-btn" data-effect="glow-matched" title="Glow Couleur (Néon Assorti)">
+                                    <span class="lang-fr">Néon Ass.</span><span class="lang-en">Neon Match</span>
                                 </button>
                             </div>
-                            <input type="hidden" id="ctrl-animation" value="none">
-                        </div>
-                        
-                        <div>
-                            <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; display: block; margin-bottom: 0.4rem; text-align: left;"><span class="lang-fr">Vitesse</span><span class="lang-en">Speed</span></span>
-                            <div class="speed-toggle-group" style="max-width: 180px;">
-                                <button type="button" class="speed-btn" data-speed="slow" title="Lent (Slow)" style="display: flex; align-items: center; justify-content: center; height: 32px;">
-                                    <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                </button>
-                                <button type="button" class="speed-btn active" data-speed="medium" title="Normal (Medium)" style="display: flex; align-items: center; justify-content: center; height: 32px;">
-                                    <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
-                                </button>
-                                <button type="button" class="speed-btn" data-speed="fast" title="Rapide (Fast)" style="display: flex; align-items: center; justify-content: center; height: 32px;">
-                                    <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                                </button>
-                            </div>
-                            <input type="hidden" id="ctrl-speed" value="medium">
-                        </div>
-                        
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.25rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.6rem;">
-                            <label for="ctrl-animate-border" style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left; cursor: pointer; user-select: none;"><span class="lang-fr">Animer la barre du bas</span><span class="lang-en">Animate bottom border</span></label>
-                            <label class="switch-toggle" style="position: relative; display: inline-block; width: 36px; height: 20px;">
-                                <input type="checkbox" id="ctrl-animate-border" checked>
-                                <span class="switch-slider"></span>
-                            </label>
-                        </div>
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.25rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.6rem;">
-                            <label for="ctrl-transparent-bg" style="flex: 1; text-align: left; cursor: pointer; user-select: none; display: flex; flex-direction: column;">
-                                <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af;"><span class="lang-fr">Fond transparent</span><span class="lang-en">Transparent background</span></span>
-                                <span style="display: block; font-size: 0.68rem; color: #6b7280; font-family: var(--font-sans);"><span class="lang-fr">Pour créer un asset superposable (PNG)</span><span class="lang-en">To create an overlay asset (PNG)</span></span>
-                            </label>
-                            <label class="switch-toggle" style="position: relative; display: inline-block; width: 36px; height: 20px;">
-                                <input type="checkbox" id="ctrl-transparent-bg">
-                                <span class="switch-slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 6: Colors -->
-                <div class="form-card">
-                    <h3 class="card-title">
-                        <span class="lang-fr">Couleurs Personnalisées</span>
-                        <span class="lang-en">Custom Colors</span>
-                    </h3>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                        <!-- FOND Group -->
-                        <div style="border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 0.75rem; background: rgba(255, 255, 255, 0.01);">
-                            <span style="font-family: var(--font-title-sans); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--accent-color, #fb923c); display: block; margin-bottom: 0.5rem; letter-spacing: 0.05em;"><span class="lang-fr">Fond</span><span class="lang-en">Background</span></span>
-                            <div class="color-pickers">
-                                <div class="color-picker-wrapper" title="Couleur de l'Accent (Néon)">
-                                    <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Accent</span><span class="lang-en">Accent</span></span>
-                                    <input type="color" id="color-accent" value="#fb923c">
-                                    <span id="accent-hex">#fb923c</span>
-                                </div>
-                                <div class="color-picker-wrapper" title="Couleur du Halo (Glow)">
-                                    <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Halo</span><span class="lang-en">Halo</span></span>
-                                    <input type="color" id="color-glow" value="#3b82f6">
-                                    <span id="glow-hex">#3b82f6</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- TEXTE Group -->
-                        <div style="border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 0.75rem; background: rgba(255, 255, 255, 0.01);">
-                            <span style="font-family: var(--font-title-sans); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--accent-color, #fb923c); display: block; margin-bottom: 0.5rem; letter-spacing: 0.05em;"><span class="lang-fr">Texte</span><span class="lang-en">Text</span></span>
-                            <div class="color-pickers" style="grid-template-columns: repeat(3, 1fr);">
-                                <div class="color-picker-wrapper" title="Couleur du Nom">
-                                    <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Nom</span><span class="lang-en">Name</span></span>
-                                    <input type="color" id="color-name" value="#ffffff">
-                                    <span id="name-hex">#ffffff</span>
-                                </div>
-                                <div class="color-picker-wrapper" title="Couleur du Titre">
-                                    <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Titre</span><span class="lang-en">Title</span></span>
-                                    <input type="color" id="color-title" value="#ffffff">
-                                    <span id="title-hex">#ffffff</span>
-                                </div>
-                                <div class="color-picker-wrapper" title="Couleur de l'Ombre / Glow">
-                                    <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Ombre</span><span class="lang-en">Shadow</span></span>
-                                    <input type="color" id="color-shadow" value="#000000">
-                                    <span id="shadow-hex">#000000</span>
-                                </div>
-                            </div>
+                            <input type="hidden" id="text-effect" value="shadow-soft">
                         </div>
                     </div>
                 </div>

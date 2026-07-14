@@ -196,17 +196,10 @@ const previewIframe = document.getElementById('preview-iframe');
 
         function applyUiTheme() {
             const storedUiTheme = localStorage.getItem('backdrop-studio-ui-theme') || 'system';
-            const resolvedTheme = getResolvedUiTheme();
             
-            // Sync active button classes
-            const uiThemeButtons = document.querySelectorAll('.ui-theme-btn');
-            uiThemeButtons.forEach(btn => {
-                if (btn.getAttribute('data-ui-theme') === storedUiTheme) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
+            // Add preference class to body to control the visible icon on the cycling button via CSS
+            document.body.classList.remove('ui-theme-pref-system', 'ui-theme-pref-light', 'ui-theme-pref-dark');
+            document.body.classList.add('ui-theme-pref-' + storedUiTheme);
         }
 
         function updateUrlTextOnly() {
@@ -1084,15 +1077,23 @@ const previewIframe = document.getElementById('preview-iframe');
         syncAlignmentUI();
         syncLangButtons();
 
-        // Bind UI Theme switcher buttons in the app header
-        const uiThemeButtons = document.querySelectorAll('.ui-theme-btn');
-        uiThemeButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const selectedUiTheme = btn.getAttribute('data-ui-theme');
-                localStorage.setItem('backdrop-studio-ui-theme', selectedUiTheme);
+        // Bind UI Theme cycling button in the app header
+        const uiThemeCycleBtn = document.getElementById('ui-theme-cycle-btn');
+        if (uiThemeCycleBtn) {
+            uiThemeCycleBtn.addEventListener('click', () => {
+                const storedUiTheme = localStorage.getItem('backdrop-studio-ui-theme') || 'system';
+                let nextUiTheme = 'light';
+                if (storedUiTheme === 'system') {
+                    nextUiTheme = 'light';
+                } else if (storedUiTheme === 'light') {
+                    nextUiTheme = 'dark';
+                } else if (storedUiTheme === 'dark') {
+                    nextUiTheme = 'system';
+                }
+                localStorage.setItem('backdrop-studio-ui-theme', nextUiTheme);
                 updateUrlTextOnly();
             });
-        });
+        }
 
         // Watch for system color scheme changes
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
@@ -1111,5 +1112,26 @@ const previewIframe = document.getElementById('preview-iframe');
             logoTrigger.addEventListener('click', () => {
                 localStorage.removeItem('backdrop-studio-config');
                 window.location.href = window.location.pathname;
+            });
+        }
+
+        // Bind Settings Tabs Navigation (Contenu / Style / Disposition)
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        if (tabButtons.length > 0 && tabContents.length > 0) {
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const targetTab = btn.getAttribute('data-tab');
+                    tabContents.forEach(content => {
+                        if (content.getAttribute('data-tab-content') === targetTab) {
+                            content.classList.add('active');
+                        } else {
+                            content.classList.remove('active');
+                        }
+                    });
+                });
             });
         }
