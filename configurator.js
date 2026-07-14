@@ -120,6 +120,32 @@ const previewIframe = document.getElementById('preview-iframe');
             updateUrl();
         }
 
+        function transitionBrandColors(oldMode, oldTheme, newMode, newTheme) {
+            const oldDefaults = brandDefaults[oldMode][oldTheme];
+            const newDefaults = brandDefaults[newMode][newTheme];
+            
+            if (ctrlColorAccent.value === oldDefaults.accent) {
+                ctrlColorAccent.value = newDefaults.accent;
+                txtAccentHex.textContent = newDefaults.accent;
+            }
+            if (ctrlColorGlow.value === oldDefaults.glow) {
+                ctrlColorGlow.value = newDefaults.glow;
+                txtGlowHex.textContent = newDefaults.glow;
+            }
+            if (ctrlColorName.value === oldDefaults.name) {
+                ctrlColorName.value = newDefaults.name;
+                txtNameHex.textContent = newDefaults.name;
+            }
+            if (ctrlColorTitle.value === oldDefaults.title) {
+                ctrlColorTitle.value = newDefaults.title;
+                txtTitleHex.textContent = newDefaults.title;
+            }
+            if (ctrlColorShadow.value === oldDefaults.shadow) {
+                ctrlColorShadow.value = newDefaults.shadow;
+                txtShadowHex.textContent = newDefaults.shadow;
+            }
+        }
+
         function updateFooterText() {
             const configFooter = document.getElementById('config-footer');
             if (!configFooter) return;
@@ -498,9 +524,16 @@ const previewIframe = document.getElementById('preview-iframe');
         const modeButtons = document.querySelectorAll('.mode-btn');
         modeButtons.forEach(btn => {
             btn.addEventListener('click', () => {
-                ctrlMode.value = btn.getAttribute('data-mode');
+                const oldMode = ctrlMode.value;
+                const oldTheme = ctrlTheme.value;
+                const newMode = btn.getAttribute('data-mode');
+                
+                transitionBrandColors(oldMode, oldTheme, newMode, oldTheme);
+                
+                ctrlMode.value = newMode;
                 syncModeButtons();
-                applyBrandDefaults();
+                updateFooterText();
+                updateUrl();
             });
         });
 
@@ -667,12 +700,16 @@ const previewIframe = document.getElementById('preview-iframe');
         const btnQrPersonaToggle = document.getElementById('btn-qr-persona-toggle');
         if (btnQrPersonaToggle) {
             btnQrPersonaToggle.addEventListener('click', () => {
-                if (ctrlMode.value === 'artist') {
-                    ctrlMode.value = 'business';
-                } else {
-                    ctrlMode.value = 'artist';
-                }
-                applyBrandDefaults();
+                const oldMode = ctrlMode.value;
+                const oldTheme = ctrlTheme.value;
+                const newMode = (oldMode === 'artist') ? 'business' : 'artist';
+                
+                transitionBrandColors(oldMode, oldTheme, newMode, oldTheme);
+                
+                ctrlMode.value = newMode;
+                if (typeof syncModeButtons === 'function') syncModeButtons();
+                updateFooterText();
+                updateUrl();
             });
         }
 
@@ -682,8 +719,15 @@ const previewIframe = document.getElementById('preview-iframe');
             btn.addEventListener('click', () => {
                 themeButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                ctrlTheme.value = btn.getAttribute('data-theme');
-                applyBrandDefaults();
+                
+                const oldMode = ctrlMode.value;
+                const oldTheme = ctrlTheme.value;
+                const newTheme = btn.getAttribute('data-theme');
+                
+                transitionBrandColors(oldMode, oldTheme, oldMode, newTheme);
+                
+                ctrlTheme.value = newTheme;
+                updateUrl();
             });
         });
 
