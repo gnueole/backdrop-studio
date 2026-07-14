@@ -1103,7 +1103,10 @@
                     }
 
                     const chunks = [];
-                    const recorder = new MediaRecorder(stream, { mimeType });
+                    const recorder = new MediaRecorder(stream, { 
+                        mimeType,
+                        videoBitsPerSecond: 12000000 // 12 Mbps for maximum visual quality
+                    });
                     
                     recorder.ondataavailable = e => {
                         if (e.data.size > 0) chunks.push(e.data);
@@ -1122,22 +1125,23 @@
                         resolve();
                     };
 
-                    let recStartTime = null;
-                    let animId = null;
+                    let currentFrame = 0;
+                    const fps = 30;
+                    const totalFrames = duration * fps;
 
-                    function drawRecordFrame(timestamp) {
-                        if (!recStartTime) recStartTime = timestamp;
-                        const elapsed = (timestamp - recStartTime) / 1000;
+                    recorder.start();
 
-                        if (onProgress) {
-                            onProgress(Math.min(100, (elapsed / duration) * 100));
-                        }
-
-                        if (elapsed >= duration) {
+                    function recordNextFrame() {
+                        if (currentFrame > totalFrames) {
                             if (onProgress) onProgress(100);
                             recorder.stop();
-                            cancelAnimationFrame(animId);
                             return;
+                        }
+
+                        const elapsed = currentFrame / fps;
+
+                        if (onProgress) {
+                            onProgress(Math.min(99, (currentFrame / totalFrames) * 100));
                         }
 
                         // Handle boomerang loop logic for video animation time
@@ -1157,11 +1161,14 @@
                         // Draw texts and borders
                         drawTextOverlay(recCtx, w, h, elapsed);
 
-                        animId = requestAnimationFrame(drawRecordFrame);
+                        currentFrame++;
+                        
+                        // We use a small timeout to let the MediaRecorder encode the frame
+                        setTimeout(recordNextFrame, 20); // ~50 frames per second encoding speed, very fast!
                     }
 
-                    recorder.start();
-                    animId = requestAnimationFrame(drawRecordFrame);
+                    // Start the deterministic recording loop
+                    recordNextFrame();
                 });
             };
         })();
