@@ -172,22 +172,11 @@ const previewIframe = document.getElementById('preview-iframe');
             if (ctrlAnimateBorder.checked) queryParams.set('borderanim', 'on');
             if (ctrlTransparentBg.checked) queryParams.set('bg', 'transparent');
 
-            const defaults = brandDefaults[ctrlMode.value][ctrlTheme.value];
-            if (ctrlColorAccent.value.toLowerCase() !== defaults.accent.toLowerCase()) {
-                queryParams.set('accent', ctrlColorAccent.value);
-            }
-            if (ctrlColorGlow.value.toLowerCase() !== defaults.glow.toLowerCase()) {
-                queryParams.set('glow', ctrlColorGlow.value);
-            }
-            if (ctrlColorName.value.toLowerCase() !== defaults.name.toLowerCase()) {
-                queryParams.set('namecolor', ctrlColorName.value);
-            }
-            if (ctrlColorTitle.value.toLowerCase() !== defaults.title.toLowerCase()) {
-                queryParams.set('titlecolor', ctrlColorTitle.value);
-            }
-            if (ctrlColorShadow.value.toLowerCase() !== defaults.shadow.toLowerCase()) {
-                queryParams.set('shadowcolor', ctrlColorShadow.value);
-            }
+            queryParams.set('accent', ctrlColorAccent.value);
+            queryParams.set('glow', ctrlColorGlow.value);
+            queryParams.set('namecolor', ctrlColorName.value);
+            queryParams.set('titlecolor', ctrlColorTitle.value);
+            queryParams.set('shadowcolor', ctrlColorShadow.value);
             
             return queryParams;
         }

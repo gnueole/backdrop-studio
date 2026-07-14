@@ -1372,7 +1372,7 @@ html, body.theme-dark {
 
         /* Preset Cards in Light Mode */
         body.theme-light .preset-card {
-            background: #ffffff !important;
+            background-color: #ffffff !important;
             border: 1px solid rgba(0, 0, 0, 0.12) !important;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
         }
@@ -1383,11 +1383,11 @@ html, body.theme-dark {
         body.theme-light .preset-card.active {
             border-color: var(--accent-color) !important;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
-            background: #ffffff !important;
+            background-color: #ffffff !important;
         }
         body.theme-light .preset-card.inactive {
             border-color: rgba(239, 68, 68, 0.4) !important;
-            background: rgba(239, 68, 68, 0.02) !important;
+            background-color: rgba(239, 68, 68, 0.02) !important;
         }
         body.theme-light .toggle-card .toggle-icon {
             color: var(--text-color, #0f172a) !important;

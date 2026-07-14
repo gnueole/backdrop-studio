@@ -249,7 +249,10 @@
             // 1. Parse URL Configuration
             const params = new URLSearchParams(window.location.search);
             const theme = params.get('theme') || 'dark';
-            const mode = params.get('mode') || params.get('persona') || 'business';
+            // Resolve host mode based on domain (eole.me -> artist, others -> business)
+            const hostname = window.location.hostname;
+            const hostMode = (hostname.indexOf('eole.me') !== -1) ? 'artist' : 'business';
+            const mode = params.get('mode') || params.get('persona') || hostMode;
             const lang = params.get('hl') || params.get('lang') || 'fr';
             
             document.body.className = '';
