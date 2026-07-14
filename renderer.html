@@ -67,6 +67,46 @@
             transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
+        /* Logo Positions */
+        .logo-pos-left {
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 0.75rem !important;
+        }
+        .logo-pos-left #backdrop-logo-container {
+            margin-bottom: 0 !important;
+            order: 1;
+        }
+        .logo-pos-left #backdrop-text-group {
+            order: 2;
+        }
+
+        .logo-pos-right {
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 0.75rem !important;
+        }
+        .logo-pos-right #backdrop-logo-container {
+            margin-bottom: 0 !important;
+            order: 2;
+        }
+        .logo-pos-right #backdrop-text-group {
+            order: 1;
+        }
+
+        .logo-pos-top-left #backdrop-logo-container {
+            align-self: flex-start !important;
+            margin-bottom: 0.25rem !important;
+        }
+        .logo-pos-top-center #backdrop-logo-container {
+            align-self: center !important;
+            margin-bottom: 0.25rem !important;
+        }
+        .logo-pos-top-right #backdrop-logo-container {
+            align-self: flex-end !important;
+            margin-bottom: 0.25rem !important;
+        }
+
         /* Text shadow / glow effect states */
         .text-effect-none #backdrop-name, 
         .text-effect-none #backdrop-title {
@@ -230,14 +270,16 @@
     
     <!-- Name / Title Container -->
     <div class="backdrop-text-container" id="backdrop-text-container">
-        <div id="backdrop-logo-container" style="display: none; margin-bottom: 0.15rem; line-height: 0;">
+        <div id="backdrop-logo-container" style="display: none; line-height: 0;">
             <img id="backdrop-logo" src="" alt="Logo" style="max-height: 100%; width: auto; object-fit: contain;">
         </div>
-        <h1 id="backdrop-name"></h1>
-        <div class="backdrop-subtitle-wrapper" id="backdrop-subtitle-wrapper" style="display: flex; align-items: center; gap: 0.4em; flex-wrap: wrap;">
-            <p id="backdrop-title" style="margin: 0;"></p>
-            <span id="backdrop-company-sep" style="opacity: 0.4; display: none;">|</span>
-            <span id="backdrop-company" style="font-family: var(--font-sans); font-weight: 400; opacity: 0.6; display: none; font-size: 0.85em;"></span>
+        <div id="backdrop-text-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
+            <h1 id="backdrop-name"></h1>
+            <div class="backdrop-subtitle-wrapper" id="backdrop-subtitle-wrapper" style="display: flex; align-items: center; gap: 0.4em; flex-wrap: wrap;">
+                <p id="backdrop-title" style="margin: 0;"></p>
+                <span id="backdrop-company-sep" style="opacity: 0.4; display: none;">|</span>
+                <span id="backdrop-company" style="font-family: var(--font-sans); font-weight: 400; opacity: 0.6; display: none; font-size: 0.85em;"></span>
+            </div>
         </div>
     </div>
     
@@ -306,6 +348,21 @@
             const logoEl = document.getElementById('backdrop-logo');
             const logoContainer = document.getElementById('backdrop-logo-container');
             
+            // 3d. Logo Position & Align setup
+            const logoPosParam = params.get('logopos') || 'top-right';
+            container.classList.add('logo-pos-' + logoPosParam);
+            
+            const textGroupEl = document.getElementById('backdrop-text-group');
+            if (textGroupEl) {
+                if (align === 'right') {
+                    textGroupEl.style.alignItems = 'flex-end';
+                } else if (align === 'center') {
+                    textGroupEl.style.alignItems = 'center';
+                } else {
+                    textGroupEl.style.alignItems = 'flex-start';
+                }
+            }
+
             // Align logo and subtitle wrapper based on align parameter
             if (subtitleWrapper) {
                 if (align === 'right') {
@@ -317,12 +374,16 @@
                 }
             }
             if (logoContainer) {
-                if (align === 'right') {
-                    logoContainer.style.alignSelf = 'flex-end';
-                } else if (align === 'center') {
+                if (logoPosParam === 'left' || logoPosParam === 'right') {
                     logoContainer.style.alignSelf = 'center';
                 } else {
-                    logoContainer.style.alignSelf = 'flex-start';
+                    if (logoPosParam === 'top-left') {
+                        logoContainer.style.alignSelf = 'flex-start';
+                    } else if (logoPosParam === 'top-center') {
+                        logoContainer.style.alignSelf = 'center';
+                    } else {
+                        logoContainer.style.alignSelf = 'flex-end';
+                    }
                 }
             }
             
@@ -819,6 +880,8 @@
                 }
 
                 const lineSpacing = 12;
+                const logopos = params.get('logopos') || 'top-right';
+                const logoGap = 15;
                 
                 // Logo properties
                 const hasLogo = logoParam && logoParam !== 'off';
@@ -830,12 +893,132 @@
                     logoWidth = logoEl.naturalWidth * (logoSizeVal / logoEl.naturalHeight);
                 }
                 
-                const totalTextHeight = (logoHeight ? logoHeight + lineSpacing : 0) + (nameText ? nameSizeVal : 0) + (activeTitle ? titleSizeVal : 0) + (nameText && activeTitle ? lineSpacing : 0);
+                // Calculate heights & widths
+                const textGroupHeight = (nameText ? nameSizeVal : 0) + (activeTitle ? titleSizeVal : 0) + (nameText && activeTitle ? lineSpacing : 0);
+                
+                let totalTextHeight = textGroupHeight;
+                if (hasLogo && logoHeight > 0) {
+                    if (logopos === 'left' || logopos === 'right') {
+                        totalTextHeight = Math.max(logoHeight, textGroupHeight);
+                    } else {
+                        totalTextHeight = logoHeight + lineSpacing + textGroupHeight;
+                    }
+                }
+
+                // Compute bounding text width to align side logo
+                let textGroupWidth = 0;
+                if (nameText) {
+                    cCtx.font = `800 ${nameSizeVal}px ${nameFontFamily}`;
+                    textGroupWidth = Math.max(textGroupWidth, cCtx.measureText(nameText).width);
+                }
+                if (activeTitle) {
+                    if (activeCompany) {
+                        const sepText = " | ";
+                        const companySizeVal = titleSizeVal * 0.85;
+                        cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                        const titleWidth = cCtx.measureText(activeTitle).width;
+                        cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                        const sepWidth = cCtx.measureText(sepText).width;
+                        cCtx.font = `400 ${companySizeVal}px ${nameFontFamily}`;
+                        const companyWidth = cCtx.measureText(activeCompany).width;
+                        textGroupWidth = Math.max(textGroupWidth, titleWidth + sepWidth + companyWidth);
+                    } else {
+                        cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                        textGroupWidth = Math.max(textGroupWidth, cCtx.measureText(activeTitle).width);
+                    }
+                }
+
+                let totalWidth = textGroupWidth;
+                if (hasLogo && logoHeight > 0 && (logopos === 'left' || logopos === 'right')) {
+                    totalWidth = logoWidth + logoGap + textGroupWidth;
+                } else if (hasLogo && logoHeight > 0) {
+                    totalWidth = Math.max(logoWidth, textGroupWidth);
+                }
 
                 if (position === 'bottom') {
                     y = h - 0.08 * h - totalTextHeight;
                 } else if (position === 'middle' || position === 'center') {
                     y = (h - totalTextHeight) / 2;
+                }
+
+                // Calculate block X based on align
+                let blockX = 0.08 * w;
+                if (align === 'right') {
+                    blockX = w - 0.08 * w - totalWidth;
+                } else if (align === 'center') {
+                    blockX = w / 2 - totalWidth / 2;
+                }
+
+                // Compute logoX, logoY, textX, textY, and textAlign
+                let logoX = 0, logoY = y;
+                let textX = blockX;
+                let textY = y;
+                let textAlign = align;
+
+                if (hasLogo && logoHeight > 0) {
+                    if (logopos === 'left' || logopos === 'right') {
+                        logoY = y + (totalTextHeight - logoHeight) / 2;
+                        textY = y + (totalTextHeight - textGroupHeight) / 2;
+                        
+                        if (logopos === 'left') {
+                            logoX = blockX;
+                            if (align === 'right') {
+                                textAlign = 'right';
+                                textX = blockX + logoWidth + logoGap + textGroupWidth;
+                            } else if (align === 'center') {
+                                textAlign = 'center';
+                                textX = blockX + logoWidth + logoGap + textGroupWidth / 2;
+                            } else {
+                                textAlign = 'left';
+                                textX = blockX + logoWidth + logoGap;
+                            }
+                        } else {
+                            // logopos === 'right'
+                            logoX = blockX + textGroupWidth + logoGap;
+                            if (align === 'right') {
+                                textAlign = 'right';
+                                textX = blockX + textGroupWidth;
+                            } else if (align === 'center') {
+                                textAlign = 'center';
+                                textX = blockX + textGroupWidth / 2;
+                            } else {
+                                textAlign = 'left';
+                                textX = blockX;
+                            }
+                        }
+                    } else {
+                        // Top positions
+                        logoY = y;
+                        textY = y + logoHeight + lineSpacing;
+                        textAlign = align;
+
+                        if (logopos === 'top-left') {
+                            logoX = blockX;
+                        } else if (logopos === 'top-center') {
+                            logoX = blockX + (totalWidth - logoWidth) / 2;
+                        } else {
+                            // top-right
+                            logoX = blockX + totalWidth - logoWidth;
+                        }
+
+                        if (align === 'right') {
+                            textX = w - 0.08 * w;
+                        } else if (align === 'center') {
+                            textX = w / 2;
+                        } else {
+                            textX = 0.08 * w;
+                        }
+                    }
+                } else {
+                    // No logo
+                    textAlign = align;
+                    if (align === 'right') {
+                        textX = w - 0.08 * w;
+                    } else if (align === 'center') {
+                        textX = w / 2;
+                    } else {
+                        textX = 0.08 * w;
+                    }
                 }
 
                 cCtx.save();
@@ -849,16 +1032,14 @@
                 if (hasLogo && logoHeight > 0) {
                     cCtx.save();
                     cCtx.globalAlpha = parseFloat(logoOpacity);
-                    let logoX = x;
-                    if (textAlign === 'right') {
-                        logoX = x - logoWidth;
-                    } else if (textAlign === 'center') {
-                        logoX = x - logoWidth / 2;
-                    }
-                    cCtx.drawImage(logoEl, logoX, y, logoWidth, logoHeight);
+                    cCtx.drawImage(logoEl, logoX, logoY, logoWidth, logoHeight);
                     cCtx.restore();
-                    y += logoHeight + lineSpacing;
                 }
+
+                cCtx.textAlign = textAlign;
+                cCtx.textBaseline = 'top';
+
+                let currentY = textY;
 
                 if (textEffect === 'shadow-soft') {
                     cCtx.shadowColor = hexToRgba(shadowColorHex, 0.5);
@@ -877,8 +1058,8 @@
                 if (nameText) {
                     cCtx.font = `800 ${nameSizeVal}px ${nameFontFamily}`;
                     cCtx.fillStyle = decodeURIComponent(namecolor || '#ffffff');
-                    cCtx.fillText(nameText, x, y);
-                    y += nameSizeVal + lineSpacing;
+                    cCtx.fillText(nameText, textX, currentY);
+                    currentY += nameSizeVal + lineSpacing;
                 }
 
                 if (activeTitle) {
@@ -908,42 +1089,42 @@
                         
                         const totalWidth = titleWidth + sepWidth + companyWidth;
                         
-                        let titleX = x;
-                        let sepX = x;
-                        let companyX = x;
+                        let titleX = textX;
+                        let sepX = textX;
+                        let companyX = textX;
                         
                         if (textAlign === 'right') {
-                            titleX = x - totalWidth;
+                            titleX = textX - totalWidth;
                             sepX = titleX + titleWidth;
                             companyX = sepX + sepWidth;
                         } else if (textAlign === 'center') {
-                            titleX = x - totalWidth / 2;
+                            titleX = textX - totalWidth / 2;
                             sepX = titleX + titleWidth;
                             companyX = sepX + sepWidth;
                         } else {
-                            titleX = x;
-                            sepX = x + titleWidth;
+                            titleX = textX;
+                            sepX = textX + titleWidth;
                             companyX = sepX + sepWidth;
                         }
                         
                         // Draw Title
                         cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
                         cCtx.fillStyle = titleColorFinal;
-                        cCtx.fillText(activeTitle, titleX, y);
+                        cCtx.fillText(activeTitle, titleX, currentY);
                         
                         // Draw Separator
                         cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
                         cCtx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                        cCtx.fillText(sepText, sepX, y);
+                        cCtx.fillText(sepText, sepX, currentY);
                         
                         // Draw Company
                         cCtx.font = `400 ${companySizeVal}px ${nameFontFamily}`;
                         cCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-                        cCtx.fillText(activeCompany, companyX, y + (titleSizeVal - companySizeVal));
+                        cCtx.fillText(activeCompany, companyX, currentY + (titleSizeVal - companySizeVal));
                     } else {
                         cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
                         cCtx.fillStyle = titleColorFinal;
-                        cCtx.fillText(activeTitle, x, y);
+                        cCtx.fillText(activeTitle, textX, currentY);
                     }
                     cCtx.restore();
                 }

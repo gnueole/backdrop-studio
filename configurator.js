@@ -33,6 +33,7 @@ const previewIframe = document.getElementById('preview-iframe');
         const ctrlLogoUrl = document.getElementById('logo-url');
         const ctrlLogoSize = document.getElementById('logo-size');
         const ctrlLogoOpacity = document.getElementById('logo-opacity');
+        const ctrlLogoPos = document.getElementById('logo-pos');
         
         const ctrlExportRes = document.getElementById('export-res');
         const ctrlVideoDuration = document.getElementById('video-duration');
@@ -169,6 +170,7 @@ const previewIframe = document.getElementById('preview-iframe');
                 }
                 if (ctrlLogoSize.value !== '2.4') queryParams.set('logosize', ctrlLogoSize.value);
                 if (ctrlLogoOpacity.value !== '0.85') queryParams.set('logoopacity', ctrlLogoOpacity.value);
+                if (ctrlLogoPos.value !== 'top-right') queryParams.set('logopos', ctrlLogoPos.value);
             }
             
             if (ctrlBoomerang.checked) queryParams.set('boomerang', 'on');
@@ -431,7 +433,7 @@ const previewIframe = document.getElementById('preview-iframe');
 
         const controls = [
             ctrlName, ctrlCompany, ctrlTitle, ctrlTitleSecondary, ctrlTitleTransition,
-            ctrlLogoUrl, ctrlLogoSize, ctrlLogoOpacity,
+            ctrlLogoUrl, ctrlLogoSize, ctrlLogoOpacity, ctrlLogoPos,
             ctrlExportRes, ctrlVideoDuration, ctrlBoomerang,
             ctrlPosition, ctrlAlign, ctrlSize, ctrlRatio, ctrlColorAccent, ctrlColorGlow, ctrlLang, ctrlColorName, ctrlColorTitle, ctrlColorShadow, ctrlAnimation, ctrlSpeed, ctrlTextEffect, ctrlAnimateBorder, ctrlTransparentBg
         ];
@@ -1018,7 +1020,8 @@ const previewIframe = document.getElementById('preview-iframe');
                     speed: ctrlSpeed.value,
                     texteffect: ctrlTextEffect.value,
                     borderanim: ctrlAnimateBorder.checked,
-                    transparentBg: ctrlTransparentBg.checked
+                    transparentBg: ctrlTransparentBg.checked,
+                    logopos: ctrlLogoPos.value
                 };
                 localStorage.setItem('backdrop-studio-config', JSON.stringify(config));
             } catch (e) {
@@ -1069,6 +1072,7 @@ const previewIframe = document.getElementById('preview-iframe');
                     if (config.texteffect) ctrlTextEffect.value = config.texteffect;
                     if (config.borderanim !== undefined) ctrlAnimateBorder.checked = config.borderanim;
                     if (config.transparentBg !== undefined) ctrlTransparentBg.checked = config.transparentBg;
+                    if (config.logopos) ctrlLogoPos.value = config.logopos;
 
                     return true;
                 }

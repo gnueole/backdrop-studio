@@ -118,6 +118,11 @@ html, body.theme-dark {
             font-family: var(--font-sans);
         }
 
+        select option {
+            background-color: #1e293b;
+            color: #ffffff;
+        }
+
         .form-control:focus, select:focus {
             border-color: var(--accent-color, #fb923c);
             box-shadow: 0 0 0 2px rgba(251, 146, 60, 0.2);
@@ -1902,4 +1907,54 @@ html, body.theme-dark {
         }
         .help-guide-list li:last-child {
             margin-bottom: 0;
+        }
+
+        /* Unified Copy + URL block */
+        .url-copy-box {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 3px solid var(--accent-color, #fb923c);
+            border-radius: 8px;
+            padding: 0.65rem 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 0.75rem;
+        }
+        .url-copy-box:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .copy-btn {
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+            color: var(--accent-color, #fb923c);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            outline: none;
+            transition: transform 0.2s ease;
+            flex-shrink: 0;
+        }
+        .copy-btn:hover {
+            transform: scale(1.15);
+        }
+        .copy-btn:active {
+            transform: scale(0.9);
+        }
+        .output-url-text {
+            font-family: 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.8rem;
+            color: var(--accent-color, #fb923c);
+            word-break: break-all;
+            user-select: all;
+            flex: 1;
+            text-align: left;
+            max-height: 90px;
+            overflow-y: auto;
+            line-height: 1.4;
         }
