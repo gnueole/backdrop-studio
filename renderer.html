@@ -253,7 +253,15 @@
             const hostname = window.location.hostname;
             const hostMode = (hostname.indexOf('eole.me') !== -1) ? 'artist' : 'business';
             const mode = params.get('mode') || params.get('persona') || hostMode;
-            const lang = params.get('hl') || params.get('lang') || 'fr';
+            
+            let defaultLang = 'en';
+            try {
+                const navLang = navigator.language || navigator.userLanguage || '';
+                if (navLang.toLowerCase().startsWith('fr')) {
+                    defaultLang = 'fr';
+                }
+            } catch (e) {}
+            const lang = params.get('hl') || params.get('lang') || defaultLang;
             
             document.body.className = '';
             document.body.classList.add('theme-' + theme);
