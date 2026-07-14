@@ -119,7 +119,7 @@
                         <div class="row-group">
                             <div class="form-group">
                                 <label><span class="lang-fr">Persona / Mode</span><span class="lang-en">Persona / Mode</span></label>
-                                <div class="mode-toggle-group" style="display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 2px; gap: 2px; width: 100%;">
+                                <div class="mode-toggle-group segmented-control">
                                     <button type="button" class="mode-btn active" data-mode="business" title="Julien Avarre (Pro)">Julien (Pro)</button>
                                     <button type="button" class="mode-btn" data-mode="artist" title="Éole (Artiste)">Éole (Artist)</button>
                                 </div>
@@ -135,7 +135,7 @@
                             <span class="lang-fr">Informations du texte</span>
                             <span class="lang-en">Text Information</span>
                         </h3>
-                        <div class="row-group" style="gap: 1rem; margin-bottom: 0.25rem;">
+                        <div class="row-group-tight">
                             <div class="form-group">
                                 <label for="name-input"><span class="lang-fr">Nom affiché</span><span class="lang-en">Displayed Name</span></label>
                                 <input type="text" id="name-input" class="form-control" placeholder="Laisser vide pour défaut">
@@ -145,7 +145,7 @@
                                 <input type="text" id="company-input" class="form-control" placeholder="Laisser vide / 'off'">
                             </div>
                         </div>
-                        <div class="row-group" style="gap: 1rem; margin-bottom: 0.25rem;">
+                        <div class="row-group-tight">
                             <div class="form-group">
                                 <label for="title-input"><span class="lang-fr">Titre Principal</span><span class="lang-en">Primary Title</span></label>
                                 <input type="text" id="title-input" class="form-control" placeholder="Laisser vide / 'off' pour masquer">
@@ -157,7 +157,7 @@
                         </div>
                         <div class="form-group">
                             <label for="title-transition"><span class="lang-fr">Transition du Titre</span><span class="lang-en">Title Transition</span></label>
-                            <select id="title-transition" class="form-control" style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #ffffff; padding: 0.45rem; font-size: 0.78rem; outline: none; width: 100%;">
+                            <select id="title-transition" class="form-control">
                                 <option value="none">Aucune (Fixe)</option>
                                 <option value="blur">Flou (Blur In/Out)</option>
                                 <option value="scramble">Lettres mélangées (Scramble)</option>
@@ -174,27 +174,27 @@
                             <span class="lang-fr">Logo</span>
                             <span class="lang-en">Logo</span>
                         </h3>
-                        <div style="display: flex; flex-direction: column; gap: 0.75rem; text-align: left;">
+                        <div class="settings-group">
                             <div class="form-group">
-                                <label for="logo-file" style="display: block; margin-bottom: 0.25rem;"><span class="lang-fr">Uploader un Logo (Local)</span><span class="lang-en">Upload a Logo (Local)</span></label>
-                                <input type="file" id="logo-file" accept="image/*" class="form-control" style="font-size: 0.75rem; padding: 0.25rem; background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #ffffff; width: 100%;">
+                                <label for="logo-file"><span class="lang-fr">Uploader un Logo (Local)</span><span class="lang-en">Upload a Logo (Local)</span></label>
+                                <input type="file" id="logo-file" accept="image/*" class="logo-file-input">
                             </div>
                             <div class="form-group">
                                 <label for="logo-url"><span class="lang-fr">Ou URL de logo (Image en ligne)</span><span class="lang-en">Or logo URL (Online image)</span></label>
                                 <input type="text" id="logo-url" class="form-control" placeholder="https://example.com/logo.png">
                             </div>
-                            <div class="row-group" style="gap: 1rem; display: flex;">
-                                <div class="form-group" style="flex: 1;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                                        <label for="logo-size" style="margin-bottom: 0;"><span class="lang-fr">Taille Logo</span><span class="lang-en">Logo Size</span></label>
-                                        <span id="logo-size-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">2.4rem</span>
+                            <div class="row-group">
+                                <div class="form-group">
+                                    <div class="slider-label-row">
+                                        <label for="logo-size"><span class="lang-fr">Taille Logo</span><span class="lang-en">Logo Size</span></label>
+                                        <span id="logo-size-val" class="slider-value-display">2.4rem</span>
                                     </div>
                                     <input type="range" id="logo-size" min="1.0" max="8.0" step="0.1" value="2.4">
                                 </div>
-                                <div class="form-group" style="flex: 1;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                                        <label for="logo-opacity" style="margin-bottom: 0;"><span class="lang-fr">Opacité</span><span class="lang-en">Opacity</span></label>
-                                        <span id="logo-opacity-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">85%</span>
+                                <div class="form-group">
+                                    <div class="slider-label-row">
+                                        <label for="logo-opacity"><span class="lang-fr">Opacité</span><span class="lang-en">Opacity</span></label>
+                                        <span id="logo-opacity-val" class="slider-value-display">85%</span>
                                     </div>
                                     <input type="range" id="logo-opacity" min="0.1" max="1.0" step="0.05" value="0.85">
                                 </div>
@@ -214,7 +214,7 @@
                         </h3>
                         <div class="row-group">
                             <div class="form-group">
-                                <div class="theme-toggle-group" style="display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 2px; gap: 2px; width: 100%;">
+                                <div class="theme-toggle-group segmented-control">
                                     <button type="button" class="theme-btn active" data-theme="dark">
                                         <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                                         <span class="lang-fr">Sombre</span><span class="lang-en">Dark</span>
@@ -236,9 +236,9 @@
                             <span class="lang-fr">Animation</span>
                             <span class="lang-en">Animation</span>
                         </h3>
-                        <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+                        <div class="settings-group">
                             <div>
-                                <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; display: block; margin-bottom: 0.4rem; text-align: left;"><span class="lang-fr">Effet</span><span class="lang-en">Effect</span></span>
+                                <span class="switch-toggle-label"><span class="lang-fr">Effet</span><span class="lang-en">Effect</span></span>
                                 <div class="animation-grid">
                                     <button type="button" class="anim-btn active" data-anim="none" title="Aucune animation (Statique)">
                                         <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><rect x="9" y="9" width="6" height="6"></rect></svg>
@@ -269,34 +269,34 @@
                             </div>
                             
                             <div>
-                                <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; display: block; margin-bottom: 0.4rem; text-align: left;"><span class="lang-fr">Vitesse</span><span class="lang-en">Speed</span></span>
-                                <div class="speed-toggle-group" style="max-width: 180px;">
-                                    <button type="button" class="speed-btn" data-speed="slow" title="Lent (Slow)" style="display: flex; align-items: center; justify-content: center; height: 32px;">
+                                <span class="switch-toggle-label"><span class="lang-fr">Vitesse</span><span class="lang-en">Speed</span></span>
+                                <div class="speed-control-group">
+                                    <button type="button" class="speed-btn speed-control-btn" data-speed="slow" title="Lent (Slow)">
                                         <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                     </button>
-                                    <button type="button" class="speed-btn active" data-speed="medium" title="Normal (Medium)" style="display: flex; align-items: center; justify-content: center; height: 32px;">
+                                    <button type="button" class="speed-btn speed-control-btn active" data-speed="medium" title="Normal (Medium)">
                                         <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
                                     </button>
-                                    <button type="button" class="speed-btn" data-speed="fast" title="Rapide (Fast)" style="display: flex; align-items: center; justify-content: center; height: 32px;">
+                                    <button type="button" class="speed-btn speed-control-btn" data-speed="fast" title="Rapide (Fast)">
                                         <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
                                     </button>
                                 </div>
                                 <input type="hidden" id="ctrl-speed" value="medium">
                             </div>
                             
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.25rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.6rem;">
-                                <label for="ctrl-animate-border" style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left; cursor: pointer; user-select: none;"><span class="lang-fr">Animer la barre du bas</span><span class="lang-en">Animate bottom border</span></label>
-                                <label class="switch-toggle" style="position: relative; display: inline-block; width: 36px; height: 20px;">
+                            <div class="switch-toggle-row">
+                                <label for="ctrl-animate-border" class="switch-toggle-label"><span class="lang-fr">Animer la barre du bas</span><span class="lang-en">Animate bottom border</span></label>
+                                <label class="switch-toggle switch-toggle-input-wrapper">
                                     <input type="checkbox" id="ctrl-animate-border" checked>
                                     <span class="switch-slider"></span>
                                 </label>
                             </div>
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.25rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.6rem;">
-                                <label for="ctrl-transparent-bg" style="flex: 1; text-align: left; cursor: pointer; user-select: none; display: flex; flex-direction: column;">
-                                    <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af;"><span class="lang-fr">Fond transparent</span><span class="lang-en">Transparent background</span></span>
-                                    <span style="display: block; font-size: 0.68rem; color: #6b7280; font-family: var(--font-sans);"><span class="lang-fr">Pour créer un asset superposable (PNG)</span><span class="lang-en">To create an overlay asset (PNG)</span></span>
+                            <div class="switch-toggle-row">
+                                <label for="ctrl-transparent-bg" class="switch-toggle-label">
+                                    <span><span class="lang-fr">Fond transparent</span><span class="lang-en">Transparent background</span></span>
+                                    <span class="switch-toggle-label-desc"><span class="lang-fr">Pour créer un asset superposable (PNG)</span><span class="lang-en">To create an overlay asset (PNG)</span></span>
                                 </label>
-                                <label class="switch-toggle" style="position: relative; display: inline-block; width: 36px; height: 20px;">
+                                <label class="switch-toggle switch-toggle-input-wrapper">
                                     <input type="checkbox" id="ctrl-transparent-bg">
                                     <span class="switch-slider"></span>
                                 </label>
@@ -311,39 +311,39 @@
                             <span class="lang-fr">Couleurs Personnalisées</span>
                             <span class="lang-en">Custom Colors</span>
                         </h3>
-                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <div class="settings-group">
                             <!-- FOND Group -->
-                            <div style="border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 0.75rem; background: rgba(255, 255, 255, 0.01);">
-                                <span style="font-family: var(--font-title-sans); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--accent-color, #fb923c); display: block; margin-bottom: 0.5rem; letter-spacing: 0.05em;"><span class="lang-fr">Fond</span><span class="lang-en">Background</span></span>
+                            <div class="color-picker-box">
+                                <span class="color-picker-box-label"><span class="lang-fr">Fond</span><span class="lang-en">Background</span></span>
                                 <div class="color-pickers">
                                     <div class="color-picker-wrapper" title="Couleur de l'Accent (Néon)">
-                                        <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Accent</span><span class="lang-en">Accent</span></span>
+                                        <span class="switch-toggle-label"><span class="lang-fr">Accent</span><span class="lang-en">Accent</span></span>
                                         <input type="color" id="color-accent" value="#fb923c">
                                         <span id="accent-hex">#fb923c</span>
                                     </div>
                                     <div class="color-picker-wrapper" title="Couleur du Halo (Glow)">
-                                        <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Halo</span><span class="lang-en">Halo</span></span>
+                                        <span class="switch-toggle-label"><span class="lang-fr">Halo</span><span class="lang-en">Halo</span></span>
                                         <input type="color" id="color-glow" value="#3b82f6">
                                         <span id="glow-hex">#3b82f6</span>
                                     </div>
                                 </div>
                             </div>
                             <!-- TEXTE Group -->
-                            <div style="border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 0.75rem; background: rgba(255, 255, 255, 0.01);">
-                                <span style="font-family: var(--font-title-sans); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--accent-color, #fb923c); display: block; margin-bottom: 0.5rem; letter-spacing: 0.05em;"><span class="lang-fr">Texte</span><span class="lang-en">Text</span></span>
-                                <div class="color-pickers" style="grid-template-columns: repeat(3, 1fr);">
+                            <div class="color-picker-box">
+                                <span class="color-picker-box-label"><span class="lang-fr">Texte</span><span class="lang-en">Text</span></span>
+                                <div class="color-pickers color-pickers-3col">
                                     <div class="color-picker-wrapper" title="Couleur du Nom">
-                                        <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Nom</span><span class="lang-en">Name</span></span>
+                                        <span class="switch-toggle-label"><span class="lang-fr">Nom</span><span class="lang-en">Name</span></span>
                                         <input type="color" id="color-name" value="#ffffff">
                                         <span id="name-hex">#ffffff</span>
                                     </div>
                                     <div class="color-picker-wrapper" title="Couleur du Titre">
-                                        <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Titre</span><span class="lang-en">Title</span></span>
+                                        <span class="switch-toggle-label"><span class="lang-fr">Titre</span><span class="lang-en">Title</span></span>
                                         <input type="color" id="color-title" value="#ffffff">
                                         <span id="title-hex">#ffffff</span>
                                     </div>
                                     <div class="color-picker-wrapper" title="Couleur de l'Ombre / Glow">
-                                        <span style="font-size: 0.75rem; font-family: var(--font-sans); color: #9ca3af; flex: 1; text-align: left;"><span class="lang-fr">Ombre</span><span class="lang-en">Shadow</span></span>
+                                        <span class="switch-toggle-label"><span class="lang-fr">Ombre</span><span class="lang-en">Shadow</span></span>
                                         <input type="color" id="color-shadow" value="#000000">
                                         <span id="shadow-hex">#000000</span>
                                     </div>
@@ -362,14 +362,14 @@
                             <span class="lang-fr">Position & Alignement</span>
                             <span class="lang-en">Position & Alignment</span>
                         </h3>
-                        <div style="display: flex; align-items: center; gap: 0.75rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 0.45rem 0.65rem; border-radius: 12px; margin-bottom: 0.85rem;">
+                        <div class="alignment-hint-box">
                             <div class="alignment-grid">
                                 <button type="button" class="align-btn top-left" data-pos="top" data-align="left" title="En haut à gauche"></button>
                                 <button type="button" class="align-btn top-right" data-pos="top" data-align="right" title="En haut à droite"></button>
                                 <button type="button" class="align-btn bottom-left" data-pos="bottom" data-align="left" title="En bas à gauche"></button>
                                 <button type="button" class="align-btn bottom-right" data-pos="bottom" data-align="right" title="En bas à droite"></button>
                             </div>
-                            <div style="font-family: var(--font-sans); font-size: 0.72rem; color: #9ca3af; line-height: 1.35; flex: 1; text-align: left;">
+                            <div class="alignment-hint-text">
                                 <span class="lang-fr">Cliquez sur un quadrant pour positionner et aligner le texte sur votre fond d'écran.</span>
                                 <span class="lang-en">Click on a quadrant to position and align the text on your backdrop.</span>
                             </div>
@@ -379,17 +379,17 @@
 
                         <div class="row-group" style="margin-bottom: 0.85rem;">
                             <div class="form-group">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                                    <label for="size" style="margin-bottom: 0;"><span class="lang-fr">Taille Globale</span><span class="lang-en">Global Size</span></label>
-                                    <span id="size-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">2.2rem</span>
+                                <div class="slider-label-row">
+                                    <label for="size"><span class="lang-fr">Taille Globale</span><span class="lang-en">Global Size</span></label>
+                                    <span id="size-val" class="slider-value-display">2.2rem</span>
                                 </div>
                                 <input type="range" id="size" min="1.0" max="12.0" step="0.1" value="2.2">
                             </div>
                             
                             <div class="form-group">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                                    <label for="ratio" style="margin-bottom: 0;"><span class="lang-fr">Ratio Titre/Nom</span><span class="lang-en">Title/Name Ratio</span></label>
-                                    <span id="ratio-val" style="font-family: monospace; font-size: 0.82rem; color: var(--accent-color, #fb923c); font-weight: 600;">45%</span>
+                                <div class="slider-label-row">
+                                    <label for="ratio"><span class="lang-fr">Ratio Titre/Nom</span><span class="lang-en">Title/Name Ratio</span></label>
+                                    <span id="ratio-val" class="slider-value-display">45%</span>
                                 </div>
                                 <input type="range" id="ratio" min="0.1" max="1.5" step="0.05" value="0.45">
                             </div>
@@ -397,7 +397,7 @@
 
                         <div class="form-group">
                             <label><span class="lang-fr">Effet du Texte (Ombre / Néon)</span><span class="lang-en">Text Effect (Shadow / Neon)</span></label>
-                            <div class="texteffect-toggle-group" style="display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 2px; gap: 2px; width: 100%;">
+                            <div class="texteffect-toggle-group segmented-control">
                                 <button type="button" class="texteffect-btn" data-effect="none" title="Aucun effet">
                                     <span class="lang-fr">Aucun</span><span class="lang-en">None</span>
                                 </button>
@@ -421,8 +421,6 @@
             </div>
 
             <!-- Right Side: Preview & Output -->
-
-            <!-- Right Side: Preview & Output -->
             <div class="preview-section">
                 <label style="font-family: var(--font-title-sans); font-weight: 500; font-size: 0.9rem; text-transform: uppercase; color: var(--accent-color, #fb923c);">
                     <span class="lang-fr">Aperçu en temps réel (16:9)</span>
@@ -435,16 +433,16 @@
                 <div class="output-section">
                     <label><span class="lang-fr">URL configurée pour OBS / Navigateur</span><span class="lang-en">Configured URL for OBS / Browser</span></label>
                     <!-- Unified Copy + URL block -->
-                    <div id="url-copy-wrapper" style="display: flex; align-items: center; gap: 0.65rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-left: 3px solid var(--accent-color, #fb923c); border-radius: 8px; padding: 0.65rem 0.85rem; cursor: pointer; transition: all 0.2s ease; margin-bottom: 0.75rem;" title="Cliquez pour copier l'URL">
-                        <button id="btn-copy-icon" style="background: transparent; border: none; padding: 0; margin: 0; color: var(--accent-color, #fb923c); cursor: pointer; display: flex; align-items: center; justify-content: center; outline: none; transition: transform 0.2s ease; flex-shrink: 0;">
+                    <div id="url-copy-wrapper" class="url-copy-box" title="Cliquez pour copier l'URL">
+                        <button id="btn-copy-icon" class="copy-btn">
                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="pointer-events: none;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                         </button>
-                        <div id="output-url" style="font-family: 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; font-size: 0.8rem; color: var(--accent-color, #fb923c); word-break: break-all; user-select: all; flex: 1; text-align: left; max-height: 90px; overflow-y: auto; line-height: 1.4;">https://eole.me/backdrop/</div>
+                        <div id="output-url" class="output-url-text">https://eole.me/backdrop/</div>
                     </div>
                     
                     <!-- Format Selector (Inline Buttons) -->
                     <div style="margin-bottom: 0.85rem;">
-                        <div class="format-toggle-group" style="display: flex; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 2px; gap: 2px; width: 100%;">
+                        <div class="format-toggle-group segmented-control">
                             <button type="button" class="format-btn active" data-format="169" title="Format OBS/Zoom (16:9)">
                                 <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
                                 <span>16:9 (Zoom/OBS)</span>
@@ -462,26 +460,26 @@
                     </div>
 
                     <!-- Export settings (Resolution, duration, boomerang) -->
-                    <div style="display: flex; gap: 1rem; margin-bottom: 0.85rem; text-align: left;">
-                        <div class="form-group" style="flex: 1;">
+                    <div class="row-group-tight" style="margin-bottom: 0.85rem;">
+                        <div class="form-group">
                             <label for="export-res">Résolution Image</label>
-                            <select id="export-res" class="form-control" style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #ffffff; padding: 0.45rem; font-size: 0.78rem; outline: none; width: 100%;">
+                            <select id="export-res" class="form-control">
                                 <option value="hd">HD (1920x1080)</option>
                                 <option value="4k">4K (3840x2160)</option>
                                 <option value="dpr">Ratio Écran (DPR)</option>
                             </select>
                         </div>
-                        <div class="form-group" style="flex: 1;">
+                        <div class="form-group">
                             <label for="video-duration">Durée Vidéo</label>
-                            <select id="video-duration" class="form-control" style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #ffffff; padding: 0.45rem; font-size: 0.78rem; outline: none; width: 100%;">
+                            <select id="video-duration" class="form-control">
                                 <option value="3">3 secondes</option>
                                 <option value="5" selected>5 secondes</option>
                                 <option value="10">10 secondes</option>
                             </select>
                         </div>
                     </div>
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem;">
-                        <label for="ctrl-boomerang" style="font-size: 0.78rem; font-family: var(--font-sans); color: #9ca3af; cursor: pointer; user-select: none;">Boucle vidéo Boomerang (aller-retour)</label>
+                    <div class="switch-toggle-row" style="margin-bottom: 0.85rem; border-top: none; padding-top: 0;">
+                        <label for="ctrl-boomerang" class="switch-toggle-label" style="font-size: 0.78rem;">Boucle vidéo Boomerang (aller-retour)</label>
                         <input type="checkbox" id="ctrl-boomerang" checked style="accent-color: var(--accent-color, #fb923c); cursor: pointer; width: 16px; height: 16px;">
                     </div>
 
@@ -495,25 +493,25 @@
                             <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                             <span class="lang-fr">Exporter l'Image</span><span class="lang-en">Export Image</span>
                         </button>
-                        <button id="btn-video" class="btn" style="flex: 1; height: 42px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%); color: white; border: none; cursor: pointer; border-radius: 8px; transition: opacity 0.2s ease;">
+                        <button id="btn-video" class="btn btn-primary-gradient" style="flex: 1; height: 42px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;">
                             <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
                             <span class="lang-fr">Exporter Vidéo</span><span class="lang-en">Export Video</span>
                         </button>
                     </div>
 
                     <!-- QR Code Sharing -->
-                    <div class="qr-container" style="margin-top: 1.5rem; padding: 1rem; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; display: flex; align-items: center; gap: 1rem;">
-                        <div style="background: #ffffff; padding: 0.35rem; border-radius: 8px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative;">
+                    <div class="qr-share-box">
+                        <div class="qr-image-wrapper">
                             <img id="qr-code-img" src="" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
-                            <div id="qr-logo-badge" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #ffffff; border: 1.5px solid #000000; border-radius: 4px; padding: 1px 3px; font-family: var(--font-title-sans, 'Outfit', sans-serif); font-size: 0.45rem; font-weight: 800; color: #000000; text-transform: uppercase; letter-spacing: 0.03em; pointer-events: none; box-shadow: 0 2px 4px rgba(0,0,0,0.15); display: none; line-height: 1;">Éole</div>
+                            <div id="qr-logo-badge" class="qr-badge">Éole</div>
                         </div>
                         
                         <!-- E / J Toggle button placed between QR code and Text -->
                         <button id="btn-qr-persona-toggle" type="button" class="qr-persona-btn" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-family: var(--font-title-sans, 'Outfit', sans-serif); font-size: 0.85rem; font-weight: 800; color: var(--accent-color, #fb923c); cursor: pointer; transition: all 0.2s ease; outline: none; flex-shrink: 0;" title="Changer de persona (E <-> J)">E</button>
                         
-                        <div style="flex: 1;">
-                            <h4 style="margin: 0 0 0.25rem 0; font-family: var(--font-title-sans); font-size: 0.85rem; color: #ffffff; font-weight: 600;">Partagez votre Backdrop</h4>
-                            <p style="margin: 0; font-family: var(--font-sans); font-size: 0.72rem; color: #9ca3af; line-height: 1.3;">Scannez ce QR code avec votre mobile pour afficher ou appliquer ce fond d'écran.</p>
+                        <div class="qr-share-content">
+                            <h4 class="qr-share-title">Partagez votre Backdrop</h4>
+                            <p class="qr-share-desc">Scannez ce QR code avec votre mobile pour afficher ou appliquer ce fond d'écran.</p>
                         </div>
                     </div>
                 </div>
@@ -526,10 +524,10 @@
                     <div class="presets-grid">
                         <!-- ON/OFF Toggle Card -->
                         <div id="preset-toggle-text" class="preset-card toggle-card active" title="Afficher / Masquer le texte (Nom et Titre)">
-                            <div class="toggle-icon" style="font-size: 1.5rem; font-weight: 800;">Aa</div>
+                            <div class="toggle-icon toggle-icon-large">Aa</div>
                         </div>
                         <!-- Random / Surprise Card -->
-                        <div id="preset-random" class="preset-card" style="background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 80%); border-style: dashed; border-color: rgba(255,255,255,0.2);" title="Mélanger et générer des couleurs aléatoires">
+                        <div id="preset-random" class="preset-card random-card" title="Mélanger et générer des couleurs aléatoires">
                             <div class="toggle-icon">🎲</div>
                             <span class="preset-label">Mélanger</span>
                         </div>
@@ -576,22 +574,22 @@
             </h3>
             <div class="help-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; text-align: left;">
                 <!-- OBS Guide -->
-                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 1.25rem;">
-                    <h4 style="margin: 0 0 0.75rem 0; font-family: var(--font-title-sans); font-size: 0.95rem; color: #ffffff; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                <div class="help-guide-box">
+                    <h4 class="help-guide-title">
                         <svg class="icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7a2 2 0 0 0-2-2H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V7z"></path><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
                         <span class="lang-fr">Intégration OBS Studio</span>
                         <span class="lang-en">OBS Studio Integration</span>
                     </h4>
-                    <ol style="margin: 0; padding-left: 1.15rem; font-family: var(--font-sans); font-size: 0.8rem; color: #9ca3af; line-height: 1.6;">
-                        <li style="margin-bottom: 0.5rem;">
+                    <ol class="help-guide-list">
+                        <li>
                             <span class="lang-fr">Cliquez sur l'URL de copie pour la copier dans votre presse-papier.</span>
                             <span class="lang-en">Click on the copy URL to copy it to your clipboard.</span>
                         </li>
-                        <li style="margin-bottom: 0.5rem;">
+                        <li>
                             <span class="lang-fr">Dans OBS Studio, ajoutez une nouvelle source de type <strong>Navigateur (Browser Source)</strong>.</span>
                             <span class="lang-en">In OBS Studio, add a new Source of type <strong>Browser (Browser Source)</strong>.</span>
                         </li>
-                        <li style="margin-bottom: 0.5rem;">
+                        <li>
                             <span class="lang-fr">Collez l'URL copiée.</span>
                             <span class="lang-en">Paste the copied URL.</span>
                         </li>
@@ -602,22 +600,22 @@
                     </ol>
                 </div>
                 <!-- Zoom / Teams Guide -->
-                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 1.25rem;">
-                    <h4 style="margin: 0 0 0.75rem 0; font-family: var(--font-title-sans); font-size: 0.95rem; color: #ffffff; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                <div class="help-guide-box">
+                    <h4 class="help-guide-title">
                         <svg class="icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
                         <span class="lang-fr">Zoom / Teams / Meet</span>
                         <span class="lang-en">Zoom / Teams / Meet</span>
                     </h4>
-                    <ol style="margin: 0; padding-left: 1.15rem; font-family: var(--font-sans); font-size: 0.8rem; color: #9ca3af; line-height: 1.6;">
-                        <li style="margin-bottom: 0.5rem;">
+                    <ol class="help-guide-list">
+                        <li>
                             <span class="lang-fr">Réglez les couleurs et le texte selon vos préférences dans le configurateur.</span>
                             <span class="lang-en">Adjust colors and text to your preferences in the configurator.</span>
                         </li>
-                        <li style="margin-bottom: 0.5rem;">
+                        <li>
                             <span class="lang-fr">Sélectionnez le format désiré (16:9, Carré ou Bannière).</span>
                             <span class="lang-en">Select the desired format (16:9, Square or Banner).</span>
                         </li>
-                        <li style="margin-bottom: 0.5rem;">
+                        <li>
                             <span class="lang-fr">Cliquez sur <strong>Exporter l'Image</strong> pour télécharger le fichier PNG.</span>
                             <span class="lang-en">Click on <strong>Export Image</strong> to download the PNG file.</span>
                         </li>
@@ -648,20 +646,20 @@
 
     <!-- Export Modal Overlay -->
     <div id="export-modal" class="modal-overlay" style="display: none;">
-        <div class="modal-content" style="max-width: 400px; text-align: center; padding: 2rem;">
-            <h3 style="font-family: var(--font-title-sans, 'Outfit', sans-serif); color: var(--accent-color, #fb923c); font-size: 1.25rem; margin: 0 0 1rem 0; font-weight: 700;">
+        <div class="modal-content export-modal-content">
+            <h3 class="export-modal-title">
                 <span class="lang-fr">Génération de la Vidéo</span>
                 <span class="lang-en">Generating Video</span>
             </h3>
-            <p style="font-family: var(--font-sans); font-size: 0.85rem; color: #9ca3af; line-height: 1.5; margin: 0 0 1.5rem 0;">
+            <p class="export-modal-desc">
                 <span class="lang-fr">Veuillez patienter pendant l'exportation de votre fond d'écran animé...</span>
                 <span class="lang-en">Please wait while your animated backdrop is being exported...</span>
             </p>
             <!-- Progress Bar -->
-            <div class="progress-container" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; height: 12px; width: 100%; position: relative; overflow: hidden; margin-bottom: 0.75rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);">
-                <div id="export-progress-bar" style="height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent-color, #fb923c), var(--glow-color, #3b82f6)); transition: width 0.08s linear; border-radius: 6px;"></div>
+            <div class="progress-container export-progress-container">
+                <div id="export-progress-bar" class="export-progress-bar"></div>
             </div>
-            <div id="export-progress-text" style="font-family: monospace; font-size: 0.95rem; color: var(--accent-color, #fb923c); font-weight: 600;">0%</div>
+            <div id="export-progress-text" class="export-progress-text">0%</div>
         </div>
     </div>
 

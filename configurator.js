@@ -59,6 +59,18 @@ const previewIframe = document.getElementById('preview-iframe');
         const ctrlAnimateBorder = document.getElementById('ctrl-animate-border');
         const ctrlTransparentBg = document.getElementById('ctrl-transparent-bg');
 
+        // Detect browser language initially: Fr -> FR, * -> EN
+        let initialLang = 'en';
+        try {
+            const navLang = navigator.language || navigator.userLanguage || '';
+            if (navLang.toLowerCase().startsWith('fr')) {
+                initialLang = 'fr';
+            }
+        } catch (e) {}
+        if (ctrlLang) {
+            ctrlLang.value = initialLang;
+        }
+
         let uploadedLogoDataUrl = localStorage.getItem('backdrop-studio-local-logo') || '';
 
         // Dynamic base URL resolver
