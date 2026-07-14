@@ -473,6 +473,14 @@ html, body.theme-dark {
             padding: 0.35rem;
             border-radius: 8px;
             flex-shrink: 0;
+            --btn-dot-bg: #ffffff;
+            --btn-dot-opacity: 0.2;
+        }
+        body.theme-light .alignment-grid {
+            background: #f1f5f9;
+            border-color: rgba(0, 0, 0, 0.12);
+            --btn-dot-bg: #475569;
+            --btn-dot-opacity: 0.25;
         }
         .align-btn {
             background: transparent;
@@ -487,6 +495,9 @@ html, body.theme-dark {
         .align-btn:hover {
             background: rgba(255, 255, 255, 0.06);
         }
+        body.theme-light .align-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
         .align-btn.active {
             background: var(--accent-color, #fb923c);
             box-shadow: 0 0 8px var(--glow-color, rgba(59, 130, 246, 0.3));
@@ -497,9 +508,13 @@ html, body.theme-dark {
             width: 10px;
             height: 6px;
             border-radius: 1px;
-            background: #ffffff;
-            opacity: 0.2;
+            background: var(--btn-dot-bg, #ffffff);
+            opacity: var(--btn-dot-opacity, 0.2);
             transition: all 0.2s ease;
+        }
+        .align-btn.active::after {
+            background: #ffffff !important;
+            opacity: 0.95 !important;
         }
         .align-btn.top-left::after { top: 4px; left: 4px; }
         .align-btn.top-right::after { top: 4px; right: 4px; }
