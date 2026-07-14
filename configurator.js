@@ -59,7 +59,7 @@ const previewIframe = document.getElementById('preview-iframe');
         const ctrlAnimateBorder = document.getElementById('ctrl-animate-border');
         const ctrlTransparentBg = document.getElementById('ctrl-transparent-bg');
 
-        let uploadedLogoDataUrl = '';
+        let uploadedLogoDataUrl = localStorage.getItem('backdrop-studio-local-logo') || '';
 
         // Dynamic base URL resolver
         const baseBackdropUrl = window.location.origin + window.location.pathname.replace('config.html', '');
@@ -145,7 +145,16 @@ const previewIframe = document.getElementById('preview-iframe');
             
             const finalLogo = uploadedLogoDataUrl || ctrlLogoUrl.value.trim();
             if (finalLogo) {
-                queryParams.set('logo', finalLogo);
+                if (uploadedLogoDataUrl) {
+                    queryParams.set('logo', 'local');
+                    try {
+                        localStorage.setItem('backdrop-studio-local-logo', uploadedLogoDataUrl);
+                    } catch (e) {
+                        console.warn('Failed to save local logo to localStorage:', e);
+                    }
+                } else {
+                    queryParams.set('logo', finalLogo);
+                }
                 if (ctrlLogoSize.value !== '2.4') queryParams.set('logosize', ctrlLogoSize.value);
                 if (ctrlLogoOpacity.value !== '0.85') queryParams.set('logoopacity', ctrlLogoOpacity.value);
             }
@@ -395,6 +404,9 @@ const previewIframe = document.getElementById('preview-iframe');
                     if (logoEl && logoContainer) {
                         const val = ctrlLogoUrl.value.trim();
                         if (val) {
+                            uploadedLogoDataUrl = '';
+                            localStorage.removeItem('backdrop-studio-local-logo');
+                            ctrlLogoFile.value = '';
                             logoEl.src = val;
                             logoContainer.style.display = 'block';
                         } else if (!uploadedLogoDataUrl) {
@@ -441,6 +453,7 @@ const previewIframe = document.getElementById('preview-iframe');
             const file = e.target.files[0];
             if (!file) {
                 uploadedLogoDataUrl = '';
+                localStorage.removeItem('backdrop-studio-local-logo');
                 updateUrl();
                 return;
             }

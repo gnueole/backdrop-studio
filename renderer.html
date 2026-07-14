@@ -462,10 +462,22 @@
             const logoSize = params.get('logosize') || '2.4';
             const logoOpacity = params.get('logoopacity') || '0.85';
             if (logoParam && logoParam !== 'off') {
-                logoEl.src = decodeURIComponent(logoParam);
-                logoEl.style.height = logoSize + 'rem';
-                logoEl.style.opacity = logoOpacity;
-                logoContainer.style.display = 'block';
+                if (logoParam === 'local') {
+                    const localLogo = localStorage.getItem('backdrop-studio-local-logo');
+                    if (localLogo) {
+                        logoEl.src = localLogo;
+                        logoEl.style.height = logoSize + 'rem';
+                        logoEl.style.opacity = logoOpacity;
+                        logoContainer.style.display = 'block';
+                    } else {
+                        logoContainer.style.display = 'none';
+                    }
+                } else {
+                    logoEl.src = decodeURIComponent(logoParam);
+                    logoEl.style.height = logoSize + 'rem';
+                    logoEl.style.opacity = logoOpacity;
+                    logoContainer.style.display = 'block';
+                }
             } else {
                 logoContainer.style.display = 'none';
             }
@@ -1066,12 +1078,25 @@
                 }
                 
                 html2canvas(document.body, options).then(canvas => {
-                    const link = document.createElement('a');
                     const cleanName = (document.getElementById('backdrop-name').textContent || 'backdrop')
                         .toLowerCase().replace(/[^a-z0-9]+/g, '_');
-                    link.download = `${cleanName}_backdrop_${format}.png`;
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
+                    const downloadName = `${cleanName}_backdrop_${format}.png`;
+                    const dataUrl = canvas.toDataURL('image/png');
+                    
+                    try {
+                        const topDoc = window.top.document;
+                        const link = topDoc.createElement('a');
+                        link.download = downloadName;
+                        link.href = dataUrl;
+                        topDoc.body.appendChild(link);
+                        link.click();
+                        topDoc.body.removeChild(link);
+                    } catch (e) {
+                        const link = document.createElement('a');
+                        link.download = downloadName;
+                        link.href = dataUrl;
+                        link.click();
+                    }
                     restoreStyles();
                 }).catch(err => {
                     console.error('Capture error:', err);
@@ -1115,13 +1140,26 @@
                     recorder.onstop = () => {
                         const blob = new Blob(chunks, { type: 'video/webm' });
                         const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
                         const cleanName = (nameEl.textContent || 'backdrop')
                             .toLowerCase().replace(/[^a-z0-9]+/g, '_');
-                        a.download = `${cleanName}_backdrop_${format}.webm`;
-                        a.href = url;
-                        a.click();
-                        URL.revokeObjectURL(url);
+                        const downloadName = `${cleanName}_backdrop_${format}.webm`;
+                        
+                        try {
+                            const topDoc = window.top.document;
+                            const a = topDoc.createElement('a');
+                            a.download = downloadName;
+                            a.href = url;
+                            topDoc.body.appendChild(a);
+                            a.click();
+                            topDoc.body.removeChild(a);
+                        } catch (e) {
+                            const a = document.createElement('a');
+                            a.download = downloadName;
+                            a.href = url;
+                            a.click();
+                        }
+                        
+                        setTimeout(() => URL.revokeObjectURL(url), 1000);
                         resolve();
                     };
 
