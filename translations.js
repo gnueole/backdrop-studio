@@ -29,9 +29,9 @@ export function syncLangButtons(lang) {
         if (titleSecondaryInput) titleSecondaryInput.placeholder = "Laisser vide si aucun cycle";
     }
 
-    // Dynamic Select Options Translation
+    // Dynamic Select/Input Options Translation
     const titleTransition = document.getElementById('title-transition');
-    if (titleTransition) {
+    if (titleTransition && titleTransition.tagName === 'SELECT') {
         const options = titleTransition.options;
         if (lang === 'en') {
             options[0].text = "None (Static)";
@@ -47,6 +47,25 @@ export function syncLangButtons(lang) {
             options[4].text = "Flip 3D (Rotation Y)";
         }
     }
+
+    // Dynamic Transition Buttons Tooltips Translation
+    const transitionBtns = document.querySelectorAll('.transition-btn');
+    transitionBtns.forEach(btn => {
+        const trans = btn.getAttribute('data-transition');
+        if (lang === 'en') {
+            if (trans === 'none') btn.title = "None (Static)";
+            else if (trans === 'blur') btn.title = "Blur (Blur In/Out)";
+            else if (trans === 'scramble') btn.title = "Scrambled Letters (Scramble)";
+            else if (trans === 'airport') btn.title = "Airport Board (Split-flap)";
+            else if (trans === 'flip') btn.title = "3D Flip (Y-axis)";
+        } else {
+            if (trans === 'none') btn.title = "Aucune (Fixe)";
+            else if (trans === 'blur') btn.title = "Flou (Blur In/Out)";
+            else if (trans === 'scramble') btn.title = "Lettres mélangées (Scramble)";
+            else if (trans === 'airport') btn.title = "Panneau d'aéroport (Split-flap)";
+            else if (trans === 'flip') btn.title = "Flip 3D (Rotation Y)";
+        }
+    });
 
     // Dynamic Alignment Buttons Tooltips Translation
     const alignBtns = document.querySelectorAll('.align-btn');

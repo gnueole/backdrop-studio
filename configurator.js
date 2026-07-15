@@ -1068,7 +1068,7 @@ const outputUrl = document.getElementById('output-url');
         });
 
         // Initial UI theme application
-        applyUiTheme();
+        updateUrlTextOnly();
 
         // Bind Logo click to reset local configuration and reload the page
         const logoTrigger = document.getElementById('logo-trigger');
