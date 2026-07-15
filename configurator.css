@@ -1958,3 +1958,62 @@ html, body.theme-dark {
             overflow-y: auto;
             line-height: 1.4;
         }
+
+        /* Primary Gradient Button style */
+        .btn-primary-gradient {
+            background: linear-gradient(135deg, var(--accent-color, #fb923c) 0%, var(--glow-color, #3b82f6) 100%) !important;
+            color: #ffffff !important;
+            border: none !important;
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--accent-color, #fb923c) 20%, transparent);
+            transition: all 0.2s ease;
+        }
+        .btn-primary-gradient:hover:not(:disabled) {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px color-mix(in srgb, var(--accent-color, #fb923c) 30%, transparent);
+        }
+        .btn-primary-gradient:active:not(:disabled) {
+            transform: translateY(0);
+            opacity: 0.9;
+        }
+
+        /* Cancel Button in Export Modal */
+        .cancel-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #9ca3af;
+            border-radius: 8px;
+            padding: 0.55rem 1.4rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-title-sans, 'Outfit', sans-serif);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            outline: none;
+            margin-top: 1.25rem;
+        }
+        .cancel-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-color: #ef4444;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.25);
+            transform: scale(1.02);
+        }
+        .cancel-btn:active {
+            transform: scale(0.98);
+        }
+
+        body.theme-light .cancel-btn {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.08);
+            color: #64748b;
+        }
+        body.theme-light .cancel-btn:hover {
+            background: rgba(239, 68, 68, 0.08);
+            color: #dc2626;
+            border-color: #dc2626;
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.15);
+        }
