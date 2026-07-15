@@ -197,6 +197,11 @@ html, body.theme-dark {
         .iframe-preview-container.ratio-banner {
             aspect-ratio: 4/1;
         }
+        .iframe-preview-container.ratio-916 {
+            aspect-ratio: 9/16;
+            max-width: 320px;
+            margin: 0 auto;
+        }
 
         .iframe-preview-container iframe {
             width: 100%;

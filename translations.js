@@ -101,10 +101,12 @@ export function syncLangButtons(lang) {
             if (format === '169') btn.title = "OBS/Zoom Format (16:9)";
             else if (format === '11') btn.title = "Square Profile Format (1:1)";
             else if (format === 'banner') btn.title = "LinkedIn Banner Format (4:1)";
+            else if (format === '916') btn.title = "Smartphone Format (9:16)";
         } else {
             if (format === '169') btn.title = "Format OBS/Zoom (16:9)";
             else if (format === '11') btn.title = "Format Profil Carré (1:1)";
             else if (format === 'banner') btn.title = "Format Bannière LinkedIn (4:1)";
+            else if (format === '916') btn.title = "Format Smartphone (9:16)";
         }
     });
 

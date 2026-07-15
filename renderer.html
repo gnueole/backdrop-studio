@@ -342,6 +342,9 @@
             } else if (formatParam === 'banner') {
                 position = hasPosition ? params.get('position') : 'middle';
                 align = hasAlign ? params.get('align') : 'right';
+            } else if (formatParam === '916') {
+                position = hasPosition ? params.get('position') : 'bottom';
+                align = hasAlign ? params.get('align') : 'center';
             } else {
                 position = params.get('position') || 'bottom';
                 align = params.get('align') || 'right';
@@ -1234,6 +1237,17 @@
                     document.body.style.minWidth = '1584px';
                     document.body.style.minHeight = '396px';
                     document.body.style.position = 'relative';
+                } else if (format === '916') {
+                    document.documentElement.style.width = '1080px';
+                    document.documentElement.style.height = '1920px';
+                    document.documentElement.style.minWidth = '1080px';
+                    document.documentElement.style.minHeight = '1920px';
+
+                    document.body.style.width = '1080px';
+                    document.body.style.height = '1920px';
+                    document.body.style.minWidth = '1080px';
+                    document.body.style.minHeight = '1920px';
+                    document.body.style.position = 'relative';
                 } else {
                     document.documentElement.style.width = '1920px';
                     document.documentElement.style.height = '1080px';
@@ -1248,8 +1262,8 @@
                 }
 
                 // Temporary resize of canvas
-                const targetW = format === '11' ? 1080 : (format === 'banner' ? 1584 : 1920);
-                const targetH = format === '11' ? 1080 : (format === 'banner' ? 396 : 1080);
+                const targetW = format === '11' ? 1080 : (format === 'banner' ? 1584 : (format === '916' ? 1080 : 1920));
+                const targetH = format === '11' ? 1080 : (format === 'banner' ? 396 : (format === '916' ? 1920 : 1080));
                 canvas.width = targetW;
                 canvas.height = targetH;
                 
@@ -1327,6 +1341,7 @@
                     let w = 1920, h = 1080;
                     if (format === '11') { w = 1080; h = 1080; }
                     else if (format === 'banner') { w = 1584; h = 396; }
+                    else if (format === '916') { w = 1080; h = 1920; }
 
                     const recCanvas = document.createElement('canvas');
                     recCanvas.width = w;

@@ -22,7 +22,7 @@ const outputUrl = document.getElementById('output-url');
                 const iframeDoc = previewIframe.contentDocument || previewIframe.contentWindow.document;
                 const exportFormatVal = document.getElementById('export-format').value;
                 if (iframeDoc && iframeDoc.body) {
-                    iframeDoc.body.classList.remove('format-169', 'format-11', 'format-banner');
+                    iframeDoc.body.classList.remove('format-169', 'format-11', 'format-banner', 'format-916');
                     iframeDoc.body.classList.add('format-' + exportFormatVal);
                 }
             } catch (e) {}
@@ -271,6 +271,7 @@ const outputUrl = document.getElementById('output-url');
                 let ratioText = '16:9';
                 if (exportFormatVal === '11') ratioText = '1:1';
                 else if (exportFormatVal === 'banner') ratioText = '4:1';
+                else if (exportFormatVal === '916') ratioText = '9:16';
                 previewLabel.textContent = `Aperçu en temps réel (${ratioText})`;
             }
 
@@ -278,7 +279,7 @@ const outputUrl = document.getElementById('output-url');
             try {
                 const iframeDoc = previewIframe.contentDocument || previewIframe.contentWindow.document;
                 if (iframeDoc && iframeDoc.body) {
-                    iframeDoc.body.classList.remove('format-169', 'format-11', 'format-banner');
+                    iframeDoc.body.classList.remove('format-169', 'format-11', 'format-banner', 'format-916');
                     iframeDoc.body.classList.add('format-' + exportFormatVal);
                 }
             } catch (e) {}
