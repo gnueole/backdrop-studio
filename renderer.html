@@ -106,6 +106,19 @@
             align-self: flex-end !important;
             margin-bottom: 0.25rem !important;
         }
+        .logo-pos-bottom-center {
+            flex-direction: column !important;
+            align-items: center !important;
+        }
+        .logo-pos-bottom-center #backdrop-logo-container {
+            align-self: center !important;
+            margin-top: 0.35rem !important;
+            margin-bottom: 0 !important;
+            order: 2;
+        }
+        .logo-pos-bottom-center #backdrop-text-group {
+            order: 1;
+        }
 
         /* Text shadow / glow effect states */
         .text-effect-none #backdrop-name, 
@@ -374,7 +387,7 @@
                 }
             }
             if (logoContainer) {
-                if (logoPosParam === 'left' || logoPosParam === 'right') {
+                if (logoPosParam === 'left' || logoPosParam === 'right' || logoPosParam === 'bottom-center') {
                     logoContainer.style.alignSelf = 'center';
                 } else {
                     if (logoPosParam === 'top-left') {
@@ -989,14 +1002,19 @@
                             }
                         }
                     } else {
-                        // Top positions
-                        logoY = y;
-                        textY = y + logoHeight + lineSpacing;
+                        // Top positions / bottom-center
+                        if (logopos === 'bottom-center') {
+                            logoY = y + textGroupHeight + lineSpacing;
+                            textY = y;
+                        } else {
+                            logoY = y;
+                            textY = y + logoHeight + lineSpacing;
+                        }
                         textAlign = align;
 
                         if (logopos === 'top-left') {
                             logoX = blockX;
-                        } else if (logopos === 'top-center') {
+                        } else if (logopos === 'top-center' || logopos === 'bottom-center') {
                             logoX = blockX + (totalWidth - logoWidth) / 2;
                         } else {
                             // top-right

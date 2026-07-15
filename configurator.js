@@ -1,4 +1,4 @@
-import { brandDefaults, transitionBrandColors } from './brand-defaults.js';
+import { brandDefaults, transitionBrandColors, hexToRgba } from './brand-defaults.js';
 import { syncLangButtons as syncLangButtonsModule } from './translations.js';
 import { saveConfigToLocalStorage as saveConfigToLocalStorageModule, loadConfigFromLocalStorage as loadConfigFromLocalStorageModule } from './config-storage.js';
 
@@ -834,6 +834,33 @@ const outputUrl = document.getElementById('output-url');
             });
         }
 
+        // Bind Visual logo position grid selector
+        const logoPosButtons = document.querySelectorAll('.logo-pos-btn');
+        const hiddenLogoPos = document.getElementById('logo-pos');
+
+        logoPosButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                logoPosButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                hiddenLogoPos.value = btn.getAttribute('data-value');
+                // Trigger change event to update iframe and URL
+                hiddenLogoPos.dispatchEvent(new Event('input'));
+                hiddenLogoPos.dispatchEvent(new Event('change'));
+            });
+        });
+
+        function syncLogoPosUI() {
+            if (!hiddenLogoPos) return;
+            const logoPosVal = hiddenLogoPos.value;
+            logoPosButtons.forEach(btn => {
+                if (btn.getAttribute('data-value') === logoPosVal) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
         // Help Modal Controls
         const btnHelpModal = document.getElementById('btn-help-modal');
         const helpModal = document.getElementById('help-modal');
@@ -955,6 +982,7 @@ const outputUrl = document.getElementById('output-url');
             updateUrl();
         }
         syncAlignmentUI();
+        syncLogoPosUI();
         syncLangButtons();
 
         // Bind UI Theme cycling button in the app header

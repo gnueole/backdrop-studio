@@ -2042,3 +2042,77 @@ html, body.theme-dark {
         body.theme-light .settings-divider {
             border-top-color: rgba(0, 0, 0, 0.06);
         }
+
+        /* Logo position grid selector */
+        .logo-pos-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.35rem;
+            width: 132px;
+            height: 92px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.35rem;
+            border-radius: 8px;
+            flex-shrink: 0;
+            --btn-dot-bg: #ffffff;
+            --btn-dot-opacity: 0.2;
+        }
+        body.theme-light .logo-pos-grid {
+            background: #f1f5f9;
+            border-color: rgba(0, 0, 0, 0.12);
+            --btn-dot-bg: #475569;
+            --btn-dot-opacity: 0.25;
+        }
+        .logo-pos-btn {
+            background: transparent;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            padding: 0;
+            outline: none;
+        }
+        .logo-pos-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+        body.theme-light .logo-pos-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        .logo-pos-btn.active {
+            background: var(--accent-color, #fb923c);
+            box-shadow: 0 0 8px var(--glow-color, rgba(59, 130, 246, 0.3));
+        }
+        .logo-pos-btn::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--btn-dot-bg, #ffffff);
+            opacity: var(--btn-dot-opacity, 0.2);
+            transition: all 0.2s ease;
+        }
+        .logo-pos-btn.active::after {
+            background: #ffffff !important;
+            opacity: 0.95 !important;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+        }
+        /* Top corners and center style positioning */
+        .logo-pos-btn.top-left { grid-column: span 2; }
+        .logo-pos-btn.top-center { grid-column: span 2; }
+        .logo-pos-btn.top-right { grid-column: span 2; }
+        .logo-pos-btn.top-left::after { top: 4px; left: 4px; }
+        .logo-pos-btn.top-center::after { top: 4px; left: 50%; transform: translateX(-50%); }
+        .logo-pos-btn.top-right::after { top: 4px; right: 4px; }
+
+        /* Bottom center position */
+        .logo-pos-btn.bottom-center { grid-column: span 6; }
+        .logo-pos-btn.bottom-center::after { bottom: 4px; left: 50%; transform: translateX(-50%); }
+
+        /* Inline positions in the bottom row spanned horizontally */
+        .logo-pos-btn.inline-left { grid-column: span 3; }
+        .logo-pos-btn.inline-right { grid-column: span 3; }
+        .logo-pos-btn.inline-left::after { bottom: 4px; left: 6px; }
+        .logo-pos-btn.inline-right::after { bottom: 4px; right: 6px; }

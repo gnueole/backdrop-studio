@@ -203,14 +203,22 @@
                                 </div>
                             </div>
                             <div class="form-group" style="margin-top: 0.85rem;">
-                                <label for="logo-pos"><span class="lang-fr">Position du Logo</span><span class="lang-en">Logo Position</span></label>
-                                <select id="logo-pos" class="form-control">
-                                    <option value="top-left">En haut à gauche / Top Left</option>
-                                    <option value="top-center">Au dessus au centre / Top Center</option>
-                                    <option value="top-right" selected>En haut à droite / Top Right (Default)</option>
-                                    <option value="left">À gauche du nom / Left of Name</option>
-                                    <option value="right">À droite du nom / Right of Name</option>
-                                </select>
+                                <label><span class="lang-fr">Position du Logo</span><span class="lang-en">Logo Position</span></label>
+                                <div class="logo-pos-hint-box" style="display: flex; gap: 1rem; align-items: center;">
+                                    <div class="logo-pos-grid">
+                                        <button type="button" class="logo-pos-btn top-left" data-value="top-left" title="En haut à gauche / Top Left"></button>
+                                        <button type="button" class="logo-pos-btn top-center" data-value="top-center" title="Au dessus au centre / Top Center"></button>
+                                        <button type="button" class="logo-pos-btn top-right active" data-value="top-right" title="En haut à droite / Top Right"></button>
+                                        <button type="button" class="logo-pos-btn bottom-center" data-value="bottom-center" title="En dessous au centre / Bottom Center"></button>
+                                        <button type="button" class="logo-pos-btn inline-left" data-value="left" title="À gauche du nom / Left of Name"></button>
+                                        <button type="button" class="logo-pos-btn inline-right" data-value="right" title="À droite du nom / Right of Name"></button>
+                                    </div>
+                                    <div class="logo-pos-hint-text" style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.35; max-width: 240px;">
+                                        <span class="lang-fr">Cliquez pour positionner le logo (coins supérieurs, centré en bas, ou intégré au bloc nom).</span>
+                                        <span class="lang-en">Click to position the logo (top corners, bottom center, or inline with the name).</span>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="logo-pos" value="top-right">
                             </div>
                         </div>
                     </div>
