@@ -1,5 +1,9 @@
+import { brandDefaults, transitionBrandColors } from './brand-defaults.js';
+import { syncLangButtons as syncLangButtonsModule } from './translations.js';
+import { saveConfigToLocalStorage as saveConfigToLocalStorageModule, loadConfigFromLocalStorage as loadConfigFromLocalStorageModule } from './config-storage.js';
+
 const previewIframe = document.getElementById('preview-iframe');
-        const outputUrl = document.getElementById('output-url');
+const outputUrl = document.getElementById('output-url');
         const urlCopyWrapper = document.getElementById('url-copy-wrapper');
         const btnOpen = document.getElementById('btn-open');
         const toast = document.getElementById('toast');
@@ -60,6 +64,16 @@ const previewIframe = document.getElementById('preview-iframe');
         const ctrlAnimateBorder = document.getElementById('ctrl-animate-border');
         const ctrlTransparentBg = document.getElementById('ctrl-transparent-bg');
 
+        // Bundle controls for modular passage
+        const ctrls = {
+            ctrlTheme, ctrlMode, ctrlLang, ctrlName, ctrlCompany, ctrlTitle, ctrlTitleSecondary, ctrlTitleTransition,
+            ctrlLogoFile, ctrlLogoUrl, ctrlLogoSize, ctrlLogoOpacity, ctrlLogoPos,
+            ctrlExportRes, ctrlVideoDuration, ctrlBoomerang, ctrlPosition, ctrlAlign, ctrlSize, ctrlRatio,
+            ctrlColorAccent, ctrlColorGlow, ctrlColorName, ctrlColorTitle, ctrlAnimation, ctrlSpeed, ctrlTextEffect,
+            txtAccentHex, txtGlowHex, txtNameHex, txtTitleHex, txtRatioVal, ctrlColorShadow, txtShadowHex,
+            ctrlAnimateBorder, ctrlTransparentBg
+        };
+
         // Detect browser language initially: Fr -> FR, * -> EN
         let initialLang = 'en';
         try {
@@ -76,25 +90,6 @@ const previewIframe = document.getElementById('preview-iframe');
 
         // Dynamic base URL resolver
         const baseBackdropUrl = window.location.origin + window.location.pathname.replace('config.html', '');
-
-        // Define default brand colors from variables.css
-        const brandDefaults = {
-            business: {
-                dark: { accent: '#38bdf8', glow: '#38bdf8', name: '#ffffff', title: '#38bdf8', shadow: '#000000' },
-                light: { accent: '#0284c7', glow: '#0284c7', name: '#0f172a', title: '#0284c7', shadow: '#ffffff' }
-            },
-            artist: {
-                dark: { accent: '#e2875c', glow: '#e2875c', name: '#ffffff', title: '#e2875c', shadow: '#000000' },
-                light: { accent: '#c96537', glow: '#c96537', name: '#2c241e', title: '#c96537', shadow: '#ffffff' }
-            }
-        };
-
-        function hexToRgba(hex, alpha) {
-            const r = parseInt(hex.slice(1, 3), 16);
-            const g = parseInt(hex.slice(3, 5), 16);
-            const b = parseInt(hex.slice(5, 7), 16);
-            return `rgba(${r},${g},${b},${alpha})`;
-        }
 
         // Apply defaults when mode or theme changes
         function applyBrandDefaults() {
@@ -118,32 +113,6 @@ const previewIframe = document.getElementById('preview-iframe');
             if (typeof syncModeButtons === 'function') syncModeButtons();
             updateFooterText();
             updateUrl();
-        }
-
-        function transitionBrandColors(oldMode, oldTheme, newMode, newTheme) {
-            const oldDefaults = brandDefaults[oldMode][oldTheme];
-            const newDefaults = brandDefaults[newMode][newTheme];
-            
-            if (ctrlColorAccent.value === oldDefaults.accent) {
-                ctrlColorAccent.value = newDefaults.accent;
-                txtAccentHex.textContent = newDefaults.accent;
-            }
-            if (ctrlColorGlow.value === oldDefaults.glow) {
-                ctrlColorGlow.value = newDefaults.glow;
-                txtGlowHex.textContent = newDefaults.glow;
-            }
-            if (ctrlColorName.value === oldDefaults.name) {
-                ctrlColorName.value = newDefaults.name;
-                txtNameHex.textContent = newDefaults.name;
-            }
-            if (ctrlColorTitle.value === oldDefaults.title) {
-                ctrlColorTitle.value = newDefaults.title;
-                txtTitleHex.textContent = newDefaults.title;
-            }
-            if (ctrlColorShadow.value === oldDefaults.shadow) {
-                ctrlColorShadow.value = newDefaults.shadow;
-                txtShadowHex.textContent = newDefaults.shadow;
-            }
         }
 
         function updateFooterText() {
@@ -528,7 +497,7 @@ const previewIframe = document.getElementById('preview-iframe');
                 const oldTheme = ctrlTheme.value;
                 const newMode = btn.getAttribute('data-mode');
                 
-                transitionBrandColors(oldMode, oldTheme, newMode, oldTheme);
+                transitionBrandColors(ctrls, oldMode, oldTheme, newMode, oldTheme);
                 
                 ctrlMode.value = newMode;
                 syncModeButtons();
@@ -558,142 +527,7 @@ const previewIframe = document.getElementById('preview-iframe');
         });
 
         function syncLangButtons() {
-            langButtons.forEach(btn => {
-                if (btn.getAttribute('data-lang') === ctrlLang.value) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-
-            // Set document lang attribute
-            document.documentElement.setAttribute('lang', ctrlLang.value);
-
-            // Dynamic Input Placeholders Translation
-            const nameInput = document.getElementById('name-input');
-            const companyInput = document.getElementById('company-input');
-            const titleInput = document.getElementById('title-input');
-            const titleSecondaryInput = document.getElementById('title-secondary-input');
-            
-            if (ctrlLang.value === 'en') {
-                if (nameInput) nameInput.placeholder = "Leave empty for default";
-                if (companyInput) companyInput.placeholder = "Leave empty / 'off'";
-                if (titleInput) titleInput.placeholder = "Leave empty / 'off' to hide";
-                if (titleSecondaryInput) titleSecondaryInput.placeholder = "Leave empty if no cycle";
-            } else {
-                if (nameInput) nameInput.placeholder = "Laisser vide pour défaut";
-                if (companyInput) companyInput.placeholder = "Laisser vide / 'off'";
-                if (titleInput) titleInput.placeholder = "Laisser vide / 'off' pour masquer";
-                if (titleSecondaryInput) titleSecondaryInput.placeholder = "Laisser vide si aucun cycle";
-            }
-
-            // Dynamic Select Options Translation
-            const titleTransition = document.getElementById('title-transition');
-            if (titleTransition) {
-                const options = titleTransition.options;
-                if (ctrlLang.value === 'en') {
-                    options[0].text = "None (Static)";
-                    options[1].text = "Blur In/Out";
-                    options[2].text = "Scrambled Letters";
-                    options[3].text = "Airport Board (Split-flap)";
-                    options[4].text = "3D Flip (Y-axis)";
-                } else {
-                    options[0].text = "Aucune (Fixe)";
-                    options[1].text = "Flou (Blur In/Out)";
-                    options[2].text = "Lettres mélangées (Scramble)";
-                    options[3].text = "Panneau d'aéroport (Split-flap)";
-                    options[4].text = "Flip 3D (Rotation Y)";
-                }
-            }
-
-            // Dynamic Alignment Buttons Tooltips Translation
-            const alignBtns = document.querySelectorAll('.align-btn');
-            alignBtns.forEach(btn => {
-                const pos = btn.getAttribute('data-pos');
-                const align = btn.getAttribute('data-align');
-                if (ctrlLang.value === 'en') {
-                    let text = '';
-                    if (pos === 'top') text = 'Top';
-                    else if (pos === 'middle') text = 'Middle';
-                    else if (pos === 'bottom') text = 'Bottom';
-                    
-                    if (align === 'left') text += ' left';
-                    else if (align === 'right') text += ' right';
-                    btn.title = text;
-                } else {
-                    let text = '';
-                    if (pos === 'top') text = 'En haut';
-                    else if (pos === 'middle') text = 'Au milieu';
-                    else if (pos === 'bottom') text = 'En bas';
-                    
-                    if (align === 'left') text += ' à gauche';
-                    else if (align === 'right') text += ' à droite';
-                    btn.title = text;
-                }
-            });
-
-            // Dynamic Format Buttons Tooltips Translation
-            const formatBtns = document.querySelectorAll('.format-btn');
-            formatBtns.forEach(btn => {
-                const format = btn.getAttribute('data-format');
-                if (ctrlLang.value === 'en') {
-                    if (format === '169') btn.title = "OBS/Zoom Format (16:9)";
-                    else if (format === '11') btn.title = "Square Profile Format (1:1)";
-                    else if (format === 'banner') btn.title = "LinkedIn Banner Format (4:1)";
-                } else {
-                    if (format === '169') btn.title = "Format OBS/Zoom (16:9)";
-                    else if (format === '11') btn.title = "Format Profil Carré (1:1)";
-                    else if (format === 'banner') btn.title = "Format Bannière LinkedIn (4:1)";
-                }
-            });
-
-            // Help Modal Button Tooltip
-            const btnHelpModal = document.getElementById('btn-help-modal');
-            if (btnHelpModal) {
-                btnHelpModal.title = (ctrlLang.value === 'en') ? "How to use your Backdrop?" : "Comment utiliser votre Backdrop ?";
-            }
-
-            // Text Visibility Toggle Tooltip
-            const toggleCard = document.getElementById('preset-toggle-text');
-            if (toggleCard) {
-                toggleCard.title = (ctrlLang.value === 'en') ? "Show/Hide name and title on render" : "Afficher/Masquer le nom et le titre sur le rendu";
-            }
-
-            // Random Preset Button Tooltip
-            const btnRandom = document.getElementById('preset-random');
-            if (btnRandom) {
-                btnRandom.title = (ctrlLang.value === 'en') ? "Generate random harmonious colors" : "Générer des couleurs aléatoires harmonieuses";
-            }
-
-            // Copy URL Button Tooltip
-            const urlCopyWrapper = document.getElementById('url-copy-wrapper');
-            if (urlCopyWrapper) {
-                urlCopyWrapper.title = (ctrlLang.value === 'en') ? "Copy URL to clipboard" : "Copier l'URL dans le presse-papier";
-            }
-
-            // Open Render Button Tooltip
-            const btnOpen = document.getElementById('btn-open');
-            if (btnOpen) {
-                btnOpen.title = (ctrlLang.value === 'en') ? "Open full screen render in a new tab" : "Ouvrir le rendu plein écran dans un nouvel onglet";
-            }
-
-            // Export PNG Button Tooltip
-            const btnPng = document.getElementById('btn-png');
-            if (btnPng) {
-                btnPng.title = (ctrlLang.value === 'en') ? "Download the render as a PNG image" : "Télécharger le rendu sous forme d'image PNG";
-            }
-
-            // Video Button Tooltip
-            const btnVideo = document.getElementById('btn-video');
-            if (btnVideo) {
-                btnVideo.title = (ctrlLang.value === 'en') ? "Generate and download a looping MP4 video" : "Générer et télécharger une boucle vidéo MP4";
-            }
-
-            // Close Modal Button Tooltip
-            const btnCloseModal = document.getElementById('btn-close-modal');
-            if (btnCloseModal) {
-                btnCloseModal.title = (ctrlLang.value === 'en') ? "Close" : "Fermer";
-            }
+            syncLangButtonsModule(ctrlLang.value);
         }
 
         // QR Code Persona Toggle Button Logic
@@ -704,7 +538,7 @@ const previewIframe = document.getElementById('preview-iframe');
                 const oldTheme = ctrlTheme.value;
                 const newMode = (oldMode === 'artist') ? 'business' : 'artist';
                 
-                transitionBrandColors(oldMode, oldTheme, newMode, oldTheme);
+                transitionBrandColors(ctrls, oldMode, oldTheme, newMode, oldTheme);
                 
                 ctrlMode.value = newMode;
                 if (typeof syncModeButtons === 'function') syncModeButtons();
@@ -724,7 +558,7 @@ const previewIframe = document.getElementById('preview-iframe');
                 const oldTheme = ctrlTheme.value;
                 const newTheme = btn.getAttribute('data-theme');
                 
-                transitionBrandColors(oldMode, oldTheme, oldMode, newTheme);
+                transitionBrandColors(ctrls, oldMode, oldTheme, oldMode, newTheme);
                 
                 ctrlTheme.value = newTheme;
                 updateUrl();
@@ -1013,6 +847,17 @@ const previewIframe = document.getElementById('preview-iframe');
                     }
                 };
 
+                const btnCancelExport = document.getElementById('btn-cancel-export');
+                if (btnCancelExport) {
+                    btnCancelExport.onclick = () => {
+                        try {
+                            previewIframe.contentWindow.videoExportCancelled = true;
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    };
+                }
+
                 try {
                     previewIframe.contentWindow.captureVideo(exportFormat.value, durationVal, (pct) => {
                         const roundedPct = Math.round(pct);
@@ -1044,86 +889,11 @@ const previewIframe = document.getElementById('preview-iframe');
 
         // LocalStorage loading/saving
         function saveConfigToLocalStorage() {
-            try {
-                const config = {
-                    theme: ctrlTheme.value,
-                    mode: ctrlMode.value,
-                    lang: ctrlLang.value,
-                    name: ctrlName.value,
-                    title: ctrlTitle.value,
-                    position: ctrlPosition.value,
-                    align: ctrlAlign.value,
-                    size: ctrlSize.value,
-                    ratio: ctrlRatio.value,
-                    accent: ctrlColorAccent.value,
-                    glow: ctrlColorGlow.value,
-                    namecolor: ctrlColorName.value,
-                    titlecolor: ctrlColorTitle.value,
-                    shadowcolor: ctrlColorShadow.value,
-                    animation: ctrlAnimation.value,
-                    speed: ctrlSpeed.value,
-                    texteffect: ctrlTextEffect.value,
-                    borderanim: ctrlAnimateBorder.checked,
-                    transparentBg: ctrlTransparentBg.checked,
-                    logopos: ctrlLogoPos.value
-                };
-                localStorage.setItem('backdrop-studio-config', JSON.stringify(config));
-            } catch (e) {
-                console.error('Failed to save config to localStorage:', e);
-            }
+            saveConfigToLocalStorageModule(ctrls);
         }
 
         function loadConfigFromLocalStorage() {
-            try {
-                const data = localStorage.getItem('backdrop-studio-config');
-                if (data) {
-                    const config = JSON.parse(data);
-                    
-                    if (config.theme) ctrlTheme.value = config.theme;
-                    if (config.mode) ctrlMode.value = config.mode;
-                    if (config.lang) ctrlLang.value = config.lang;
-                    if (config.name !== undefined) ctrlName.value = config.name;
-                    if (config.title !== undefined) ctrlTitle.value = config.title;
-                    if (config.position) ctrlPosition.value = config.position;
-                    if (config.align) ctrlAlign.value = config.align;
-                    if (config.size) ctrlSize.value = config.size;
-                    if (config.ratio) {
-                        ctrlRatio.value = config.ratio;
-                        txtRatioVal.textContent = config.ratio;
-                    }
-                    if (config.accent) {
-                        ctrlColorAccent.value = config.accent;
-                        txtAccentHex.textContent = config.accent;
-                    }
-                    if (config.glow) {
-                        ctrlColorGlow.value = config.glow;
-                        txtGlowHex.textContent = config.glow;
-                    }
-                    if (config.namecolor) {
-                        ctrlColorName.value = config.namecolor;
-                        txtNameHex.textContent = config.namecolor;
-                    }
-                    if (config.titlecolor) {
-                        ctrlColorTitle.value = config.titlecolor;
-                        txtTitleHex.textContent = config.titlecolor;
-                    }
-                    if (config.shadowcolor) {
-                        ctrlColorShadow.value = config.shadowcolor;
-                        txtShadowHex.textContent = config.shadowcolor;
-                    }
-                    if (config.animation) ctrlAnimation.value = config.animation;
-                    if (config.speed) ctrlSpeed.value = config.speed;
-                    if (config.texteffect) ctrlTextEffect.value = config.texteffect;
-                    if (config.borderanim !== undefined) ctrlAnimateBorder.checked = config.borderanim;
-                    if (config.transparentBg !== undefined) ctrlTransparentBg.checked = config.transparentBg;
-                    if (config.logopos) ctrlLogoPos.value = config.logopos;
-
-                    return true;
-                }
-            } catch (e) {
-                console.error('Failed to load config from localStorage:', e);
-            }
-            return false;
+            return loadConfigFromLocalStorageModule(ctrls);
         }
 
         // Initialize default view

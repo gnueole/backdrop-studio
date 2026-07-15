@@ -1329,10 +1329,18 @@
                         if (e.data.size > 0) chunks.push(e.data);
                     };
                     
+                    window.videoExportCancelled = false;
+
                     recorder.onstop = () => {
+                        if (window.videoExportCancelled) {
+                            reject(new Error('Export cancelled by user'));
+                            return;
+                        }
+                        
                         const blob = new Blob(chunks, { type: 'video/webm' });
                         const url = URL.createObjectURL(blob);
-                        const cleanName = (nameEl.textContent || 'backdrop')
+                        const backdropNameEl = document.getElementById('backdrop-name');
+                        const cleanName = ((backdropNameEl ? backdropNameEl.textContent : 'backdrop') || 'backdrop')
                             .toLowerCase().replace(/[^a-z0-9]+/g, '_');
                         const downloadName = `${cleanName}_backdrop_${format}.webm`;
                         
@@ -1362,6 +1370,11 @@
                     recorder.start();
 
                     function recordNextFrame() {
+                        if (window.videoExportCancelled) {
+                            recorder.stop();
+                            return;
+                        }
+
                         if (currentFrame > totalFrames) {
                             if (onProgress) onProgress(100);
                             recorder.stop();
