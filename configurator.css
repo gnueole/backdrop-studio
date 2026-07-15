@@ -2067,7 +2067,7 @@ html, body.theme-dark {
             grid-template-columns: repeat(6, 1fr);
             gap: 0.35rem;
             width: 132px;
-            height: 92px;
+            height: 64px;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.08);
             padding: 0.35rem;
@@ -2125,15 +2125,13 @@ html, body.theme-dark {
         .logo-pos-btn.top-center::after { top: 4px; left: 50%; transform: translateX(-50%); }
         .logo-pos-btn.top-right::after { top: 4px; right: 4px; }
 
-        /* Bottom center position */
-        .logo-pos-btn.bottom-center { grid-column: span 6; }
+        /* Bottom row buttons - each span 2 for a symmetrical 3x2 grid */
+        .logo-pos-btn.inline-left { grid-column: span 2; }
+        .logo-pos-btn.bottom-center { grid-column: span 2; }
+        .logo-pos-btn.inline-right { grid-column: span 2; }
+        .logo-pos-btn.inline-left::after { bottom: 4px; left: 4px; }
         .logo-pos-btn.bottom-center::after { bottom: 4px; left: 50%; transform: translateX(-50%); }
-
-        /* Inline positions in the bottom row spanned horizontally */
-        .logo-pos-btn.inline-left { grid-column: span 3; }
-        .logo-pos-btn.inline-right { grid-column: span 3; }
-        .logo-pos-btn.inline-left::after { bottom: 4px; left: 6px; }
-        .logo-pos-btn.inline-right::after { bottom: 4px; right: 6px; }
+        .logo-pos-btn.inline-right::after { bottom: 4px; right: 4px; }
 
         /* Timing Segmented Control Buttons */
         .duration-btn {
@@ -2161,4 +2159,41 @@ html, body.theme-dark {
             background: var(--accent-color, #fb923c);
             color: #ffffff !important;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Title Transition Segmented Control Buttons */
+        .transition-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted, #94a3b8);
+            padding: 6px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+        .transition-btn svg {
+            width: 15px;
+            height: 15px;
+            stroke-width: 2.5;
+            transition: transform 0.2s ease;
+        }
+        .transition-btn:hover:not(.active) {
+            color: var(--text-color, #ffffff);
+            background: rgba(255, 255, 255, 0.04);
+        }
+        body.theme-light .transition-btn:hover:not(.active) {
+            background: rgba(0, 0, 0, 0.04);
+        }
+        .transition-btn.active {
+            background: var(--accent-color, #fb923c);
+            color: #ffffff !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+        .transition-btn.active svg {
+            transform: scale(1.1);
         }
