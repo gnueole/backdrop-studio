@@ -317,7 +317,11 @@
                                 <span class="settings-subsection-title"><span class="lang-fr">Texte (Cycle)</span><span class="lang-en">Text (Cycle)</span></span>
                                 <div class="row-group-tight">
                                     <div class="form-group" style="flex: 1;">
-                                        <label for="title-transition"><span class="lang-fr">Transition du Titre</span><span class="lang-en">Title Transition</span></label>
+                                        <label for="title-transition" style="display: flex; align-items: center; gap: 0.35rem;">
+                                            <svg class="icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                                            <span class="lang-fr">Transition du Titre</span>
+                                            <span class="lang-en">Title Transition</span>
+                                        </label>
                                         <select id="title-transition" class="form-control">
                                             <option value="none">Aucune (Fixe)</option>
                                             <option value="blur">Flou (Blur In/Out)</option>
@@ -326,14 +330,19 @@
                                             <option value="flip">Flip 3D (Rotation Y)</option>
                                         </select>
                                     </div>
-                                    <div class="form-group" style="width: 140px; flex-shrink: 0;">
-                                        <label for="title-transition-speed"><span class="lang-fr">Durée d'affichage</span><span class="lang-en">Display Duration</span></label>
-                                        <select id="title-transition-speed" class="form-control">
-                                            <option value="3">3s</option>
-                                            <option value="5" selected>5s</option>
-                                            <option value="8">8s</option>
-                                            <option value="10">10s</option>
-                                        </select>
+                                    <div class="form-group" style="width: 160px; flex-shrink: 0;">
+                                        <label style="display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.35rem;">
+                                            <svg class="icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                            <span class="lang-fr">Durée d'affichage</span>
+                                            <span class="lang-en">Display Duration</span>
+                                        </label>
+                                        <div class="duration-toggle-group segmented-control">
+                                            <button type="button" class="duration-btn" data-speed="3">3s</button>
+                                            <button type="button" class="duration-btn active" data-speed="5">5s</button>
+                                            <button type="button" class="duration-btn" data-speed="8">8s</button>
+                                            <button type="button" class="duration-btn" data-speed="10">10s</button>
+                                        </div>
+                                        <input type="hidden" id="title-transition-speed" value="5">
                                     </div>
                                 </div>
                             </div>

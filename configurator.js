@@ -861,6 +861,32 @@ const outputUrl = document.getElementById('output-url');
             });
         }
 
+        // Bind Visual title transition speed/duration selector
+        const durationButtons = document.querySelectorAll('.duration-btn');
+        const hiddenDuration = document.getElementById('title-transition-speed');
+
+        durationButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                durationButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                hiddenDuration.value = btn.getAttribute('data-speed');
+                hiddenDuration.dispatchEvent(new Event('input'));
+                hiddenDuration.dispatchEvent(new Event('change'));
+            });
+        });
+
+        function syncDurationUI() {
+            if (!hiddenDuration) return;
+            const durationVal = hiddenDuration.value;
+            durationButtons.forEach(btn => {
+                if (btn.getAttribute('data-speed') === durationVal) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
         // Help Modal Controls
         const btnHelpModal = document.getElementById('btn-help-modal');
         const helpModal = document.getElementById('help-modal');
@@ -983,6 +1009,7 @@ const outputUrl = document.getElementById('output-url');
         }
         syncAlignmentUI();
         syncLogoPosUI();
+        syncDurationUI();
         syncLangButtons();
 
         // Bind UI Theme cycling button in the app header
