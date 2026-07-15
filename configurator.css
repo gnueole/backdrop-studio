@@ -2017,3 +2017,28 @@ html, body.theme-dark {
             border-color: #dc2626;
             box-shadow: 0 0 8px rgba(239, 68, 68, 0.15);
         }
+
+        /* Animation Subsections & Divider */
+        .settings-subsection {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .settings-subsection-title {
+            display: block;
+            font-family: var(--font-title-sans, 'Outfit', sans-serif);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-color, #fb923c);
+            margin-bottom: 0.25rem;
+        }
+        .settings-divider {
+            border: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin: 0.5rem 0;
+        }
+        body.theme-light .settings-divider {
+            border-top-color: rgba(0, 0, 0, 0.06);
+        }

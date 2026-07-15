@@ -20,7 +20,8 @@ export function saveConfigToLocalStorage(ctrls) {
             texteffect: ctrls.ctrlTextEffect.value,
             borderanim: ctrls.ctrlAnimateBorder.checked,
             transparentBg: ctrls.ctrlTransparentBg.checked,
-            logopos: ctrls.ctrlLogoPos.value
+            logopos: ctrls.ctrlLogoPos.value,
+            transspeed: ctrls.ctrlTitleTransitionSpeed.value
         };
         localStorage.setItem('backdrop-studio-config', JSON.stringify(config));
     } catch (e) {
@@ -72,6 +73,7 @@ export function loadConfigFromLocalStorage(ctrls) {
             if (config.borderanim !== undefined) ctrls.ctrlAnimateBorder.checked = config.borderanim;
             if (config.transparentBg !== undefined) ctrls.ctrlTransparentBg.checked = config.transparentBg;
             if (config.logopos) ctrls.ctrlLogoPos.value = config.logopos;
+            if (config.transspeed) ctrls.ctrlTitleTransitionSpeed.value = config.transspeed;
 
             return true;
         }

@@ -153,17 +153,6 @@
                             <div class="form-group">
                                 <label for="title-secondary-input"><span class="lang-fr">Titre Secondaire (Transition)</span><span class="lang-en">Secondary Title (Transition)</span></label>
                                 <input type="text" id="title-secondary-input" class="form-control" placeholder="Laisser vide si aucun cycle">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="title-transition"><span class="lang-fr">Transition du Titre</span><span class="lang-en">Title Transition</span></label>
-                            <select id="title-transition" class="form-control">
-                                <option value="none">Aucune (Fixe)</option>
-                                <option value="blur">Flou (Blur In/Out)</option>
-                                <option value="scramble">Lettres mélangées (Scramble)</option>
-                                <option value="airport">Panneau d'aéroport (Split-flap)</option>
-                                <option value="flip">Flip 3D (Rotation Y)</option>
-                            </select>
                         </div>
                     </div>
 
@@ -175,9 +164,22 @@
                             <span class="lang-en">Logo</span>
                         </h3>
                         <div class="settings-group">
-                            <div class="form-group">
+                            <div class="form-group" style="margin-bottom: 0.25rem;">
                                 <label for="logo-file"><span class="lang-fr">Uploader un Logo (Local)</span><span class="lang-en">Upload a Logo (Local)</span></label>
                                 <input type="file" id="logo-file" accept="image/*" class="logo-file-input">
+                                <p class="file-info-text">
+                                    <span class="lang-fr">Formats : PNG, SVG, JPG. Recommandé : carré, 120x120px max. (limite 500 Ko).</span>
+                                    <span class="lang-en">Formats: PNG, SVG, JPG. Recommended: square, 120x120px max. (limit 500 KB).</span>
+                                </p>
+                                <!-- Active Logo Preview & Reset Container -->
+                                <div id="logo-preview-container" style="display: none; align-items: center; gap: 0.75rem; margin-top: 0.5rem; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.08); padding: 0.5rem; border-radius: 6px;">
+                                    <img id="logo-preview-img" src="" style="max-height: 32px; border-radius: 4px; background: rgba(255,255,255,0.05); padding: 2px;">
+                                    <span style="font-size: 0.75rem; color: #9ca3af; flex: 1;" class="lang-fr">Logo actif (sauvegardé)</span>
+                                    <span style="font-size: 0.75rem; color: #9ca3af; flex: 1;" class="lang-en">Active logo (saved)</span>
+                                    <button type="button" id="btn-remove-logo" class="btn-remove-logo" title="Supprimer le logo" style="background: none; border: none; color: #ef4444; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 4px; transition: all 0.2s;">
+                                        <svg class="icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                    </button>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="logo-url"><span class="lang-fr">Ou URL de logo (Image en ligne)</span><span class="lang-en">Or logo URL (Online image)</span></label>
@@ -247,69 +249,106 @@
                             <span class="lang-en">Animation</span>
                         </h3>
                         <div class="settings-group">
-                            <div>
-                                <span class="switch-toggle-label"><span class="lang-fr">Effet</span><span class="lang-en">Effect</span></span>
-                                <div class="animation-grid">
-                                    <button type="button" class="anim-btn active" data-anim="none" title="Aucune animation (Statique)">
-                                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><rect x="9" y="9" width="6" height="6"></rect></svg>
-                                        <span class="lang-fr">Statique</span><span class="lang-en">Static</span>
-                                    </button>
-                                    <button type="button" class="anim-btn" data-anim="pulse" title="Variation d'intensité (Pulse)">
-                                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                                        <span class="lang-fr">Pulse</span><span class="lang-en">Pulse</span>
-                                    </button>
-                                    <button type="button" class="anim-btn" data-anim="wave" title="Déplacement fluide (Vague)">
-                                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20M2 8h16M2 16h12"></path></svg>
-                                        <span class="lang-fr">Vague</span><span class="lang-en">Wave</span>
-                                    </button>
-                                    <button type="button" class="anim-btn" data-anim="shimmer" title="Variation de teintes (Shimmer)">
-                                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                                        <span class="lang-fr">Shimmer</span><span class="lang-en">Shimmer</span>
-                                    </button>
-                                    <button type="button" class="anim-btn" data-anim="monochrome" title="Monochrome animé (Mono)">
-                                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10V2z"></path></svg>
-                                        <span class="lang-fr">Mono</span><span class="lang-en">Mono</span>
-                                    </button>
-                                    <button type="button" class="anim-btn" data-anim="eclipse" title="Orbites croisées lentes (Éclipse)">
-                                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path><path d="M2 12h20"></path></svg>
-                                        <span class="lang-fr">Éclipse</span><span class="lang-en">Eclipse</span>
-                                    </button>
+                            <!-- Background Animation Section -->
+                            <div class="settings-subsection">
+                                <span class="settings-subsection-title"><span class="lang-fr">Fond d'écran</span><span class="lang-en">Background</span></span>
+                                <div class="row-group-tight" style="margin-bottom: 0.5rem;">
+                                    <div style="flex: 1;">
+                                        <span class="switch-toggle-label"><span class="lang-fr">Effet</span><span class="lang-en">Effect</span></span>
+                                        <div class="animation-grid">
+                                            <button type="button" class="anim-btn active" data-anim="none" title="Aucune animation (Statique)">
+                                                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><rect x="9" y="9" width="6" height="6"></rect></svg>
+                                                <span class="lang-fr">Statique</span><span class="lang-en">Static</span>
+                                            </button>
+                                            <button type="button" class="anim-btn" data-anim="pulse" title="Variation d'intensité (Pulse)">
+                                                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                                                <span class="lang-fr">Pulse</span><span class="lang-en">Pulse</span>
+                                            </button>
+                                            <button type="button" class="anim-btn" data-anim="wave" title="Déplacement fluide (Vague)">
+                                                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20M2 8h16M2 16h12"></path></svg>
+                                                <span class="lang-fr">Vague</span><span class="lang-en">Wave</span>
+                                            </button>
+                                            <button type="button" class="anim-btn" data-anim="shimmer" title="Variation de teintes (Shimmer)">
+                                                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                                <span class="lang-fr">Shimmer</span><span class="lang-en">Shimmer</span>
+                                            </button>
+                                            <button type="button" class="anim-btn" data-anim="monochrome" title="Monochrome animé (Mono)">
+                                                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10V2z"></path></svg>
+                                                <span class="lang-fr">Mono</span><span class="lang-en">Mono</span>
+                                            </button>
+                                            <button type="button" class="anim-btn" data-anim="eclipse" title="Orbites croisées lentes (Éclipse)">
+                                                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path><path d="M2 12h20"></path></svg>
+                                                <span class="lang-fr">Éclipse</span><span class="lang-en">Eclipse</span>
+                                            </button>
+                                        </div>
+                                        <input type="hidden" id="ctrl-animation" value="none">
+                                    </div>
+                                    <div style="width: auto; flex-shrink: 0;">
+                                        <span class="switch-toggle-label"><span class="lang-fr">Vitesse</span><span class="lang-en">Speed</span></span>
+                                        <div class="speed-control-group">
+                                            <button type="button" class="speed-btn speed-control-btn" data-speed="slow" title="Lent (Slow)">
+                                                <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                            </button>
+                                            <button type="button" class="speed-btn speed-control-btn active" data-speed="medium" title="Normal (Medium)">
+                                                <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
+                                            </button>
+                                            <button type="button" class="speed-btn speed-control-btn" data-speed="fast" title="Rapide (Fast)">
+                                                <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                            </button>
+                                        </div>
+                                        <input type="hidden" id="ctrl-speed" value="medium">
+                                    </div>
                                 </div>
-                                <input type="hidden" id="ctrl-animation" value="none">
                             </div>
-                            
-                            <div>
-                                <span class="switch-toggle-label"><span class="lang-fr">Vitesse</span><span class="lang-en">Speed</span></span>
-                                <div class="speed-control-group">
-                                    <button type="button" class="speed-btn speed-control-btn" data-speed="slow" title="Lent (Slow)">
-                                        <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                    </button>
-                                    <button type="button" class="speed-btn speed-control-btn active" data-speed="medium" title="Normal (Medium)">
-                                        <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
-                                    </button>
-                                    <button type="button" class="speed-btn speed-control-btn" data-speed="fast" title="Rapide (Fast)">
-                                        <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                                    </button>
+
+                            <hr class="settings-divider">
+
+                            <!-- Text Animation / Title Cycle Section -->
+                            <div class="settings-subsection">
+                                <span class="settings-subsection-title"><span class="lang-fr">Texte (Cycle)</span><span class="lang-en">Text (Cycle)</span></span>
+                                <div class="row-group-tight">
+                                    <div class="form-group" style="flex: 1;">
+                                        <label for="title-transition"><span class="lang-fr">Transition du Titre</span><span class="lang-en">Title Transition</span></label>
+                                        <select id="title-transition" class="form-control">
+                                            <option value="none">Aucune (Fixe)</option>
+                                            <option value="blur">Flou (Blur In/Out)</option>
+                                            <option value="scramble">Lettres mélangées (Scramble)</option>
+                                            <option value="airport">Panneau d'aéroport (Split-flap)</option>
+                                            <option value="flip">Flip 3D (Rotation Y)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" style="width: 140px; flex-shrink: 0;">
+                                        <label for="title-transition-speed"><span class="lang-fr">Durée d'affichage</span><span class="lang-en">Display Duration</span></label>
+                                        <select id="title-transition-speed" class="form-control">
+                                            <option value="3">3s</option>
+                                            <option value="5" selected>5s</option>
+                                            <option value="8">8s</option>
+                                            <option value="10">10s</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <input type="hidden" id="ctrl-speed" value="medium">
                             </div>
-                            
-                            <div class="switch-toggle-row">
-                                <label for="ctrl-animate-border" class="switch-toggle-label"><span class="lang-fr">Animer la barre du bas</span><span class="lang-en">Animate bottom border</span></label>
-                                <label class="switch-toggle switch-toggle-input-wrapper">
-                                    <input type="checkbox" id="ctrl-animate-border" checked>
-                                    <span class="switch-slider"></span>
-                                </label>
-                            </div>
-                            <div class="switch-toggle-row">
-                                <label for="ctrl-transparent-bg" class="switch-toggle-label">
-                                    <span><span class="lang-fr">Fond transparent</span><span class="lang-en">Transparent background</span></span>
-                                    <span class="switch-toggle-label-desc"><span class="lang-fr">Pour créer un asset superposable (PNG)</span><span class="lang-en">To create an overlay asset (PNG)</span></span>
-                                </label>
-                                <label class="switch-toggle switch-toggle-input-wrapper">
-                                    <input type="checkbox" id="ctrl-transparent-bg">
-                                    <span class="switch-slider"></span>
-                                </label>
+
+                            <hr class="settings-divider">
+
+                            <!-- Options bottom border and transparent -->
+                            <div class="row-group-tight">
+                                <div class="switch-toggle-row" style="flex: 1; margin: 0;">
+                                    <label for="ctrl-animate-border" class="switch-toggle-label"><span class="lang-fr">Animer la barre du bas</span><span class="lang-en">Animate bottom border</span></label>
+                                    <label class="switch-toggle switch-toggle-input-wrapper">
+                                        <input type="checkbox" id="ctrl-animate-border" checked>
+                                        <span class="switch-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="switch-toggle-row" style="flex: 1; margin: 0;">
+                                    <label for="ctrl-transparent-bg" class="switch-toggle-label">
+                                        <span><span class="lang-fr">Fond transparent</span><span class="lang-en">Transparent background</span></span>
+                                    </label>
+                                    <label class="switch-toggle switch-toggle-input-wrapper">
+                                        <input type="checkbox" id="ctrl-transparent-bg">
+                                        <span class="switch-slider"></span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -680,8 +680,9 @@
                 currentTextIndex = nextIndex;
             }
             
-            // Cycle every 5 seconds
-            setInterval(cycleTitle, 5000);
+            // Cycle timing based on parameter
+            const transSpeedParam = parseInt(params.get('transspeed'), 10) || 5; // default 5 seconds
+            setInterval(cycleTitle, transSpeedParam * 1000);
             
             // 6. Name Display Logic
             const nameParam = params.get('name');
@@ -841,7 +842,8 @@
                 const nameText = nameParam !== 'off' ? (nameParam ? decodeURIComponent(nameParam) : (mode === 'artist' ? 'Éole' : 'Julien Avarre')) : '';
                 
                 // Get animated title and company texts
-                const cycleTime = elapsed % 5;
+                const transSpeedParam = parseInt(params.get('transspeed'), 10) || 5;
+                const cycleTime = elapsed % transSpeedParam;
                 let blurPx = 0;
                 let opacityVal = 1;
                 let activeTitle = '';
@@ -851,7 +853,7 @@
                 const hasCompany2 = window.companies[1] && window.companies[1].trim() !== '';
                 
                 if (hasTitle2 || hasCompany2) {
-                    const nextIndex = Math.floor(elapsed / 5) % 2;
+                    const nextIndex = Math.floor(elapsed / transSpeedParam) % 2;
                     activeTitle = window.titles[nextIndex] || '';
                     activeCompany = window.companies[nextIndex] || '';
                     
@@ -861,8 +863,8 @@
                             const progress = cycleTime / 0.4;
                             blurPx = (1 - progress) * 8;
                             opacityVal = progress;
-                        } else if (cycleTime > 4.6) {
-                            const progress = (5.0 - cycleTime) / 0.4;
+                        } else if (cycleTime > (transSpeedParam - 0.4)) {
+                            const progress = (transSpeedParam - cycleTime) / 0.4;
                             blurPx = (1 - progress) * 8;
                             opacityVal = progress;
                         }
@@ -870,8 +872,8 @@
                         // For scramble/airport/flip in canvas, do a clean quick cross-fade transition
                         if (cycleTime < 0.3) {
                             opacityVal = cycleTime / 0.3;
-                        } else if (cycleTime > 4.7) {
-                            opacityVal = (5.0 - cycleTime) / 0.3;
+                        } else if (cycleTime > (transSpeedParam - 0.3)) {
+                            opacityVal = (transSpeedParam - cycleTime) / 0.3;
                         }
                     }
                 } else {

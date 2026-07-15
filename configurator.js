@@ -41,6 +41,7 @@ const outputUrl = document.getElementById('output-url');
         const ctrlTitle = document.getElementById('title-input');
         const ctrlTitleSecondary = document.getElementById('title-secondary-input');
         const ctrlTitleTransition = document.getElementById('title-transition');
+        const ctrlTitleTransitionSpeed = document.getElementById('title-transition-speed');
         
         const ctrlLogoFile = document.getElementById('logo-file');
         const ctrlLogoUrl = document.getElementById('logo-url');
@@ -75,7 +76,7 @@ const outputUrl = document.getElementById('output-url');
 
         // Bundle controls for modular passage
         const ctrls = {
-            ctrlTheme, ctrlMode, ctrlLang, ctrlName, ctrlCompany, ctrlTitle, ctrlTitleSecondary, ctrlTitleTransition,
+            ctrlTheme, ctrlMode, ctrlLang, ctrlName, ctrlCompany, ctrlTitle, ctrlTitleSecondary, ctrlTitleTransition, ctrlTitleTransitionSpeed,
             ctrlLogoFile, ctrlLogoUrl, ctrlLogoSize, ctrlLogoOpacity, ctrlLogoPos,
             ctrlExportRes, ctrlVideoDuration, ctrlBoomerang, ctrlPosition, ctrlAlign, ctrlSize, ctrlRatio,
             ctrlColorAccent, ctrlColorGlow, ctrlColorName, ctrlColorTitle, ctrlAnimation, ctrlSpeed, ctrlTextEffect,
@@ -96,6 +97,22 @@ const outputUrl = document.getElementById('output-url');
         }
 
         let uploadedLogoDataUrl = localStorage.getItem('backdrop-studio-local-logo') || '';
+
+        // Logo preview helper functions
+        const logoPreviewContainer = document.getElementById('logo-preview-container');
+        const logoPreviewImg = document.getElementById('logo-preview-img');
+        const btnRemoveLogo = document.getElementById('btn-remove-logo');
+
+        function syncLogoPreview() {
+            if (uploadedLogoDataUrl) {
+                if (logoPreviewImg) logoPreviewImg.src = uploadedLogoDataUrl;
+                if (logoPreviewContainer) logoPreviewContainer.style.display = 'flex';
+            } else {
+                if (logoPreviewContainer) logoPreviewContainer.style.display = 'none';
+                if (logoPreviewImg) logoPreviewImg.src = '';
+            }
+        }
+        syncLogoPreview();
 
         // Dynamic base URL resolver
         const baseBackdropUrl = window.location.origin + window.location.pathname.replace('config.html', '');
@@ -159,6 +176,7 @@ const outputUrl = document.getElementById('output-url');
             }
             
             if (ctrlTitleTransition.value !== 'none') queryParams.set('transanim', ctrlTitleTransition.value);
+            if (ctrlTitleTransitionSpeed.value !== '5') queryParams.set('transspeed', ctrlTitleTransitionSpeed.value);
             
             const finalLogo = uploadedLogoDataUrl || ctrlLogoUrl.value.trim();
             if (finalLogo) {
@@ -414,6 +432,7 @@ const outputUrl = document.getElementById('output-url');
                             uploadedLogoDataUrl = '';
                             localStorage.removeItem('backdrop-studio-local-logo');
                             ctrlLogoFile.value = '';
+                            syncLogoPreview();
                             logoEl.src = val;
                             logoContainer.style.display = 'block';
                         } else if (!uploadedLogoDataUrl) {
@@ -436,7 +455,8 @@ const outputUrl = document.getElementById('output-url');
         }
 
         const controls = [
-            ctrlName, ctrlCompany, ctrlTitle, ctrlTitleSecondary, ctrlTitleTransition,
+            ctrlTheme, ctrlMode,
+            ctrlName, ctrlCompany, ctrlTitle, ctrlTitleSecondary, ctrlTitleTransition, ctrlTitleTransitionSpeed,
             ctrlLogoUrl, ctrlLogoSize, ctrlLogoOpacity, ctrlLogoPos,
             ctrlExportRes, ctrlVideoDuration, ctrlBoomerang,
             ctrlPosition, ctrlAlign, ctrlSize, ctrlRatio, ctrlColorAccent, ctrlColorGlow, ctrlLang, ctrlColorName, ctrlColorTitle, ctrlColorShadow, ctrlAnimation, ctrlSpeed, ctrlTextEffect, ctrlAnimateBorder, ctrlTransparentBg
@@ -461,7 +481,14 @@ const outputUrl = document.getElementById('output-url');
             if (!file) {
                 uploadedLogoDataUrl = '';
                 localStorage.removeItem('backdrop-studio-local-logo');
+                syncLogoPreview();
                 updateUrl();
+                return;
+            }
+            // File size validation (max 500 KB)
+            if (file.size > 500 * 1024) {
+                alert(ctrlLang.value === 'en' ? "Image is too large (max 500 KB)" : "L'image est trop volumineuse (max 500 Ko)");
+                ctrlLogoFile.value = '';
                 return;
             }
             const reader = new FileReader();
@@ -491,12 +518,24 @@ const outputUrl = document.getElementById('output-url');
                     
                     // Clear URL input to avoid conflicts
                     ctrlLogoUrl.value = '';
+                    syncLogoPreview();
                     updateUrl();
                 };
                 img.src = event.target.result;
             };
             reader.readAsDataURL(file);
         });
+
+        // Delete/Remove uploaded logo logic
+        if (btnRemoveLogo) {
+            btnRemoveLogo.addEventListener('click', () => {
+                uploadedLogoDataUrl = '';
+                localStorage.removeItem('backdrop-studio-local-logo');
+                ctrlLogoFile.value = '';
+                syncLogoPreview();
+                updateUrl();
+            });
+        }
 
         // Mode Toggle Buttons Logic
         const modeButtons = document.querySelectorAll('.mode-btn');
