@@ -2,6 +2,15 @@ import { brandDefaults, transitionBrandColors } from './brand-defaults.js';
 import { syncLangButtons as syncLangButtonsModule } from './translations.js';
 import { saveConfigToLocalStorage as saveConfigToLocalStorageModule, loadConfigFromLocalStorage as loadConfigFromLocalStorageModule } from './config-storage.js';
 
+window.downloadFile = function(url, filename) {
+    const a = document.createElement('a');
+    a.download = filename;
+    a.href = url;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+};
+
 const previewIframe = document.getElementById('preview-iframe');
 const outputUrl = document.getElementById('output-url');
         const urlCopyWrapper = document.getElementById('url-copy-wrapper');

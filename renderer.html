@@ -1275,19 +1275,23 @@
                     const downloadName = `${cleanName}_backdrop_${format}.png`;
                     const dataUrl = canvas.toDataURL('image/png');
                     
-                    try {
-                        const topDoc = window.top.document;
-                        const link = topDoc.createElement('a');
-                        link.download = downloadName;
-                        link.href = dataUrl;
-                        topDoc.body.appendChild(link);
-                        link.click();
-                        topDoc.body.removeChild(link);
-                    } catch (e) {
-                        const link = document.createElement('a');
-                        link.download = downloadName;
-                        link.href = dataUrl;
-                        link.click();
+                    if (window.parent && typeof window.parent.downloadFile === 'function') {
+                        window.parent.downloadFile(dataUrl, downloadName);
+                    } else {
+                        try {
+                            const topDoc = window.top.document;
+                            const link = topDoc.createElement('a');
+                            link.download = downloadName;
+                            link.href = dataUrl;
+                            topDoc.body.appendChild(link);
+                            link.click();
+                            topDoc.body.removeChild(link);
+                        } catch (e) {
+                            const link = document.createElement('a');
+                            link.download = downloadName;
+                            link.href = dataUrl;
+                            link.click();
+                        }
                     }
                     restoreStyles();
                 }).catch(err => {
@@ -1344,19 +1348,23 @@
                             .toLowerCase().replace(/[^a-z0-9]+/g, '_');
                         const downloadName = `${cleanName}_backdrop_${format}.webm`;
                         
-                        try {
-                            const topDoc = window.top.document;
-                            const a = topDoc.createElement('a');
-                            a.download = downloadName;
-                            a.href = url;
-                            topDoc.body.appendChild(a);
-                            a.click();
-                            topDoc.body.removeChild(a);
-                        } catch (e) {
-                            const a = document.createElement('a');
-                            a.download = downloadName;
-                            a.href = url;
-                            a.click();
+                        if (window.parent && typeof window.parent.downloadFile === 'function') {
+                            window.parent.downloadFile(url, downloadName);
+                        } else {
+                            try {
+                                const topDoc = window.top.document;
+                                const a = topDoc.createElement('a');
+                                a.download = downloadName;
+                                a.href = url;
+                                topDoc.body.appendChild(a);
+                                a.click();
+                                topDoc.body.removeChild(a);
+                            } catch (e) {
+                                const a = document.createElement('a');
+                                a.download = downloadName;
+                                a.href = url;
+                                a.click();
+                            }
                         }
                         
                         setTimeout(() => URL.revokeObjectURL(url), 1000);
