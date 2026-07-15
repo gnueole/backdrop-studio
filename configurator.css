@@ -1472,10 +1472,28 @@ html, body.theme-dark {
         }
 
         /* File input upload button text styling */
-        body.theme-light input[type="file"]::-webkit-file-upload-button {
-            background: rgba(0, 0, 0, 0.05);
-            color: var(--text-color, #0f172a);
-            border: 1px solid rgba(0, 0, 0, 0.12);
+        .logo-file-input::-webkit-file-upload-button,
+        .logo-file-input::file-selector-button {
+            background: var(--accent-color, #fb923c);
+            border: none;
+            color: #ffffff !important;
+            padding: 4px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.72rem;
+            transition: all 0.2s ease;
+            margin-right: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        }
+        .logo-file-input::-webkit-file-upload-button:hover,
+        .logo-file-input::file-selector-button:hover {
+            opacity: 0.9;
+        }
+        body.theme-light .logo-file-input::-webkit-file-upload-button,
+        body.theme-light .logo-file-input::file-selector-button {
+            background: var(--accent-color, #fb923c);
+            color: #ffffff !important;
         }
 
         /* ==============================================================================

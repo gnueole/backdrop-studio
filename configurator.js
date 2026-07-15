@@ -724,12 +724,13 @@ const outputUrl = document.getElementById('output-url');
                 // Get colors
                 const accent = preset.getAttribute('data-accent');
                 const glow = preset.getAttribute('data-glow');
+                const title = preset.getAttribute('data-title') || accent;
 
-                // Set inputs (harmonizing name as white and title as matching accent)
+                // Set inputs (harmonizing name as white and title as distinct matching color)
                 ctrlColorAccent.value = accent;
                 ctrlColorGlow.value = glow;
                 ctrlColorName.value = '#ffffff';
-                ctrlColorTitle.value = accent;
+                ctrlColorTitle.value = title;
 
                 updateUrl();
             });
@@ -779,7 +780,8 @@ const outputUrl = document.getElementById('output-url');
             ctrlColorAccent.value = randomAccent;
             ctrlColorGlow.value = randomColor();
             ctrlColorName.value = '#ffffff';
-            ctrlColorTitle.value = randomAccent;
+            // Title and Accent should not be exactly the same color
+            ctrlColorTitle.value = randomColor();
 
             updateUrl();
         });

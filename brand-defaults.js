@@ -1,11 +1,11 @@
 export const brandDefaults = {
     business: {
-        dark: { accent: '#38bdf8', glow: '#38bdf8', name: '#ffffff', title: '#38bdf8', shadow: '#000000' },
-        light: { accent: '#0284c7', glow: '#0284c7', name: '#0f172a', title: '#0284c7', shadow: '#ffffff' }
+        dark: { accent: '#0ea5e9', glow: '#0ea5e9', name: '#ffffff', title: '#38bdf8', shadow: '#000000' },
+        light: { accent: '#0284c7', glow: '#0284c7', name: '#0f172a', title: '#0369a1', shadow: '#ffffff' }
     },
     artist: {
-        dark: { accent: '#e2875c', glow: '#e2875c', name: '#ffffff', title: '#e2875c', shadow: '#000000' },
-        light: { accent: '#c96537', glow: '#c96537', name: '#2c241e', title: '#c96537', shadow: '#ffffff' }
+        dark: { accent: '#f97316', glow: '#f97316', name: '#ffffff', title: '#e2875c', shadow: '#000000' },
+        light: { accent: '#c96537', glow: '#c96537', name: '#2c241e', title: '#7c2d12', shadow: '#ffffff' }
     }
 };
 
