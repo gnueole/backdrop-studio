@@ -1,0 +1,1184 @@
+        (function() {
+            // 1. Parse URL Configuration
+            const params = new URLSearchParams(window.location.search);
+            const theme = params.get('theme') || 'dark';
+            // Resolve host mode based on domain (eole.me -> artist, others -> business)
+            const hostname = window.location.hostname;
+            const hostMode = (hostname.indexOf('eole.me') !== -1) ? 'artist' : 'business';
+            const mode = params.get('mode') || params.get('persona') || hostMode;
+            
+            let defaultLang = 'en';
+            try {
+                const navLang = navigator.language || navigator.userLanguage || '';
+                if (navLang.toLowerCase().startsWith('fr')) {
+                    defaultLang = 'fr';
+                }
+            } catch (e) {}
+            const lang = params.get('hl') || params.get('lang') || defaultLang;
+            
+            document.body.className = '';
+            document.body.classList.add('theme-' + theme);
+            document.body.classList.add('mode-' + mode);
+
+            // 3. Format Layout Class
+            const formatParam = params.get('format') || '169';
+            document.body.classList.add('format-' + formatParam);
+
+            // 3b. Transparent Background Mode
+            const bgParam = params.get('bg');
+            if (bgParam === 'transparent') {
+                document.body.classList.add('bg-transparent');
+            }
+            
+            // 3c. Size and Position configuration
+            const hasPosition = params.has('position');
+            const hasAlign = params.has('align');
+            let position, align;
+            if (formatParam === '11') {
+                position = hasPosition ? params.get('position') : 'center';
+                align = hasAlign ? params.get('align') : 'center';
+            } else if (formatParam === 'banner') {
+                position = hasPosition ? params.get('position') : 'middle';
+                align = hasAlign ? params.get('align') : 'right';
+            } else if (formatParam === '916') {
+                position = hasPosition ? params.get('position') : 'bottom';
+                align = hasAlign ? params.get('align') : 'center';
+            } else {
+                position = params.get('position') || 'bottom';
+                align = params.get('align') || 'right';
+            }
+            const sizeParam = params.get('size') || 'medium';
+            
+            const container = document.getElementById('backdrop-text-container');
+            container.className = 'backdrop-text-container';
+            container.classList.add('pos-' + position);
+            container.classList.add('align-' + align);
+            
+            const nameEl = document.getElementById('backdrop-name');
+            const titleEl = document.getElementById('backdrop-title');
+            const companyEl = document.getElementById('backdrop-company');
+            const companySepEl = document.getElementById('backdrop-company-sep');
+            const subtitleWrapper = document.getElementById('backdrop-subtitle-wrapper');
+            const logoEl = document.getElementById('backdrop-logo');
+            const logoContainer = document.getElementById('backdrop-logo-container');
+            
+            // 3d. Logo Position & Align setup
+            const logoPosParam = params.get('logopos') || 'top-right';
+            container.classList.add('logo-pos-' + logoPosParam);
+            
+            const textGroupEl = document.getElementById('backdrop-text-group');
+            if (textGroupEl) {
+                if (align === 'right') {
+                    textGroupEl.style.alignItems = 'flex-end';
+                } else if (align === 'center') {
+                    textGroupEl.style.alignItems = 'center';
+                } else {
+                    textGroupEl.style.alignItems = 'flex-start';
+                }
+            }
+
+            // Align logo and subtitle wrapper based on align parameter
+            if (subtitleWrapper) {
+                if (align === 'right') {
+                    subtitleWrapper.style.justifyContent = 'flex-end';
+                } else if (align === 'center') {
+                    subtitleWrapper.style.justifyContent = 'center';
+                } else {
+                    subtitleWrapper.style.justifyContent = 'flex-start';
+                }
+            }
+            if (logoContainer) {
+                if (logoPosParam === 'left' || logoPosParam === 'right' || logoPosParam === 'bottom-center') {
+                    logoContainer.style.alignSelf = 'center';
+                } else {
+                    if (logoPosParam === 'top-left') {
+                        logoContainer.style.alignSelf = 'flex-start';
+                    } else if (logoPosParam === 'top-center') {
+                        logoContainer.style.alignSelf = 'center';
+                    } else {
+                        logoContainer.style.alignSelf = 'flex-end';
+                    }
+                }
+            }
+            
+            const ratioParam = params.get('ratio') || '0.45';
+            const numRatio = parseFloat(ratioParam);
+            const numSize = parseFloat(sizeParam);
+
+            if (!isNaN(numSize)) {
+                nameEl.style.fontSize = numSize + 'rem';
+                const computedTitleSize = numSize * (isNaN(numRatio) ? 0.45 : numRatio);
+                titleEl.style.fontSize = computedTitleSize + 'rem';
+                if (companyEl) companyEl.style.fontSize = (computedTitleSize * 0.85) + 'rem';
+            } else {
+                container.classList.add('size-' + sizeParam);
+            }
+            
+            // 4. Custom colors parsing
+            const brandDefaults = {
+                business: {
+                    dark: { accent: '#38bdf8', glow: '#0f172a', bg: '#080b11' },
+                    light: { accent: '#0284c7', glow: '#f0f9ff', bg: '#f8fafc' }
+                },
+                artist: {
+                    dark: { accent: '#e2875c', glow: '#1b3a4b', bg: '#16100c' },
+                    light: { accent: '#c2410c', glow: '#fff7ed', bg: '#fcfbf7' }
+                }
+            };
+            const defaults = brandDefaults[mode]?.[theme] || brandDefaults.business.dark;
+
+            function hexToRgba(hex, alpha) {
+                const cleanHex = hex.replace('#', '');
+                let r = 0, g = 0, b = 0;
+                if (cleanHex.length === 3) {
+                    r = parseInt(cleanHex[0] + cleanHex[0], 16);
+                    g = parseInt(cleanHex[1] + cleanHex[1], 16);
+                    b = parseInt(cleanHex[2] + cleanHex[2], 16);
+                } else if (cleanHex.length === 6) {
+                    r = parseInt(cleanHex.slice(0, 2), 16);
+                    g = parseInt(cleanHex.slice(2, 4), 16);
+                    b = parseInt(cleanHex.slice(4, 6), 16);
+                }
+                return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            }
+
+            // Hue shift utility for canvas shimmer
+            function shiftHue(hex, degree) {
+                const cleanHex = hex.replace('#', '');
+                let r = parseInt(cleanHex.slice(0, 2), 16);
+                let g = parseInt(cleanHex.slice(2, 4), 16);
+                let b = parseInt(cleanHex.slice(4, 6), 16);
+                if (cleanHex.length === 3) {
+                    r = parseInt(cleanHex[0] + cleanHex[0], 16);
+                    g = parseInt(cleanHex[1] + cleanHex[1], 16);
+                    b = parseInt(cleanHex[2] + cleanHex[2], 16);
+                }
+                r /= 255; g /= 255; b /= 255;
+                const max = Math.max(r, g, b), min = Math.min(r, g, b);
+                let h, s, l = (max + min) / 2;
+                if (max === min) {
+                    h = s = 0;
+                } else {
+                    const d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    switch (max) {
+                        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                        case g: h = (b - r) / d + 2; break;
+                        case b: h = (r - g) / d + 4; break;
+                    }
+                    h /= 6;
+                }
+                h = (h * 360 + degree) % 360;
+                if (h < 0) h += 360;
+                return `hsl(${Math.round(h)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
+            }
+
+            const glow = params.get('glow');
+            const finalGlow = glow ? decodeURIComponent(glow) : defaults.glow;
+            document.body.style.setProperty('--glow-color', finalGlow);
+            document.body.style.setProperty('--glow-color-30', hexToRgba(finalGlow, 0.3));
+
+            const accent = params.get('accent');
+            const finalAccent = accent ? decodeURIComponent(accent) : defaults.accent;
+            document.body.style.setProperty('--accent-color', finalAccent);
+            document.body.style.setProperty('--accent-color-15', hexToRgba(finalAccent, 0.15));
+
+            const namecolor = params.get('namecolor') || params.get('fontcolor');
+            if (namecolor) {
+                document.body.style.setProperty('--text-color', decodeURIComponent(namecolor));
+            }
+            const titlecolor = params.get('titlecolor');
+            if (titlecolor) {
+                document.body.style.setProperty('--title-color', decodeURIComponent(titlecolor));
+            }
+            const shadowcolor = params.get('shadowcolor');
+            const finalShadow = shadowcolor ? decodeURIComponent(shadowcolor) : '#000000';
+            document.body.style.setProperty('--shadow-color', finalShadow);
+            document.body.style.setProperty('--shadow-color-95', hexToRgba(finalShadow, 0.95));
+            document.body.style.setProperty('--shadow-color-80', hexToRgba(finalShadow, 0.8));
+            document.body.style.setProperty('--shadow-color-50', hexToRgba(finalShadow, 0.5));
+            document.body.style.setProperty('--shadow-color-30', hexToRgba(finalShadow, 0.3));
+            
+            // 4.7. Text shadow/glow effect configuration
+            const textEffect = params.get('texteffect') || 'shadow-soft';
+            document.body.classList.add('text-effect-' + textEffect);
+            
+            // Animation variables
+            const animation = params.get('animation') || 'none';
+            const speed = params.get('speed') || 'medium';
+            const bgColor = defaults.bg;
+            
+            // 5. Title Display Logic
+            // 5. Title Display Logic
+            const titleParam = params.get('title');
+            const title2Param = params.get('title2');
+            let initialTitle = '';
+            if (titleParam === 'off') {
+                titleEl.style.display = 'none';
+            } else if (titleParam && titleParam !== 'on') {
+                initialTitle = decodeURIComponent(titleParam);
+                titleEl.textContent = initialTitle;
+            } else {
+                if (mode === 'artist') {
+                    initialTitle = lang === 'en' ? 'Artist & Explorer' : 'Artiste & Explorateur';
+                } else {
+                    initialTitle = 'Presales Engineer';
+                }
+                titleEl.textContent = initialTitle;
+            }
+            
+            // 5b. Company Display Logic
+            const companyParam = params.get('company');
+            const company2Param = params.get('company2');
+            let initialCompany = '';
+            if (companyParam && companyParam !== 'off') {
+                initialCompany = decodeURIComponent(companyParam);
+                companyEl.textContent = initialCompany;
+                companyEl.style.display = 'inline';
+                if (companySepEl && titleParam !== 'off') {
+                    companySepEl.style.display = 'inline';
+                }
+            } else {
+                companyEl.style.display = 'none';
+                if (companySepEl) companySepEl.style.display = 'none';
+            }
+            
+            // 5c. Logo Display Logic
+            const logoParam = params.get('logo');
+            const logoSize = params.get('logosize') || '2.4';
+            const logoOpacity = params.get('logoopacity') || '0.85';
+            if (logoParam && logoParam !== 'off') {
+                if (logoParam === 'local') {
+                    const localLogo = localStorage.getItem('backdrop-studio-local-logo');
+                    if (localLogo) {
+                        logoEl.src = localLogo;
+                        logoEl.style.height = logoSize + 'rem';
+                        logoEl.style.opacity = logoOpacity;
+                        logoContainer.style.display = 'block';
+                    } else {
+                        logoContainer.style.display = 'none';
+                    }
+                } else {
+                    logoEl.src = decodeURIComponent(logoParam);
+                    logoEl.style.height = logoSize + 'rem';
+                    logoEl.style.opacity = logoOpacity;
+                    logoContainer.style.display = 'block';
+                }
+            } else {
+                logoContainer.style.display = 'none';
+            }
+
+            // Expose values for live iframe modification
+            window.titles = [initialTitle, title2Param ? decodeURIComponent(title2Param) : ''];
+            window.companies = [initialCompany, company2Param ? decodeURIComponent(company2Param) : ''];
+            
+            // Cycle/Loop logic
+            let currentTextIndex = 0;
+            function wrapTextInSpans(el, text) {
+                el.innerHTML = '';
+                const chars = [...text];
+                chars.forEach((char) => {
+                    const span = document.createElement('span');
+                    span.textContent = char === ' ' ? '\u00A0' : char;
+                    span.style.display = 'inline-block';
+                    span.style.whiteSpace = 'pre';
+                    el.appendChild(span);
+                });
+            }
+            
+            function scrambleText(el, targetText) {
+                const chars = '!@#$%^&*()_+{}[]:;<>?,./~';
+                const originalText = el.textContent || '';
+                const length = Math.max(originalText.length, targetText.length);
+                let frames = 0;
+                const maxFrames = 15;
+                
+                const interval = setInterval(() => {
+                    let currentText = '';
+                    for (let i = 0; i < length; i++) {
+                        if (i < frames) {
+                            currentText += targetText[i] || '';
+                        } else {
+                            currentText += chars[Math.floor(Math.random() * chars.length)];
+                        }
+                    }
+                    el.textContent = currentText;
+                    frames++;
+                    if (frames > length || frames > maxFrames) {
+                        el.textContent = targetText;
+                        clearInterval(interval);
+                    }
+                }, 40);
+            }
+            
+            function airportTransition(el, targetText, outClass, inClass) {
+                const originalText = el.textContent || '';
+                wrapTextInSpans(el, originalText);
+                const spans = el.querySelectorAll('span');
+                
+                spans.forEach((span, idx) => {
+                    span.style.animationDelay = (idx * 0.02) + 's';
+                    span.classList.add(outClass);
+                });
+                
+                setTimeout(() => {
+                    wrapTextInSpans(el, targetText);
+                    const newSpans = el.querySelectorAll('span');
+                    newSpans.forEach((span, idx) => {
+                        span.style.animationDelay = (idx * 0.02) + 's';
+                        span.classList.add(inClass);
+                    });
+                }, 400 + (spans.length * 20));
+            }
+            
+            function cycleTitle() {
+                const hasTitle2 = window.titles[1] && window.titles[1].trim() !== '';
+                const hasCompany2 = window.companies[1] && window.companies[1].trim() !== '';
+                if (!hasTitle2 && !hasCompany2) return;
+                
+                const nextIndex = (currentTextIndex + 1) % 2;
+                const nextTitle = window.titles[nextIndex] || '';
+                const nextCompany = window.companies[nextIndex] || '';
+                
+                const transAnim = params.get('transanim') || 'none';
+                
+                if (transAnim === 'blur') {
+                    titleEl.classList.add('title-blur-transition', 'blur-out');
+                    if (companyEl) companyEl.classList.add('title-blur-transition', 'blur-out');
+                    
+                    setTimeout(() => {
+                        titleEl.textContent = nextTitle;
+                        if (companyEl) {
+                            companyEl.textContent = nextCompany;
+                            companyEl.style.display = nextCompany.trim() ? 'inline' : 'none';
+                            if (companySepEl) companySepEl.style.display = (nextTitle.trim() && nextCompany.trim()) ? 'inline' : 'none';
+                        }
+                        titleEl.classList.remove('blur-out');
+                        if (companyEl) companyEl.classList.remove('blur-out');
+                    }, 400);
+                } else if (transAnim === 'scramble') {
+                    scrambleText(titleEl, nextTitle);
+                    if (companyEl) {
+                        scrambleText(companyEl, nextCompany);
+                        setTimeout(() => {
+                            companyEl.style.display = nextCompany.trim() ? 'inline' : 'none';
+                            if (companySepEl) companySepEl.style.display = (nextTitle.trim() && nextCompany.trim()) ? 'inline' : 'none';
+                        }, 800);
+                    }
+                } else if (transAnim === 'airport') {
+                    airportTransition(titleEl, nextTitle, 'char-airport-out', 'char-airport-in');
+                    if (companyEl) {
+                        airportTransition(companyEl, nextCompany, 'char-airport-out', 'char-airport-in');
+                        setTimeout(() => {
+                            companyEl.style.display = nextCompany.trim() ? 'inline' : 'none';
+                            if (companySepEl) companySepEl.style.display = (nextTitle.trim() && nextCompany.trim()) ? 'inline' : 'none';
+                        }, 800);
+                    }
+                } else if (transAnim === 'flip') {
+                    airportTransition(titleEl, nextTitle, 'char-flip-out', 'char-flip-in');
+                    if (companyEl) {
+                        airportTransition(companyEl, nextCompany, 'char-flip-out', 'char-flip-in');
+                        setTimeout(() => {
+                            companyEl.style.display = nextCompany.trim() ? 'inline' : 'none';
+                            if (companySepEl) companySepEl.style.display = (nextTitle.trim() && nextCompany.trim()) ? 'inline' : 'none';
+                        }, 800);
+                    }
+                } else {
+                    titleEl.textContent = nextTitle;
+                    if (companyEl) {
+                        companyEl.textContent = nextCompany;
+                        companyEl.style.display = nextCompany.trim() ? 'inline' : 'none';
+                        if (companySepEl) companySepEl.style.display = (nextTitle.trim() && nextCompany.trim()) ? 'inline' : 'none';
+                    }
+                }
+                currentTextIndex = nextIndex;
+            }
+            
+            // Cycle timing based on parameter
+            const transSpeedParam = parseInt(params.get('transspeed'), 10) || 5; // default 5 seconds
+            setInterval(cycleTitle, transSpeedParam * 1000);
+            
+            // 6. Name Display Logic
+            const nameParam = params.get('name');
+            if (nameParam === 'off') {
+                nameEl.style.display = 'none';
+            } else if (nameParam && nameParam !== 'on') {
+                nameEl.textContent = decodeURIComponent(nameParam);
+            } else {
+                if (mode === 'artist') {
+                    nameEl.textContent = 'Éole';
+                } else {
+                    nameEl.textContent = 'Julien Avarre';
+                }
+            }
+            
+            // 7. Bottom Border Animation Logic
+            const borderAnimParam = params.get('borderanim') || 'on';
+            const borderEl = document.querySelector('.backdrop-border');
+            if (borderEl) {
+                if (borderAnimParam === 'on') {
+                    borderEl.classList.add('border-animated');
+                } else {
+                    borderEl.classList.remove('border-animated');
+                }
+            }
+
+            // ==============================================================================
+            // 🎨 Canvas-based Glow Rendering Engine
+            // ==============================================================================
+            const canvas = document.getElementById('backdrop-canvas');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            function drawBackdrops(cCtx, width, height, elapsed) {
+                cCtx.clearRect(0, 0, width, height);
+
+                if (bgParam === 'transparent') return;
+
+                // 1. Draw base background color
+                cCtx.fillStyle = bgColor;
+                cCtx.fillRect(0, 0, width, height);
+
+                // 2. Compute animation coordinates
+                const speedMultipliers = { slow: 0.1, medium: 0.25, fast: 0.6 };
+                const s = speedMultipliers[speed] || 0.25;
+
+                let g1_x = 0.25 * width;
+                let g1_y = 0.25 * height;
+                let g2_x = 0.75 * width;
+                let g2_y = 0.75 * height;
+
+                let opacity1 = 0.55;
+                let opacity2 = 0.45;
+                let scale1 = 1.0;
+                let scale2 = 1.0;
+
+                let baseGlowColor = finalGlow;
+                let baseAccentColor = finalAccent;
+
+                if (animation === 'pulse') {
+                    opacity1 = 0.40 + 0.15 * Math.sin(elapsed * s * Math.PI * 2);
+                    scale1 = 1.0 + 0.08 * Math.sin(elapsed * s * Math.PI * 2);
+                    opacity2 = 0.30 + 0.15 * Math.sin(elapsed * s * 0.8 * Math.PI * 2);
+                    scale2 = 1.0 + 0.12 * Math.sin(elapsed * s * 0.8 * Math.PI * 2);
+                } else if (animation === 'wave') {
+                    g1_x += 0.06 * width * Math.sin(elapsed * s * 0.5 * Math.PI * 2);
+                    g1_y -= 0.04 * height * Math.sin(elapsed * s * 0.5 * Math.PI * 2);
+                    g2_x -= 0.06 * width * Math.sin(elapsed * s * 0.4 * Math.PI * 2);
+                    g2_y += 0.04 * height * Math.sin(elapsed * s * 0.4 * Math.PI * 2);
+                } else if (animation === 'eclipse') {
+                    const angle = elapsed * s * 0.2 * Math.PI * 2;
+                    g1_x += 0.08 * width * Math.cos(angle);
+                    g1_y += 0.06 * height * Math.sin(angle);
+                    g2_x -= 0.08 * width * Math.cos(angle);
+                    g2_y -= 0.06 * height * Math.sin(angle);
+                } else if (animation === 'monochrome') {
+                    baseGlowColor = baseAccentColor;
+                    opacity1 = 0.10 + 0.22 * Math.sin(elapsed * s * Math.PI * 2);
+                    opacity2 = 0.08 + 0.18 * Math.sin(elapsed * s * 0.8 * Math.PI * 2);
+                }
+
+                const maxDim = Math.max(width, height);
+
+                // Setup custom color/stops for Shimmer
+                let colorGlowFinal = baseGlowColor;
+                let colorAccentFinal = baseAccentColor;
+
+                if (animation === 'shimmer') {
+                    const hueShift = Math.floor(elapsed * s * 45) % 360;
+                    colorGlowFinal = shiftHue(baseGlowColor, hueShift);
+                    colorAccentFinal = shiftHue(baseAccentColor, -hueShift);
+                }
+
+                // Render Glow 1 (Radial Gradient)
+                const r1 = 0.65 * maxDim * scale1;
+                const grad1 = cCtx.createRadialGradient(g1_x, g1_y, 0, g1_x, g1_y, r1);
+                grad1.addColorStop(0, hexToRgba(colorGlowFinal, opacity1));
+                grad1.addColorStop(1, 'transparent');
+                
+                cCtx.fillStyle = grad1;
+                cCtx.fillRect(0, 0, width, height);
+
+                // Render Glow 2 (Radial Gradient)
+                const r2 = 0.65 * maxDim * scale2;
+                const grad2 = cCtx.createRadialGradient(g2_x, g2_y, 0, g2_x, g2_y, r2);
+                grad2.addColorStop(0, hexToRgba(colorAccentFinal, opacity2));
+                grad2.addColorStop(1, 'transparent');
+                
+                cCtx.fillStyle = grad2;
+                cCtx.fillRect(0, 0, width, height);
+            }
+
+            function drawTextOverlay(cCtx, w, h, elapsed) {
+                if (nameParam === 'off' && titleParam === 'off') return;
+
+                let x = 0.08 * w;
+                let y = 0.08 * h;
+                let textAlign = 'left';
+
+                if (align === 'right') {
+                    x = w - 0.08 * w;
+                    textAlign = 'right';
+                } else if (align === 'center') {
+                    x = w / 2;
+                    textAlign = 'center';
+                }
+
+                let nameSizeVal = 60;
+                let titleSizeVal = 30;
+
+                if (!isNaN(numSize)) {
+                    nameSizeVal = numSize * 25;
+                    titleSizeVal = nameSizeVal * (isNaN(numRatio) ? 0.45 : numRatio);
+                } else {
+                    const sizeMap = {
+                        small: { name: 40, title: 20 },
+                        medium: { name: 60, title: 27 },
+                        big: { name: 90, title: 40 }
+                    };
+                    const sizes = sizeMap[sizeParam] || sizeMap.medium;
+                    nameSizeVal = sizes.name;
+                    titleSizeVal = sizes.title;
+                }
+
+                const nameFontFamily = mode === 'artist' ? 'Lora, Georgia, serif' : 'Outfit, Inter, sans-serif';
+                const titleFontFamily = mode === 'artist' ? 'Lora, Georgia, serif' : 'Outfit, Inter, sans-serif';
+
+                cCtx.textAlign = textAlign;
+                cCtx.textBaseline = 'top';
+
+                const nameText = nameParam !== 'off' ? (nameParam ? decodeURIComponent(nameParam) : (mode === 'artist' ? 'Éole' : 'Julien Avarre')) : '';
+                
+                // Get animated title and company texts
+                const transSpeedParam = parseInt(params.get('transspeed'), 10) || 5;
+                const cycleTime = elapsed % transSpeedParam;
+                let blurPx = 0;
+                let opacityVal = 1;
+                let activeTitle = '';
+                let activeCompany = '';
+                
+                const hasTitle2 = window.titles[1] && window.titles[1].trim() !== '';
+                const hasCompany2 = window.companies[1] && window.companies[1].trim() !== '';
+                
+                if (hasTitle2 || hasCompany2) {
+                    const nextIndex = Math.floor(elapsed / transSpeedParam) % 2;
+                    activeTitle = window.titles[nextIndex] || '';
+                    activeCompany = window.companies[nextIndex] || '';
+                    
+                    const transAnim = params.get('transanim') || 'none';
+                    if (transAnim === 'blur') {
+                        if (cycleTime < 0.4) {
+                            const progress = cycleTime / 0.4;
+                            blurPx = (1 - progress) * 8;
+                            opacityVal = progress;
+                        } else if (cycleTime > (transSpeedParam - 0.4)) {
+                            const progress = (transSpeedParam - cycleTime) / 0.4;
+                            blurPx = (1 - progress) * 8;
+                            opacityVal = progress;
+                        }
+                    } else if (transAnim !== 'none') {
+                        // For scramble/airport/flip in canvas, do a clean quick cross-fade transition
+                        if (cycleTime < 0.3) {
+                            opacityVal = cycleTime / 0.3;
+                        } else if (cycleTime > (transSpeedParam - 0.3)) {
+                            opacityVal = (transSpeedParam - cycleTime) / 0.3;
+                        }
+                    }
+                } else {
+                    activeTitle = window.titles[0] || '';
+                    activeCompany = window.companies[0] || '';
+                }
+
+                const lineSpacing = 12;
+                const logopos = params.get('logopos') || 'top-right';
+                const logoGap = 15;
+                
+                // Logo properties
+                const hasLogo = logoParam && logoParam !== 'off';
+                let logoHeight = 0;
+                let logoWidth = 0;
+                if (hasLogo && logoEl.complete && logoEl.naturalHeight > 0) {
+                    const logoSizeVal = parseFloat(logoSize) * 20;
+                    logoHeight = logoSizeVal;
+                    logoWidth = logoEl.naturalWidth * (logoSizeVal / logoEl.naturalHeight);
+                }
+                
+                // Calculate heights & widths
+                const textGroupHeight = (nameText ? nameSizeVal : 0) + (activeTitle ? titleSizeVal : 0) + (nameText && activeTitle ? lineSpacing : 0);
+                
+                let totalTextHeight = textGroupHeight;
+                if (hasLogo && logoHeight > 0) {
+                    if (logopos === 'left' || logopos === 'right') {
+                        totalTextHeight = Math.max(logoHeight, textGroupHeight);
+                    } else {
+                        totalTextHeight = logoHeight + lineSpacing + textGroupHeight;
+                    }
+                }
+
+                // Compute bounding text width to align side logo
+                let textGroupWidth = 0;
+                if (nameText) {
+                    cCtx.font = `800 ${nameSizeVal}px ${nameFontFamily}`;
+                    textGroupWidth = Math.max(textGroupWidth, cCtx.measureText(nameText).width);
+                }
+                if (activeTitle) {
+                    if (activeCompany) {
+                        const sepText = " | ";
+                        const companySizeVal = titleSizeVal * 0.85;
+                        cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                        const titleWidth = cCtx.measureText(activeTitle).width;
+                        cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                        const sepWidth = cCtx.measureText(sepText).width;
+                        cCtx.font = `400 ${companySizeVal}px ${nameFontFamily}`;
+                        const companyWidth = cCtx.measureText(activeCompany).width;
+                        textGroupWidth = Math.max(textGroupWidth, titleWidth + sepWidth + companyWidth);
+                    } else {
+                        cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                        textGroupWidth = Math.max(textGroupWidth, cCtx.measureText(activeTitle).width);
+                    }
+                }
+
+                let totalWidth = textGroupWidth;
+                if (hasLogo && logoHeight > 0 && (logopos === 'left' || logopos === 'right')) {
+                    totalWidth = logoWidth + logoGap + textGroupWidth;
+                } else if (hasLogo && logoHeight > 0) {
+                    totalWidth = Math.max(logoWidth, textGroupWidth);
+                }
+
+                if (position === 'bottom') {
+                    y = h - 0.08 * h - totalTextHeight;
+                } else if (position === 'middle' || position === 'center') {
+                    y = (h - totalTextHeight) / 2;
+                }
+
+                // Calculate block X based on align
+                let blockX = 0.08 * w;
+                if (align === 'right') {
+                    blockX = w - 0.08 * w - totalWidth;
+                } else if (align === 'center') {
+                    blockX = w / 2 - totalWidth / 2;
+                }
+
+                // Compute logoX, logoY, textX, textY, and textAlign
+                let logoX = 0, logoY = y;
+                let textX = blockX;
+                let textY = y;
+                textAlign = align;
+
+                if (hasLogo && logoHeight > 0) {
+                    if (logopos === 'left' || logopos === 'right') {
+                        logoY = y + (totalTextHeight - logoHeight) / 2;
+                        textY = y + (totalTextHeight - textGroupHeight) / 2;
+                        
+                        if (logopos === 'left') {
+                            logoX = blockX;
+                            if (align === 'right') {
+                                textAlign = 'right';
+                                textX = blockX + logoWidth + logoGap + textGroupWidth;
+                            } else if (align === 'center') {
+                                textAlign = 'center';
+                                textX = blockX + logoWidth + logoGap + textGroupWidth / 2;
+                            } else {
+                                textAlign = 'left';
+                                textX = blockX + logoWidth + logoGap;
+                            }
+                        } else {
+                            // logopos === 'right'
+                            logoX = blockX + textGroupWidth + logoGap;
+                            if (align === 'right') {
+                                textAlign = 'right';
+                                textX = blockX + textGroupWidth;
+                            } else if (align === 'center') {
+                                textAlign = 'center';
+                                textX = blockX + textGroupWidth / 2;
+                            } else {
+                                textAlign = 'left';
+                                textX = blockX;
+                            }
+                        }
+                    } else {
+                        // Top positions / bottom-center
+                        if (logopos === 'bottom-center') {
+                            logoY = y + textGroupHeight + lineSpacing;
+                            textY = y;
+                        } else {
+                            logoY = y;
+                            textY = y + logoHeight + lineSpacing;
+                        }
+                        textAlign = align;
+
+                        if (logopos === 'top-left') {
+                            logoX = blockX;
+                        } else if (logopos === 'top-center' || logopos === 'bottom-center') {
+                            logoX = blockX + (totalWidth - logoWidth) / 2;
+                        } else {
+                            // top-right
+                            logoX = blockX + totalWidth - logoWidth;
+                        }
+
+                        if (align === 'right') {
+                            textX = w - 0.08 * w;
+                        } else if (align === 'center') {
+                            textX = w / 2;
+                        } else {
+                            textX = 0.08 * w;
+                        }
+                    }
+                } else {
+                    // No logo
+                    textAlign = align;
+                    if (align === 'right') {
+                        textX = w - 0.08 * w;
+                    } else if (align === 'center') {
+                        textX = w / 2;
+                    } else {
+                        textX = 0.08 * w;
+                    }
+                }
+
+                cCtx.save();
+                cCtx.shadowOffsetX = 0;
+                cCtx.shadowOffsetY = 0;
+                cCtx.shadowBlur = 0;
+
+                const shadowColorHex = finalShadow || '#000000';
+
+                // Draw Logo
+                if (hasLogo && logoHeight > 0) {
+                    cCtx.save();
+                    cCtx.globalAlpha = parseFloat(logoOpacity);
+                    cCtx.drawImage(logoEl, logoX, logoY, logoWidth, logoHeight);
+                    cCtx.restore();
+                }
+
+                cCtx.textAlign = textAlign;
+                cCtx.textBaseline = 'top';
+
+                let currentY = textY;
+
+                if (textEffect === 'shadow-soft') {
+                    cCtx.shadowColor = hexToRgba(shadowColorHex, 0.5);
+                    cCtx.shadowBlur = 10;
+                } else if (textEffect === 'shadow-strong') {
+                    cCtx.shadowColor = hexToRgba(shadowColorHex, 0.8);
+                    cCtx.shadowBlur = 18;
+                } else if (textEffect === 'glow-neon') {
+                    cCtx.shadowColor = hexToRgba(finalAccent, 0.8);
+                    cCtx.shadowBlur = 15;
+                } else if (textEffect === 'glow-matched') {
+                    cCtx.shadowColor = hexToRgba(finalAccent, 0.6);
+                    cCtx.shadowBlur = 18;
+                }
+
+                if (nameText) {
+                    cCtx.font = `800 ${nameSizeVal}px ${nameFontFamily}`;
+                    cCtx.fillStyle = decodeURIComponent(namecolor || '#ffffff');
+                    cCtx.fillText(nameText, textX, currentY);
+                    currentY += nameSizeVal + lineSpacing;
+                }
+
+                if (activeTitle) {
+                    cCtx.save();
+                    cCtx.globalAlpha = opacityVal;
+                    if (blurPx > 0) {
+                        cCtx.filter = `blur(${blurPx}px)`;
+                    }
+                    
+                    let titleColorFinal = decodeURIComponent(titlecolor || finalAccent);
+                    if (textEffect === 'glow-matched') {
+                        cCtx.shadowColor = hexToRgba(titleColorFinal, 0.6);
+                    }
+                    
+                    if (activeCompany) {
+                        const sepText = " | ";
+                        const companySizeVal = titleSizeVal * 0.85;
+                        
+                        cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                        const titleWidth = cCtx.measureText(activeTitle).width;
+                        
+                        cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                        const sepWidth = cCtx.measureText(sepText).width;
+                        
+                        cCtx.font = `400 ${companySizeVal}px ${nameFontFamily}`;
+                        const companyWidth = cCtx.measureText(activeCompany).width;
+                        
+                        const totalWidth = titleWidth + sepWidth + companyWidth;
+                        
+                        let titleX = textX;
+                        let sepX = textX;
+                        let companyX = textX;
+                        
+                        if (textAlign === 'right') {
+                            titleX = textX - totalWidth;
+                            sepX = titleX + titleWidth;
+                            companyX = sepX + sepWidth;
+                        } else if (textAlign === 'center') {
+                            titleX = textX - totalWidth / 2;
+                            sepX = titleX + titleWidth;
+                            companyX = sepX + sepWidth;
+                        } else {
+                            titleX = textX;
+                            sepX = textX + titleWidth;
+                            companyX = sepX + sepWidth;
+                        }
+                        
+                        // Draw Title
+                        cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                        cCtx.fillStyle = titleColorFinal;
+                        cCtx.fillText(activeTitle, titleX, currentY);
+                        
+                        // Draw Separator
+                        cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                        cCtx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                        cCtx.fillText(sepText, sepX, currentY);
+                        
+                        // Draw Company
+                        cCtx.font = `400 ${companySizeVal}px ${nameFontFamily}`;
+                        cCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                        cCtx.fillText(activeCompany, companyX, currentY + (titleSizeVal - companySizeVal));
+                    } else {
+                        cCtx.font = `400 ${titleSizeVal}px ${titleFontFamily}`;
+                        cCtx.fillStyle = titleColorFinal;
+                        cCtx.fillText(activeTitle, textX, currentY);
+                    }
+                    cCtx.restore();
+                }
+                cCtx.restore();
+
+                // Draw Bottom Border
+                if (borderAnimParam === 'on') {
+                    cCtx.save();
+                    const borderHeight = 4;
+                    const borderY = h - borderHeight;
+                    const offset = (elapsed * 0.25) % 1.0; 
+                    const grad = cCtx.createLinearGradient(-w + offset * 2 * w, borderY, w + offset * 2 * w, borderY);
+                    
+                    grad.addColorStop(0, finalAccent);
+                    grad.addColorStop(0.33, finalGlow);
+                    grad.addColorStop(0.5, 'rgba(255,255,255,0.35)');
+                    grad.addColorStop(0.66, finalGlow);
+                    grad.addColorStop(1.0, finalAccent);
+
+                    cCtx.fillStyle = grad;
+                    cCtx.fillRect(0, borderY, w, borderHeight);
+                    cCtx.restore();
+                }
+            }
+
+            // Real-time animation loop (background only)
+            const boomerangParam = params.get('boomerang') || 'off';
+            const durationParam = parseFloat(params.get('duration')) || 5;
+            
+            const startTime = Date.now();
+            function renderLoop() {
+                const elapsed = (Date.now() - startTime) / 1000;
+                let animTime = elapsed;
+                if (boomerangParam === 'on') {
+                    const cycle = elapsed % durationParam;
+                    const half = durationParam / 2;
+                    if (cycle < half) {
+                        animTime = cycle;
+                    } else {
+                        animTime = durationParam - cycle;
+                    }
+                }
+                drawBackdrops(ctx, canvas.width, canvas.height, animTime);
+                requestAnimationFrame(renderLoop);
+            }
+            requestAnimationFrame(renderLoop);
+
+            // ==============================================================================
+            // 📸 Exporters
+            // ==============================================================================
+            window.capturePng = function(format = '169', resOption = 'hd') {
+                if (typeof html2canvas === 'undefined') {
+                    alert('Erreur : La librairie de capture est en cours de chargement.');
+                    return;
+                }
+                
+                const oldHtmlWidth = document.documentElement.style.width;
+                const oldHtmlHeight = document.documentElement.style.height;
+                const oldHtmlMinW = document.documentElement.style.minWidth;
+                const oldHtmlMinH = document.documentElement.style.minHeight;
+
+                const oldWidth = document.body.style.width;
+                const oldHeight = document.body.style.height;
+                const oldMinW = document.body.style.minWidth;
+                const oldMinH = document.body.style.minHeight;
+                const oldPosition = document.body.style.position;
+                
+                if (format === '11') {
+                    document.documentElement.style.width = '1080px';
+                    document.documentElement.style.height = '1080px';
+                    document.documentElement.style.minWidth = '1080px';
+                    document.documentElement.style.minHeight = '1080px';
+
+                    document.body.style.width = '1080px';
+                    document.body.style.height = '1080px';
+                    document.body.style.minWidth = '1080px';
+                    document.body.style.minHeight = '1080px';
+                    document.body.style.position = 'relative';
+                } else if (format === 'banner') {
+                    document.documentElement.style.width = '1584px';
+                    document.documentElement.style.height = '396px';
+                    document.documentElement.style.minWidth = '1584px';
+                    document.documentElement.style.minHeight = '396px';
+
+                    document.body.style.width = '1584px';
+                    document.body.style.height = '396px';
+                    document.body.style.minWidth = '1584px';
+                    document.body.style.minHeight = '396px';
+                    document.body.style.position = 'relative';
+                } else if (format === '916') {
+                    document.documentElement.style.width = '1080px';
+                    document.documentElement.style.height = '1920px';
+                    document.documentElement.style.minWidth = '1080px';
+                    document.documentElement.style.minHeight = '1920px';
+
+                    document.body.style.width = '1080px';
+                    document.body.style.height = '1920px';
+                    document.body.style.minWidth = '1080px';
+                    document.body.style.minHeight = '1920px';
+                    document.body.style.position = 'relative';
+                } else {
+                    document.documentElement.style.width = '1920px';
+                    document.documentElement.style.height = '1080px';
+                    document.documentElement.style.minWidth = '1920px';
+                    document.documentElement.style.minHeight = '1080px';
+
+                    document.body.style.width = '1920px';
+                    document.body.style.height = '1080px';
+                    document.body.style.minWidth = '1920px';
+                    document.body.style.minHeight = '1080px';
+                    document.body.style.position = 'relative';
+                }
+
+                // Temporary resize of canvas
+                const targetW = format === '11' ? 1080 : (format === 'banner' ? 1584 : (format === '916' ? 1080 : 1920));
+                const targetH = format === '11' ? 1080 : (format === 'banner' ? 396 : (format === '916' ? 1920 : 1080));
+                canvas.width = targetW;
+                canvas.height = targetH;
+                
+                const elapsed = (Date.now() - startTime) / 1000;
+                drawBackdrops(ctx, targetW, targetH, elapsed);
+
+                const noiseEl = document.querySelector('.noise-overlay');
+                if (noiseEl) noiseEl.style.display = 'none';
+
+                let scaleVal = 1;
+                if (resOption === '4k') {
+                    scaleVal = 2;
+                } else if (resOption === 'dpr') {
+                    scaleVal = window.devicePixelRatio || 1;
+                }
+
+                const options = {
+                    scale: scaleVal,
+                    useCORS: true,
+                    allowTaint: true,
+                    width: targetW,
+                    height: targetH
+                };
+
+                function restoreStyles() {
+                    if (noiseEl) noiseEl.style.display = '';
+                    document.documentElement.style.width = oldHtmlWidth;
+                    document.documentElement.style.height = oldHtmlHeight;
+                    document.documentElement.style.minWidth = oldHtmlMinW;
+                    document.documentElement.style.minHeight = oldHtmlMinH;
+
+                    document.body.style.width = oldWidth;
+                    document.body.style.height = oldHeight;
+                    document.body.style.minWidth = oldMinW;
+                    document.body.style.minHeight = oldMinH;
+                    document.body.style.position = oldPosition;
+                    resizeCanvas();
+                }
+                
+                html2canvas(document.body, options).then(canvas => {
+                    const cleanName = (document.getElementById('backdrop-name').textContent || 'backdrop')
+                        .toLowerCase().replace(/[^a-z0-9]+/g, '_');
+                    const downloadName = `${cleanName}_backdrop_${format}.png`;
+                    const dataUrl = canvas.toDataURL('image/png');
+                    
+                    if (window.parent && typeof window.parent.downloadFile === 'function') {
+                        window.parent.downloadFile(dataUrl, downloadName);
+                    } else {
+                        try {
+                            const topDoc = window.top.document;
+                            const link = topDoc.createElement('a');
+                            link.download = downloadName;
+                            link.href = dataUrl;
+                            topDoc.body.appendChild(link);
+                            link.click();
+                            topDoc.body.removeChild(link);
+                        } catch (e) {
+                            const link = document.createElement('a');
+                            link.download = downloadName;
+                            link.href = dataUrl;
+                            link.click();
+                        }
+                    }
+                    restoreStyles();
+                }).catch(err => {
+                    console.error('Capture error:', err);
+                    alert('Erreur lors de la génération du PNG.');
+                    restoreStyles();
+                });
+            };
+
+            // Capture animated 5 seconds WebM video
+            window.captureVideo = function(format = '169', duration = 5, onProgress) {
+                return new Promise((resolve, reject) => {
+                    let w = 1920, h = 1080;
+                    if (format === '11') { w = 1080; h = 1080; }
+                    else if (format === 'banner') { w = 1584; h = 396; }
+                    else if (format === '916') { w = 1080; h = 1920; }
+
+                    const recCanvas = document.createElement('canvas');
+                    recCanvas.width = w;
+                    recCanvas.height = h;
+                    const recCtx = recCanvas.getContext('2d');
+
+                    // Prefer manual frame capture (requestFrame): pushing each frame
+                    // explicitly is far more reliable for an offscreen canvas than relying
+                    // on the compositor's implicit auto-capture timer, which can silently
+                    // drop every frame (producing an empty video) until the canvas has been
+                    // composited. Fall back to timed auto-capture where requestFrame is
+                    // unavailable.
+                    let stream = recCanvas.captureStream(0);
+                    let videoTrack = stream.getVideoTracks()[0];
+                    const canRequestFrame = !!(videoTrack && typeof videoTrack.requestFrame === 'function');
+                    if (!canRequestFrame) {
+                        stream = recCanvas.captureStream(30); // 30 FPS auto-capture fallback
+                        videoTrack = stream.getVideoTracks()[0];
+                    }
+
+                    let mimeType = 'video/webm;codecs=vp9';
+                    if (!MediaRecorder.isTypeSupported(mimeType)) {
+                        mimeType = 'video/webm;codecs=vp8';
+                    }
+                    if (!MediaRecorder.isTypeSupported(mimeType)) {
+                        mimeType = 'video/webm';
+                    }
+
+                    const chunks = [];
+                    const recorder = new MediaRecorder(stream, { 
+                        mimeType,
+                        videoBitsPerSecond: 12000000 // 12 Mbps for maximum visual quality
+                    });
+                    
+                    recorder.ondataavailable = e => {
+                        if (e.data.size > 0) chunks.push(e.data);
+                    };
+                    
+                    window.videoExportCancelled = false;
+
+                    recorder.onstop = () => {
+                        if (window.videoExportCancelled) {
+                            reject(new Error('Export cancelled by user'));
+                            return;
+                        }
+                        
+                        const blob = new Blob(chunks, { type: 'video/webm' });
+                        const url = URL.createObjectURL(blob);
+                        const backdropNameEl = document.getElementById('backdrop-name');
+                        const cleanName = ((backdropNameEl ? backdropNameEl.textContent : 'backdrop') || 'backdrop')
+                            .toLowerCase().replace(/[^a-z0-9]+/g, '_');
+                        const downloadName = `${cleanName}_backdrop_${format}.webm`;
+                        
+                        if (window.parent && typeof window.parent.downloadFile === 'function') {
+                            window.parent.downloadFile(url, downloadName);
+                        } else {
+                            try {
+                                const topDoc = window.top.document;
+                                const a = topDoc.createElement('a');
+                                a.download = downloadName;
+                                a.href = url;
+                                topDoc.body.appendChild(a);
+                                a.click();
+                                topDoc.body.removeChild(a);
+                            } catch (e) {
+                                const a = document.createElement('a');
+                                a.download = downloadName;
+                                a.href = url;
+                                a.click();
+                            }
+                        }
+                        
+                        setTimeout(() => URL.revokeObjectURL(url), 1000);
+                        resolve();
+                    };
+
+                    // Render a single frame for a given elapsed time (in seconds).
+                    function renderFrameAt(elapsed) {
+                        // Handle boomerang loop logic for video animation time
+                        let animTime = elapsed;
+                        if (boomerangParam === 'on') {
+                            const halfDuration = duration / 2;
+                            animTime = elapsed < halfDuration ? elapsed : duration - elapsed;
+                        }
+
+                        // Draw background gradients
+                        drawBackdrops(recCtx, w, h, animTime);
+
+                        // Draw texts and borders
+                        drawTextOverlay(recCtx, w, h, elapsed);
+
+                        // Explicitly hand the freshly drawn frame to the recorder.
+                        if (canRequestFrame) videoTrack.requestFrame();
+                    }
+
+                    // Draw the first frame before recording so the stream never starts
+                    // on an empty (transparent) canvas.
+                    renderFrameAt(0);
+
+                    recorder.start();
+                    const startMs = performance.now();
+
+                    // Real-time recording loop.
+                    //
+                    // captureStream()/MediaRecorder timestamp frames by real wall-clock
+                    // time, so the length of the exported video is determined by how long
+                    // the recording actually runs — not by how many frames we draw. We
+                    // therefore pace the loop against real elapsed time and derive the
+                    // animation time from it. This keeps the output video's length tied to
+                    // the requested `duration` and plays back at the same speed as the live
+                    // preview, regardless of how fast or slow individual frames render.
+                    function recordNextFrame() {
+                        if (window.videoExportCancelled) {
+                            recorder.stop();
+                            return;
+                        }
+
+                        const elapsed = (performance.now() - startMs) / 1000;
+
+                        if (elapsed >= duration) {
+                            // Pin the final frame exactly to the requested duration so the
+                            // last visible frame is deterministic.
+                            renderFrameAt(duration);
+                            if (onProgress) onProgress(100);
+                            recorder.stop();
+                            return;
+                        }
+
+                        if (onProgress) {
+                            onProgress(Math.min(99, (elapsed / duration) * 100));
+                        }
+
+                        renderFrameAt(elapsed);
+
+                        requestAnimationFrame(recordNextFrame);
+                    }
+
+                    // Start the real-time recording loop
+                    requestAnimationFrame(recordNextFrame);
+                });
+            };
+        })();
