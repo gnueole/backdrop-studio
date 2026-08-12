@@ -1348,8 +1348,20 @@
                     recCanvas.height = h;
                     const recCtx = recCanvas.getContext('2d');
 
-                    const stream = recCanvas.captureStream(30); // 30 FPS
-                    
+                    // Prefer manual frame capture (requestFrame): pushing each frame
+                    // explicitly is far more reliable for an offscreen canvas than relying
+                    // on the compositor's implicit auto-capture timer, which can silently
+                    // drop every frame (producing an empty video) until the canvas has been
+                    // composited. Fall back to timed auto-capture where requestFrame is
+                    // unavailable.
+                    let stream = recCanvas.captureStream(0);
+                    let videoTrack = stream.getVideoTracks()[0];
+                    const canRequestFrame = !!(videoTrack && typeof videoTrack.requestFrame === 'function');
+                    if (!canRequestFrame) {
+                        stream = recCanvas.captureStream(30); // 30 FPS auto-capture fallback
+                        videoTrack = stream.getVideoTracks()[0];
+                    }
+
                     let mimeType = 'video/webm;codecs=vp9';
                     if (!MediaRecorder.isTypeSupported(mimeType)) {
                         mimeType = 'video/webm;codecs=vp8';
@@ -1406,39 +1418,13 @@
                         resolve();
                     };
 
-                    let currentFrame = 0;
-                    const fps = 30;
-                    const totalFrames = duration * fps;
-
-                    recorder.start();
-
-                    function recordNextFrame() {
-                        if (window.videoExportCancelled) {
-                            recorder.stop();
-                            return;
-                        }
-
-                        if (currentFrame > totalFrames) {
-                            if (onProgress) onProgress(100);
-                            recorder.stop();
-                            return;
-                        }
-
-                        const elapsed = currentFrame / fps;
-
-                        if (onProgress) {
-                            onProgress(Math.min(99, (currentFrame / totalFrames) * 100));
-                        }
-
+                    // Render a single frame for a given elapsed time (in seconds).
+                    function renderFrameAt(elapsed) {
                         // Handle boomerang loop logic for video animation time
                         let animTime = elapsed;
                         if (boomerangParam === 'on') {
                             const halfDuration = duration / 2;
-                            if (elapsed < halfDuration) {
-                                animTime = elapsed;
-                            } else {
-                                animTime = duration - elapsed;
-                            }
+                            animTime = elapsed < halfDuration ? elapsed : duration - elapsed;
                         }
 
                         // Draw background gradients
@@ -1447,14 +1433,54 @@
                         // Draw texts and borders
                         drawTextOverlay(recCtx, w, h, elapsed);
 
-                        currentFrame++;
-                        
-                        // We use a small timeout to let the MediaRecorder encode the frame
-                        setTimeout(recordNextFrame, 20); // ~50 frames per second encoding speed, very fast!
+                        // Explicitly hand the freshly drawn frame to the recorder.
+                        if (canRequestFrame) videoTrack.requestFrame();
                     }
 
-                    // Start the deterministic recording loop
-                    recordNextFrame();
+                    // Draw the first frame before recording so the stream never starts
+                    // on an empty (transparent) canvas.
+                    renderFrameAt(0);
+
+                    recorder.start();
+                    const startMs = performance.now();
+
+                    // Real-time recording loop.
+                    //
+                    // captureStream()/MediaRecorder timestamp frames by real wall-clock
+                    // time, so the length of the exported video is determined by how long
+                    // the recording actually runs — not by how many frames we draw. We
+                    // therefore pace the loop against real elapsed time and derive the
+                    // animation time from it. This keeps the output video's length tied to
+                    // the requested `duration` and plays back at the same speed as the live
+                    // preview, regardless of how fast or slow individual frames render.
+                    function recordNextFrame() {
+                        if (window.videoExportCancelled) {
+                            recorder.stop();
+                            return;
+                        }
+
+                        const elapsed = (performance.now() - startMs) / 1000;
+
+                        if (elapsed >= duration) {
+                            // Pin the final frame exactly to the requested duration so the
+                            // last visible frame is deterministic.
+                            renderFrameAt(duration);
+                            if (onProgress) onProgress(100);
+                            recorder.stop();
+                            return;
+                        }
+
+                        if (onProgress) {
+                            onProgress(Math.min(99, (elapsed / duration) * 100));
+                        }
+
+                        renderFrameAt(elapsed);
+
+                        requestAnimationFrame(recordNextFrame);
+                    }
+
+                    // Start the real-time recording loop
+                    requestAnimationFrame(recordNextFrame);
                 });
             };
         })();
